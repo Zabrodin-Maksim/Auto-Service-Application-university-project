@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace BDAS2_University_Project.Repositories.Interfaces
 {
+    //TODO: DELETE
     public interface IFileStorageRepository
     {
         IEnumerable<FileStorage> GetAllFiles();
