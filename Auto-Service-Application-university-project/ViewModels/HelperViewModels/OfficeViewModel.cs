@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BDAS2_University_Project.ViewModels
+namespace BDAS2_University_Project.ViewModels.HelperViewModels
 {
     public class OfficeViewModel : ViewModelBase
     {
