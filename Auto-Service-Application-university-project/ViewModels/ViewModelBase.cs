@@ -6,7 +6,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BDAS2_University_Project.ViewModels
+namespace Auto_Service_Application_university_project.ViewModels
 {
     public class ViewModelBase : INotifyPropertyChanged
     {

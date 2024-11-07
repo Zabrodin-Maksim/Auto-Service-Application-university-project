@@ -1,5 +1,5 @@
-﻿using BDAS2_University_Project.Models;
-using BDAS2_University_Project.Repositories.Interfaces;
+﻿using Auto_Service_Application_university_project.Models;
+using Auto_Service_Application_university_project.Repositories.Interfaces;
 using Oracle.ManagedDataAccess.Client;
 using System;
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BDAS2_University_Project.Repositories
+namespace Auto_Service_Application_university_project.Repositories
 {
     public class ReservationRepository : IReservationRepository
     {

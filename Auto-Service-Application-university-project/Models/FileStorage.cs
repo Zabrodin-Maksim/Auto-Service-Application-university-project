@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BDAS2_University_Project.Models
+namespace Auto_Service_Application_university_project.Models
 {
     public class FileStorage
     {

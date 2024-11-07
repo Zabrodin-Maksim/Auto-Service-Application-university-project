@@ -1,5 +1,5 @@
-﻿using BDAS2_University_Project.Models;
-using BDAS2_University_Project.Repositories.Interfaces;
+﻿using Auto_Service_Application_university_project.Models;
+using Auto_Service_Application_university_project.Repositories.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BDAS2_University_Project.ViewModels.HelperViewModels
+namespace Auto_Service_Application_university_project.ViewModels.HelperViewModels
 {
     public class PneuserviseViewModel : ViewModelBase
     {
