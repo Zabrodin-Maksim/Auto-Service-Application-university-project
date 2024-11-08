@@ -15,14 +15,16 @@
         >
     <Window.Resources>
         <!-- Main Color -->
-        <SolidColorBrush x:Key="MainBackgrounColor" Color="#042f2e" Opacity="0.95"/>
-        
-        <!-- Menu Color -->
-        <SolidColorBrush x:Key="MenuBackgrounColor" Color="#134e4a"/>
-        
-        <!-- Color Helper Buttons -->
-        <SolidColorBrush x:Key="HelperButtons" Color="#99f6e4"/>
+        <SolidColorBrush x:Key="MainBackgrounColor" Color="#052e16" Opacity="0.95"/>
 
+        <!-- Menu Color -->
+        <SolidColorBrush x:Key="MenuBackgrounColor" Color="#14532d"/>
+
+        <!-- Color Helper Buttons -->
+        <SolidColorBrush x:Key="HelperButtons" Color="#ecfccb"/>
+
+        <!-- FONT -->
+        <FontFamily x:Key="MyCustomFont">pack://application:,,,/Auto-Service-Application-university-project;component/Resources/Fonts/DancingScript-Bold.ttf#Dancing Script</FontFamily>
 
         <!-- Style Exit Button -->
         <Style x:Key="EndButton" TargetType="Button">
@@ -32,7 +34,7 @@
             <Setter Property="BorderBrush" Value="Transparent"/>
             <Setter Property="FontSize" Value="35"/>
             <Setter Property="Foreground" Value="{StaticResource HelperButtons}"/>
-            <Setter Property="Margin" Value="10"/>
+            <Setter Property="Margin" Value="20"/>
 
             <Setter Property="Template">
                 <Setter.Value>
@@ -53,7 +55,7 @@
                     <Setter Property="Effect">
                         <Setter.Value>
                             <DropShadowEffect Color="LightBlue" 
-                                  BlurRadius="15" 
+                                  BlurRadius="25" 
                                   ShadowDepth="0" 
                                   Opacity="1"/>
                         </Setter.Value>
@@ -62,22 +64,82 @@
             </Style.Triggers>
         </Style>
 
+
+        <!--#region Style Menu Items -->
         <!-- Style Head Menu Text -->
         <Style x:Key="HeadText" TargetType = "TextBlock" >
+            <Setter Property="FontFamily" Value="{StaticResource MyCustomFont}"/>
             <Setter Property="HorizontalAlignment" Value="Center"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
-            <Setter Property="FontSize" Value="30"/>
-            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontSize" Value="60"/>
+            <Setter Property="Foreground" Value="#ecfccb"/>
         </Style>
 
+        <!-- Style Stack Panel -->
+        <Style x:Key="StackPanelMenu" TargetType="StackPanel">
+            <Setter Property="Margin" Value="30,0"/>
+        </Style>
+
+        <!-- Buttons Style -->
+        <Style x:Key="MenuButtons" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Foreground" Value="{StaticResource HelperButtons}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border>
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="Transparent"/>
+                    <Setter Property="BorderBrush" Value="Transparent"/>
+                    <Setter Property="Effect">
+                        <Setter.Value>
+                            <DropShadowEffect Color="LightBlue" 
+                                            BlurRadius="25" 
+                                            ShadowDepth="0" 
+                                            Opacity="1"/>
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- Text Block Style -->
+        <Style x:Key="TextBlock" TargetType="TextBlock">
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="FontSize" Value="30"/>
+        </Style>
+
+        <!-- Icon Style -->
+        <Style x:Key="IconsStyle" TargetType="fa:FontAwesome">
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="Margin" Value="0,0,20,0"/>
+            <Setter Property="Width" Value="50"/>
+            <Setter Property="FontSize" Value="35"/>
+        </Style>
+        <!--#endregion -->
+
+        <!--#region Navigation -->
         <DataTemplate DataType="{x:Type vm:LoginViewModel}">
             <local1:LoginView/>
         </DataTemplate>
+        <!--#endregion -->
+        
     </Window.Resources>
 
     <Grid Background="{StaticResource MainBackgrounColor}">
         <StackPanel Orientation="Horizontal" MinHeight="740" MinWidth="1220">
-            
+
             <!--#region Menu -->
             <Grid Width="350" Background="{StaticResource MenuBackgrounColor}">
                 <Grid.RowDefinitions>
@@ -89,14 +151,105 @@
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="*"/>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="*"/>
+                    <!--<RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>-->
                     <RowDefinition Height="1.2*"/>
                 </Grid.RowDefinitions>
 
+                <!-- Head -->
+                
                 <TextBlock Style="{StaticResource HeadText}" Grid.Row="0" Text="Auto Servis"/>
+                <Separator VerticalAlignment="Bottom" Height="2" Margin="20,0"/>
+
+                <!-- Home -->
+                
+                <Button Grid.Row="1" Style="{StaticResource MenuButtons}">
+                    <StackPanel Style="{StaticResource StackPanelMenu}" Grid.Row="1" Orientation="Horizontal">
+                        <fa:FontAwesome Style="{StaticResource IconsStyle}" Icon="Home"/>
+                        <TextBlock Style="{StaticResource TextBlock}" Text="Home"/>
+                    </StackPanel>
+                </Button>
+
+                <!-- Login -->
+
+                <Button Grid.Row="2" Style="{StaticResource MenuButtons}">
+                    <StackPanel Style="{StaticResource StackPanelMenu}" Grid.Row="2" Orientation="Horizontal">
+                        <fa:FontAwesome Style="{StaticResource IconsStyle}" Icon="UserOutline"/>
+                        <TextBlock Style="{StaticResource TextBlock}" Text="Login"/>
+                    </StackPanel>
+                </Button>
 
 
+                <!-- Registration -->
+                
+                <Button Grid.Row="3" Style="{StaticResource MenuButtons}">
+                    <StackPanel Style="{StaticResource StackPanelMenu}" Grid.Row="3" Orientation="Horizontal">
+                        <fa:FontAwesome Style="{StaticResource IconsStyle}" Icon="UserPlus"/>
+                        <TextBlock Style="{StaticResource TextBlock}" Text="Registration"/>
+                    </StackPanel>
+                </Button>
+
+                <!-- Customer -->
+
+                <Button Grid.Row="4" Style="{StaticResource MenuButtons}">
+                    <StackPanel Style="{StaticResource StackPanelMenu}" Grid.Row="4" Orientation="Horizontal">
+                        <fa:FontAwesome Style="{StaticResource IconsStyle}" Icon="Users"/>
+                        <TextBlock Style="{StaticResource TextBlock}" Text="Customer"/>
+                    </StackPanel>
+                </Button>
+
+
+                <!-- Order -->
+
+                <Button Grid.Row="5" Style="{StaticResource MenuButtons}">
+                    <StackPanel Style="{StaticResource StackPanelMenu}" Grid.Row="5" Orientation="Horizontal">
+                        <fa:FontAwesome Style="{StaticResource IconsStyle}" Icon="CheckCircleOutline"/>
+                        <TextBlock Style="{StaticResource TextBlock}" Text="Order"/>
+                    </StackPanel>
+                </Button>
+
+
+                <!-- Visit -->
+
+                <Button Grid.Row="6" Style="{StaticResource MenuButtons}">
+                    <StackPanel Style="{StaticResource StackPanelMenu}" Grid.Row="6" Orientation="Horizontal">
+                        <fa:FontAwesome Style="{StaticResource IconsStyle}" Icon="Calendar"/>
+                        <TextBlock Style="{StaticResource TextBlock}" Text="Visit"/>
+                    </StackPanel>
+                </Button>
+
+
+                <!-- Employee -->
+
+                <Button Grid.Row="7" Style="{StaticResource MenuButtons}">
+                    <StackPanel Style="{StaticResource StackPanelMenu}" Grid.Row="7" Orientation="Horizontal">
+                        <fa:FontAwesome Style="{StaticResource IconsStyle}" Icon="UserSecret"/>
+                        <TextBlock Style="{StaticResource TextBlock}" Text="Employee"/>
+                    </StackPanel>
+                </Button>
+
+
+                <!-- Order -->
+                <!--
+                <StackPanel Style="{StaticResource StackPanelMenu}" Grid.Row="8" Orientation="Horizontal">
+                    <Button Style="{StaticResource MenuButtons}">
+                        <fa:FontAwesome Icon="Home"/>
+                    </Button>
+                </StackPanel>
+                
+                -->
+                <!-- Visit -->
+                <!--
+                <StackPanel Style="{StaticResource StackPanelMenu}" Grid.Row="9" Orientation="Horizontal">
+                    <Button Style="{StaticResource MenuButtons}">
+                        <fa:FontAwesome Icon="Home"/>
+                    </Button>
+                </StackPanel>-->
+
+                <!-- Logout -->
+                <Button Grid.Row="8" Style="{StaticResource MenuButtons}" FontSize="45" Margin="20,0">
+                    <fa:FontAwesome Icon="SignOut"/>
+                </Button>
             </Grid>
             <!--#endregion Menu -->
 
@@ -108,7 +261,5 @@
                 </Button>
             </Grid>
         </StackPanel>
-
-        
     </Grid>
 </Window>

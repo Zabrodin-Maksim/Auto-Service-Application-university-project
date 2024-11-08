@@ -4,15 +4,146 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Auto_Service_Application_university_project.Views"
+             xmlns:fa="http://schemas.fontawesome.io/icons/" 
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="740" d:DesignWidth="870">
+    <UserControl.Resources>
+        <!-- Color Background main -->
+        <SolidColorBrush x:Key="backgroundMain" Color="#052e16" Opacity="0.85"/>
+
+        <!-- Color Button -->
+        <SolidColorBrush x:Key="backgroundButton" Color="#84cc16"/>
+
+
+        <!-- Head Text Page -->
+        <Style x:Key="pageTextDiscription" TargetType="TextBlock">
+            <Setter Property="Margin" Value="10"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Foreground" Value="DarkGray"/>
+        </Style>
+
+        <!-- Style Stack Panel -->
+        <Style x:Key="mainStackPanel" TargetType="StackPanel">
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Top"/>
+            <Setter Property="Margin" Value="0,35"/>
+            <Setter Property="MinWidth" Value="290"/>
+        </Style>
+
+        <!-- Style Text-->
+        <Style x:Key="textEmailPassword" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="DarkGray"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="FontWeight" Value="Medium"/>
+            <Setter Property="Margin" Value="0,35,0,0"/>
+        </Style>
+
+        <!-- Style Text Box-->
+        <Style TargetType="TextBox">
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="FontWeight" Value="Medium"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="CaretBrush" Value="LightGray"/>
+            <Setter Property="BorderBrush" Value="DarkGray"/>
+            <Setter Property="BorderThickness" Value="0,0,0,2"/>
+            <Setter Property="Height" Value="28"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="0,5,0,0"/>
+            <Setter Property="Padding" Value="20,0,0,0"/>
+        </Style>
+
+        <!-- Style Text-->
+        <Style x:Key="errorText" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="Red"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="FontWeight" Value="Medium"/>
+            <Setter Property="Margin" Value="0,10,0,0"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+        </Style>
+
+        <!-- Style Button-->
+        <Style TargetType="Button">
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="IsDefault" Value="True"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontSize" Value="22"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Margin" Value="0,20,0,0"/>
+            <Setter Property="Background" Value="{StaticResource backgroundButton}"/>
+
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="20" Padding="20">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{StaticResource backgroundButton}"/>
+                    <Setter Property="BorderBrush" Value="Transparent"/>
+                    <Setter Property="Effect">
+                        <Setter.Value>
+                            <DropShadowEffect Color="LightBlue" 
+                                                BlurRadius="25" 
+                                                ShadowDepth="0" 
+                                                Opacity="1"/>
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+    </UserControl.Resources>
+    
+    
     <Grid>
         <Grid.Background>
-            <ImageBrush ImageSource="/Resources/Images/login-background.jpg" Stretch="Fill"/>
+            <ImageBrush ImageSource="/Resources/Images/login-background.jpg" Stretch="UniformToFill"/>
         </Grid.Background>
 
-        <Grid Background="#042f2e" Opacity="0.80">
-            
+        <Grid Background="{StaticResource backgroundMain}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="0.05*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock Style="{StaticResource pageTextDiscription}" Text="LOG IN"/>
+
+            <StackPanel Grid.Row="1" Style="{StaticResource mainStackPanel}">
+                
+                <Image Source="/Resources/Images/Login-logo.png" 
+                       Width="150" 
+                       Height="150"/>
+
+                <ProgressBar IsIndeterminate="True" 
+                             Margin="20"
+                             Visibility="{Binding IsLoggingIn}"/>
+
+                <TextBlock Text="Email" Style="{StaticResource textEmailPassword}"/>
+
+                <TextBox>
+                    <TextBox.Background>
+                        <ImageBrush ImageSource="/Resources/Images/user-icon.png" Stretch="None" AlignmentX="Left"/>
+                    </TextBox.Background>
+                </TextBox>
+
+                <TextBlock Text="Password" Style="{StaticResource textEmailPassword}"/>
+                
+                <TextBox>
+                    <TextBox.Background>
+                        <ImageBrush ImageSource="/Resources/Images/key-icon.png" Stretch="None" AlignmentX="Left"/>
+                    </TextBox.Background>
+                </TextBox>
+
+                <TextBlock Text="{Binding ErrorMessage}" Style="{StaticResource errorText}"/>
+
+                <Button Content="LOG IN"/>
+
+            </StackPanel>
         </Grid>
     </Grid>
 </UserControl>
