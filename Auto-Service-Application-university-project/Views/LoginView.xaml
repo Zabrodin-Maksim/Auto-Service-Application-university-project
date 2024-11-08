@@ -14,7 +14,6 @@
         <!-- Color Button -->
         <SolidColorBrush x:Key="backgroundButton" Color="#84cc16"/>
 
-
         <!-- Head Text Page -->
         <Style x:Key="pageTextDiscription" TargetType="TextBlock">
             <Setter Property="Margin" Value="10"/>
@@ -68,13 +67,14 @@
             <Setter Property="Foreground" Value="White"/>
             <Setter Property="FontSize" Value="22"/>
             <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="MaxWidth" Value="250"/>
             <Setter Property="Margin" Value="0,20,0,0"/>
             <Setter Property="Background" Value="{StaticResource backgroundButton}"/>
 
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
-                        <Border Background="{TemplateBinding Background}" CornerRadius="20" Padding="20">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="20" Padding="15">
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </Border>
                     </ControlTemplate>
