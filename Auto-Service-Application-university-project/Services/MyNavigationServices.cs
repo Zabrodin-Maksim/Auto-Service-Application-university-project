@@ -22,9 +22,12 @@ namespace Auto_Service_Application_university_project.Services
             switch (viewType)
             {
                 case ViewTupes.LoginView:
-                    _mainViewModel.CurrentViewModel = new LoginViewModel(_mainViewModel); // To Authorization
+                    _mainViewModel.CurrentViewModel = new LoginViewModel(_mainViewModel); // To Login
                     break;
-                
+
+                case ViewTupes.Registration:
+                    _mainViewModel.CurrentViewModel = new RegistrationViewModel(_mainViewModel); // To Registration
+                    break;
             }
         }
 

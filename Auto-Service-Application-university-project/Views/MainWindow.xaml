@@ -132,6 +132,9 @@
             <DataTemplate DataType="{x:Type vm:LoginViewModel}">
                 <local1:LoginView/>
             </DataTemplate>
+            <DataTemplate DataType="{x:Type vm:RegistrationViewModel}">
+                <local1:Registration/>
+            </DataTemplate>
             <!--#endregion -->
 
         </ResourceDictionary>
@@ -173,7 +176,7 @@
 
                 <!-- Login -->
 
-                <Button Grid.Row="2" Style="{StaticResource MenuButtons}">
+                <Button Command="{Binding NavigateToLoginCommand}" Grid.Row="2" Style="{StaticResource MenuButtons}">
                     <StackPanel Style="{StaticResource StackPanelMenu}" Grid.Row="2" Orientation="Horizontal">
                         <fa:FontAwesome Style="{StaticResource IconsStyle}" Icon="UserOutline"/>
                         <TextBlock Style="{StaticResource TextBlock}" Text="Login"/>
@@ -183,7 +186,7 @@
 
                 <!-- Registration -->
 
-                <Button Grid.Row="3" Style="{StaticResource MenuButtons}">
+                <Button Command="{Binding NavigateToRegistration}" Grid.Row="3" Style="{StaticResource MenuButtons}">
                     <StackPanel Style="{StaticResource StackPanelMenu}" Grid.Row="3" Orientation="Horizontal">
                         <fa:FontAwesome Style="{StaticResource IconsStyle}" Icon="UserPlus"/>
                         <TextBlock Style="{StaticResource TextBlock}" Text="Registration"/>

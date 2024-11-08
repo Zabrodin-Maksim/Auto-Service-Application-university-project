@@ -11,9 +11,11 @@
 
   <ItemGroup>
     <None Remove="Resources\Fonts\DancingScript-Bold.ttf" />
+    <None Remove="Resources\Images\back-image.jpg" />
     <None Remove="Resources\Images\key-icon.png" />
     <None Remove="Resources\Images\login-background.jpg" />
     <None Remove="Resources\Images\Login-logo.png" />
+    <None Remove="Resources\Images\registration.png" />
     <None Remove="Resources\Images\tel-icon.png" />
     <None Remove="Resources\Images\user-icon.png" />
   </ItemGroup>
@@ -27,9 +29,11 @@
     <Resource Include="Resources\Fonts\DancingScript-Bold.ttf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="Resources\Images\back-image.jpg" />
     <Resource Include="Resources\Images\key-icon.png" />
     <Resource Include="Resources\Images\login-background.jpg" />
     <Resource Include="Resources\Images\Login-logo.png" />
+    <Resource Include="Resources\Images\registration.png" />
     <Resource Include="Resources\Images\tel-icon.png" />
     <Resource Include="Resources\Images\user-icon.png" />
   </ItemGroup>

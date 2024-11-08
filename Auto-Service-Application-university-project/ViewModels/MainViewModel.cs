@@ -29,6 +29,8 @@ namespace Auto_Service_Application_university_project.ViewModels
         #region Commands
         //Navigation
         public ICommand NavigateToLoginCommand { get; }
+        public ICommand NavigateToRegistration { get; }
+
         #endregion
 
         public MainViewModel()
@@ -39,6 +41,7 @@ namespace Auto_Service_Application_university_project.ViewModels
 
             // Navigation Commands
             NavigateToLoginCommand = new MyICommand(() => _navigationService.Navigate(ViewTupes.LoginView));
+            NavigateToRegistration = new MyICommand(() => _navigationService.Navigate(ViewTupes.Registration));
 
             // First Page
             NavigateToLoginCommand.Execute(null);
@@ -48,4 +51,4 @@ namespace Auto_Service_Application_university_project.ViewModels
         }
     }
 }
-// TODO: Поменять в Нура файлах namespace на Auto_Service_Application_university_project
+// TODO: Реализовать Text Fields в Login View Model
