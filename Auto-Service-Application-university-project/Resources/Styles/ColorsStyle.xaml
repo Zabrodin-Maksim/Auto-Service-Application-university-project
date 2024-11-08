@@ -1,0 +1,15 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- Color Background main -->
+    <SolidColorBrush x:Key="backgroundMain" Color="#052e16" Opacity="0.85"/>
+
+    <!-- Menu Color -->
+    <SolidColorBrush x:Key="MenuBackgrounColor" Color="#14532d"/>
+
+    <!-- Color Helper Buttons -->
+    <SolidColorBrush x:Key="HelperButtons" Color="#ecfccb"/>
+
+    <!-- Color Button -->
+    <SolidColorBrush x:Key="backgroundButton" Color="#84cc16" Opacity="0.6"/>
+</ResourceDictionary>

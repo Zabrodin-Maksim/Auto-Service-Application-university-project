@@ -14,127 +14,128 @@
         MouseDown="Window_MouseDown"
         >
     <Window.Resources>
-        <!-- Main Color -->
-        <SolidColorBrush x:Key="MainBackgrounColor" Color="#052e16" Opacity="0.95"/>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Resources/Styles/ColorsStyle.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
 
-        <!-- Menu Color -->
-        <SolidColorBrush x:Key="MenuBackgrounColor" Color="#14532d"/>
+            <!-- Main Color -->
+            <SolidColorBrush x:Key="MainBackgrounColor" Color="#052e16" Opacity="0.95"/>
 
-        <!-- Color Helper Buttons -->
-        <SolidColorBrush x:Key="HelperButtons" Color="#ecfccb"/>
+            <!-- FONT -->
+            <FontFamily x:Key="MyCustomFont">pack://application:,,,/Auto-Service-Application-university-project;component/Resources/Fonts/DancingScript-Bold.ttf#Dancing Script</FontFamily>
 
-        <!-- FONT -->
-        <FontFamily x:Key="MyCustomFont">pack://application:,,,/Auto-Service-Application-university-project;component/Resources/Fonts/DancingScript-Bold.ttf#Dancing Script</FontFamily>
+            <!-- Style Exit Button -->
+            <Style x:Key="EndButton" TargetType="Button">
+                <Setter Property="VerticalAlignment" Value="Top"/>
+                <Setter Property="HorizontalAlignment" Value="Right"/>
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="BorderBrush" Value="Transparent"/>
+                <Setter Property="FontSize" Value="35"/>
+                <Setter Property="Foreground" Value="{StaticResource HelperButtons}"/>
+                <Setter Property="Margin" Value="20"/>
 
-        <!-- Style Exit Button -->
-        <Style x:Key="EndButton" TargetType="Button">
-            <Setter Property="VerticalAlignment" Value="Top"/>
-            <Setter Property="HorizontalAlignment" Value="Right"/>
-            <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="BorderBrush" Value="Transparent"/>
-            <Setter Property="FontSize" Value="35"/>
-            <Setter Property="Foreground" Value="{StaticResource HelperButtons}"/>
-            <Setter Property="Margin" Value="20"/>
-
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border Background="{TemplateBinding Background}"
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Border Background="{TemplateBinding Background}"
                         BorderBrush="{TemplateBinding BorderBrush}"
                         BorderThickness="{TemplateBinding BorderThickness}">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
 
-            <Style.Triggers>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="Transparent"/>
-                    <Setter Property="BorderBrush" Value="Transparent"/>
-                    <Setter Property="Effect">
-                        <Setter.Value>
-                            <DropShadowEffect Color="LightBlue" 
+                <Style.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="Background" Value="Transparent"/>
+                        <Setter Property="BorderBrush" Value="Transparent"/>
+                        <Setter Property="Effect">
+                            <Setter.Value>
+                                <DropShadowEffect Color="LightBlue" 
                                   BlurRadius="25" 
                                   ShadowDepth="0" 
                                   Opacity="1"/>
-                        </Setter.Value>
-                    </Setter>
-                </Trigger>
-            </Style.Triggers>
-        </Style>
+                            </Setter.Value>
+                        </Setter>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
 
 
-        <!--#region Style Menu Items -->
-        <!-- Style Head Menu Text -->
-        <Style x:Key="HeadText" TargetType = "TextBlock" >
-            <Setter Property="FontFamily" Value="{StaticResource MyCustomFont}"/>
-            <Setter Property="HorizontalAlignment" Value="Center"/>
-            <Setter Property="VerticalAlignment" Value="Center"/>
-            <Setter Property="FontSize" Value="60"/>
-            <Setter Property="Foreground" Value="#ecfccb"/>
-        </Style>
+            <!--#region Style Menu Items -->
+            <!-- Style Head Menu Text -->
+            <Style x:Key="HeadText" TargetType = "TextBlock" >
+                <Setter Property="FontFamily" Value="{StaticResource MyCustomFont}"/>
+                <Setter Property="HorizontalAlignment" Value="Center"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="FontSize" Value="60"/>
+                <Setter Property="Foreground" Value="#ecfccb"/>
+            </Style>
 
-        <!-- Style Stack Panel -->
-        <Style x:Key="StackPanelMenu" TargetType="StackPanel">
-            <Setter Property="Margin" Value="30,0"/>
-        </Style>
+            <!-- Style Stack Panel -->
+            <Style x:Key="StackPanelMenu" TargetType="StackPanel">
+                <Setter Property="Margin" Value="30,0"/>
+            </Style>
 
-        <!-- Buttons Style -->
-        <Style x:Key="MenuButtons" TargetType="Button">
-            <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="BorderBrush" Value="Transparent"/>
-            <Setter Property="HorizontalAlignment" Value="Left"/>
-            <Setter Property="VerticalAlignment" Value="Center"/>
-            <Setter Property="Foreground" Value="{StaticResource HelperButtons}"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border>
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
+            <!-- Buttons Style -->
+            <Style x:Key="MenuButtons" TargetType="Button">
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="BorderBrush" Value="Transparent"/>
+                <Setter Property="HorizontalAlignment" Value="Left"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="Foreground" Value="{StaticResource HelperButtons}"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Border>
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
 
-            <Style.Triggers>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="Transparent"/>
-                    <Setter Property="BorderBrush" Value="Transparent"/>
-                    <Setter Property="Effect">
-                        <Setter.Value>
-                            <DropShadowEffect Color="LightBlue" 
+                <Style.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="Background" Value="Transparent"/>
+                        <Setter Property="BorderBrush" Value="Transparent"/>
+                        <Setter Property="Effect">
+                            <Setter.Value>
+                                <DropShadowEffect Color="LightBlue" 
                                             BlurRadius="25" 
                                             ShadowDepth="0" 
                                             Opacity="1"/>
-                        </Setter.Value>
-                    </Setter>
-                </Trigger>
-            </Style.Triggers>
-        </Style>
+                            </Setter.Value>
+                        </Setter>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
 
-        <!-- Text Block Style -->
-        <Style x:Key="TextBlock" TargetType="TextBlock">
-            <Setter Property="VerticalAlignment" Value="Center"/>
-            <Setter Property="FontSize" Value="30"/>
-        </Style>
+            <!-- Text Block Style -->
+            <Style x:Key="TextBlock" TargetType="TextBlock">
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="FontSize" Value="30"/>
+            </Style>
 
-        <!-- Icon Style -->
-        <Style x:Key="IconsStyle" TargetType="fa:FontAwesome">
-            <Setter Property="VerticalAlignment" Value="Center"/>
-            <Setter Property="HorizontalAlignment" Value="Left"/>
-            <Setter Property="Margin" Value="0,0,20,0"/>
-            <Setter Property="Width" Value="50"/>
-            <Setter Property="FontSize" Value="35"/>
-        </Style>
-        <!--#endregion -->
+            <!-- Icon Style -->
+            <Style x:Key="IconsStyle" TargetType="fa:FontAwesome">
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="HorizontalAlignment" Value="Left"/>
+                <Setter Property="Margin" Value="0,0,20,0"/>
+                <Setter Property="Width" Value="50"/>
+                <Setter Property="FontSize" Value="35"/>
+            </Style>
+            <!--#endregion -->
 
-        <!--#region Navigation -->
-        <DataTemplate DataType="{x:Type vm:LoginViewModel}">
-            <local1:LoginView/>
-        </DataTemplate>
-        <!--#endregion -->
-        
+            <!--#region Navigation -->
+            <DataTemplate DataType="{x:Type vm:LoginViewModel}">
+                <local1:LoginView/>
+            </DataTemplate>
+            <!--#endregion -->
+
+        </ResourceDictionary>
+
     </Window.Resources>
 
     <Grid Background="{StaticResource MainBackgrounColor}">
@@ -157,12 +158,12 @@
                 </Grid.RowDefinitions>
 
                 <!-- Head -->
-                
+
                 <TextBlock Style="{StaticResource HeadText}" Grid.Row="0" Text="Auto Servis"/>
                 <Separator VerticalAlignment="Bottom" Height="2" Margin="20,0"/>
 
                 <!-- Home -->
-                
+
                 <Button Grid.Row="1" Style="{StaticResource MenuButtons}">
                     <StackPanel Style="{StaticResource StackPanelMenu}" Grid.Row="1" Orientation="Horizontal">
                         <fa:FontAwesome Style="{StaticResource IconsStyle}" Icon="Home"/>
@@ -181,7 +182,7 @@
 
 
                 <!-- Registration -->
-                
+
                 <Button Grid.Row="3" Style="{StaticResource MenuButtons}">
                     <StackPanel Style="{StaticResource StackPanelMenu}" Grid.Row="3" Orientation="Horizontal">
                         <fa:FontAwesome Style="{StaticResource IconsStyle}" Icon="UserPlus"/>
