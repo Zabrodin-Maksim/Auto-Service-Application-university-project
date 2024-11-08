@@ -12,7 +12,7 @@
         <SolidColorBrush x:Key="backgroundMain" Color="#052e16" Opacity="0.85"/>
 
         <!-- Color Button -->
-        <SolidColorBrush x:Key="backgroundButton" Color="#84cc16"/>
+        <SolidColorBrush x:Key="backgroundButton" Color="#84cc16" Opacity="0.6"/>
 
         <!-- Head Text Page -->
         <Style x:Key="pageTextDiscription" TargetType="TextBlock">
@@ -83,7 +83,7 @@
 
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="{StaticResource backgroundButton}"/>
+                    <Setter Property="Background" Value="#84cc16"/>
                     <Setter Property="BorderBrush" Value="Transparent"/>
                     <Setter Property="Effect">
                         <Setter.Value>
