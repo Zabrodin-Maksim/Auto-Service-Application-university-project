@@ -2,9 +2,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace Auto_Service_Application_university_project.ViewModels
@@ -36,6 +38,10 @@ namespace Auto_Service_Application_university_project.ViewModels
 
         // Third Part
         private Visibility _visibilityThird = Visibility.Collapsed;
+        private Visibility visibilityProgres = Visibility.Collapsed;
+
+        private string _userEmail;
+        private string _userPassword;
         #endregion
 
         #region Properties
@@ -69,6 +75,9 @@ namespace Auto_Service_Application_university_project.ViewModels
 
         #region Third Part
         public Visibility VisibilityThird { get => _visibilityThird; private set => SetProperty(ref _visibilityThird, value, nameof(VisibilityThird)); }
+        public Visibility VisibilityProgres { get => visibilityProgres; private set => SetProperty(ref visibilityProgres, value, nameof(VisibilityProgres)); }
+
+        public string UserEmail { get => _userEmail; set => SetProperty(ref _userEmail, value, nameof(UserEmail)); }
         #endregion
 
         #endregion
@@ -77,6 +86,7 @@ namespace Auto_Service_Application_university_project.ViewModels
         public ICommand NextCommand { get; }
         public ICommand PrevCommand { get; }
         public ICommand CancelCommand { get; }
+        public ICommand FinishCommand { get; }
 
         #endregion
 
@@ -86,14 +96,16 @@ namespace Auto_Service_Application_university_project.ViewModels
 
             _currentPart = 0;
 
-            NextCommand = new MyICommand(GoNext);
-            PrevCommand = new MyICommand(GoBack);
-            CancelCommand = new MyICommand(Cancel);
+            NextCommand = new MyICommand(OnNext);
+            PrevCommand = new MyICommand(OnBack);
+            CancelCommand = new MyICommand(OnCancel);
+            // TODO: ДЛЯ АССИНХРОНИЗАЦИИ ОСПОЛЬЗОВАТЬ new MyICommand<object>(async parameter => await OnFinish(parameter));
+            FinishCommand = new MyICommand<object>(OnFinish);
         }
 
         #region Navigation between parts
         // Method for change register part to next one
-        private void GoNext()
+        private void OnNext()
         {
             // first part
             if (_currentPart == 0 && CheckInputFirstPart() && TelephoneNumberIsOk())
@@ -112,13 +124,13 @@ namespace Auto_Service_Application_university_project.ViewModels
         }
 
         // Method for change register part to back one
-        private void GoBack()
+        private void OnBack()
         {
             CurrentPart--;
         }
 
         // Method exit from Registration page
-        private void Cancel()
+        private void OnCancel()
         {
             _mainViewModel.NavigateToLoginCommand.Execute(null);
         }
@@ -187,6 +199,41 @@ namespace Auto_Service_Application_university_project.ViewModels
         {
             if (new[] { _userCountry, _userCity, _userStreet, _userHouseNumber, _userPostCode }.Any(string.IsNullOrEmpty))
             {
+                ErrorMessage = "";
+                ErrorMessage = "Fill in all the fields to continue.";
+                return false;
+            }
+            ErrorMessage = "";
+            return true;
+        }
+        #endregion
+
+        #region Methods for Third part
+        // TODO: Сделать метод ассинхронным 
+        private void OnFinish(object parameter)
+        {
+            VisibilityProgres = Visibility.Visible;
+
+            if (parameter is PasswordBox passwordBox)
+            {
+                _userPassword = passwordBox.Password;
+                CheckInputTirdPart();
+                // TODO: РЕАЛИЗОВАТЬ ПЕРЕХОД
+            }
+            else
+            {
+                VisibilityProgres = Visibility.Collapsed;
+                ErrorMessage = "";
+                ErrorMessage = "Fill in all the fields to continue.";
+            }
+
+        }
+
+        private bool CheckInputTirdPart()
+        {
+            if (new[] { _userEmail, _userPassword }.Any(string.IsNullOrEmpty))
+            {
+                VisibilityProgres = Visibility.Collapsed;
                 ErrorMessage = "";
                 ErrorMessage = "Fill in all the fields to continue.";
                 return false;

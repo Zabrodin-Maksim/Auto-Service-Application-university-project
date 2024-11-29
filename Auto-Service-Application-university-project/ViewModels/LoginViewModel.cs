@@ -11,7 +11,6 @@ namespace Auto_Service_Application_university_project.ViewModels
 {
     public class LoginViewModel : ViewModelBase 
     {
-        // TODO: Добавить команду логин через асинк и чтобы запускался сначала _visibilityLoginProgres а потом логика входа
         #region Private Fields
         private readonly MainViewModel _mainViewModel;
 
@@ -39,11 +38,9 @@ namespace Auto_Service_Application_university_project.ViewModels
         {
             _mainViewModel = mainViewModel;
 
-            
-
             LoginCommand = new MyICommand(OnClickLogIn);
         }
-
+        // TODO: Добавить команду логин через асинк 
         private void OnClickLogIn()
         {
             

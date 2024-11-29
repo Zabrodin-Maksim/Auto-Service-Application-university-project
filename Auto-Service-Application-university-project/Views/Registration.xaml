@@ -61,7 +61,7 @@
             <ImageBrush ImageSource="/Resources/Images/back-image.jpg" Stretch="UniformToFill"/>
         </Grid.Background>
 
-        <Grid Background="{StaticResource backgroundMain}">
+        <Grid Background="{StaticResource backgroundMain}" >
             <Grid.RowDefinitions>
                 <RowDefinition Height="0.05*"/>
                 <RowDefinition Height="*"/>
@@ -183,14 +183,14 @@
                 <TextBlock Text="{Binding Path= ErrorMessage, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource errorText}"/>
 
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                    <Button Content="CANCEL" Background="Gray" Command="{Binding CancelCommand}"/>
+                    <Button Content="BACK" Background="Gray" Command="{Binding PrevCommand}"/>
                     <Button Content="NEXT" Command="{Binding NextCommand}"/>
                 </StackPanel>
             </StackPanel>
             <!--#endregion -->
 
             <!--#region Third Page-->
-            <StackPanel Grid.Row="1" Orientation="Vertical" Style="{StaticResource mainStackPanel}" >
+            <StackPanel Grid.Row="1" Orientation="Vertical" Style="{StaticResource mainStackPanel}">
 
                 <Image Source="/Resources/Images/registration.png" Height="120" Width="120"/>
 
@@ -200,41 +200,35 @@
                     <Ellipse Width="15" Height="15" Fill="Gray" Margin="2" StrokeThickness="1" Stroke="Black"/>
                 </StackPanel>
 
-                <!--#region Name -->
-                <TextBlock Style="{StaticResource textDiscription}" Text="Name"/>
+                <ProgressBar IsIndeterminate="True" 
+                     Margin="20"
+                     Visibility="{Binding VisibilityProgres}"/>
+                
+                <!--#region Email -->
+                <TextBlock Style="{StaticResource textDiscription}" Text="Email"/>
 
-                <TextBox Text="{Binding Path= UserName, UpdateSourceTrigger=PropertyChanged}">
+                <TextBox Text="{Binding Path= UserEmail, UpdateSourceTrigger=PropertyChanged}">
                     <TextBox.Background>
                         <ImageBrush ImageSource="/Resources/Images/user-icon.png" Stretch="None" AlignmentX="Left"/>
                     </TextBox.Background>
                 </TextBox>
                 <!--#endregion -->
 
-                <!--#region Surname -->
-                <TextBlock Style="{StaticResource textDiscription}" Text="Surname"/>
+                <!--#region Password -->
+                <TextBlock Style="{StaticResource textDiscription}" Text="Password"/>
 
-                <TextBox Text="{Binding Path= UserSurname, UpdateSourceTrigger=PropertyChanged}">
-                    <TextBox.Background>
-                        <ImageBrush ImageSource="/Resources/Images/user-icon.png" Stretch="None" AlignmentX="Left"/>
-                    </TextBox.Background>
-                </TextBox>
-                <!--#endregion -->
-
-                <!--#region TelephoneNumber -->
-                <TextBlock Style="{StaticResource textDiscription}" Text="Telephone Number"/>
-
-                <TextBox Text="{Binding Path= UserTelephoneNumber, UpdateSourceTrigger=PropertyChanged}">
-                    <TextBox.Background>
-                        <ImageBrush ImageSource="/Resources/Images/tel-icon.png" Stretch="None" AlignmentX="Left"/>
-                    </TextBox.Background>
-                </TextBox>
+                <PasswordBox x:Name="userPassword">
+                    <PasswordBox.Background>
+                        <ImageBrush ImageSource="/Resources/Images/key-icon.png" Stretch="None" AlignmentX="Left"/>
+                    </PasswordBox.Background>
+                </PasswordBox>
                 <!--#endregion -->
 
                 <TextBlock Text="{Binding Path= ErrorMessage, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource errorText}"/>
 
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                    <Button Content="CANCEL" Background="Gray" Command="{Binding CancelCommand}"/>
-                    <Button Content="NEXT" Command="{Binding NextCommand}"/>
+                    <Button Content="BACK" Background="Gray" Command="{Binding PrevCommand}"/>
+                    <Button Content="FINISH" Command="{Binding FinishCommand}" CommandParameter="{Binding ElementName=userPassword}"/>
                 </StackPanel>
             </StackPanel>
             <!--#endregion -->
