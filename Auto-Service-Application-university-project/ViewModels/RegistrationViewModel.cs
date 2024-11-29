@@ -118,7 +118,7 @@ namespace Auto_Service_Application_university_project.ViewModels
                 // second part
                 if (_currentPart == 1 && CheckInputSecondPart())
             {
-                //CurrentPart++;
+                CurrentPart++;
             }
 
         }

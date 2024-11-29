@@ -69,8 +69,8 @@
 
             <TextBlock Text="REGISTRATION" Style="{StaticResource pageTextDiscription}"/>
             
-            <!--#region First Page Visibility="{Binding VisibilityFirst}" -->
-            <StackPanel Grid.Row="1" Orientation="Vertical" Style="{StaticResource mainStackPanel}" Visibility="Collapsed">
+            <!--#region First Page -->
+            <StackPanel Grid.Row="1" Orientation="Vertical" Style="{StaticResource mainStackPanel}" Visibility="{Binding VisibilityFirst}">
                 
                 <Image Source="/Resources/Images/registration.png" Height="120" Width="120"/>
 
@@ -119,8 +119,8 @@
             </StackPanel>
             <!--#endregion -->
 
-            <!--#region Second Page Visibility="{Binding VisibilitySecond}" -->
-            <StackPanel Grid.Row="1" Orientation="Vertical" Style="{StaticResource mainStackPanel}" Visibility="Collapsed">
+            <!--#region Second Page  -->
+            <StackPanel Grid.Row="1" Orientation="Vertical" Style="{StaticResource mainStackPanel}" Visibility="{Binding VisibilitySecond}">
 
                 <Image Source="/Resources/Images/registration.png" Height="120" Width="120"/>
 
@@ -190,7 +190,7 @@
             <!--#endregion -->
 
             <!--#region Third Page-->
-            <StackPanel Grid.Row="1" Orientation="Vertical" Style="{StaticResource mainStackPanel}">
+            <StackPanel Grid.Row="1" Orientation="Vertical" Style="{StaticResource mainStackPanel}" Visibility="{Binding VisibilityThird}">
 
                 <Image Source="/Resources/Images/registration.png" Height="120" Width="120"/>
 
