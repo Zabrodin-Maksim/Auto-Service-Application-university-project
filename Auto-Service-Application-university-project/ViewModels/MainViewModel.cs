@@ -43,6 +43,7 @@ namespace Auto_Service_Application_university_project.ViewModels
             NavigateToLoginCommand = new MyICommand(() => _navigationService.Navigate(ViewTupes.LoginView));
             NavigateToRegistration = new MyICommand(() => _navigationService.Navigate(ViewTupes.Registration));
 
+
             // First Page
             NavigateToLoginCommand.Execute(null);
             #endregion

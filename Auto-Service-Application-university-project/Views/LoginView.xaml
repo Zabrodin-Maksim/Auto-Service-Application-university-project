@@ -77,11 +77,11 @@
 
                 <ProgressBar IsIndeterminate="True" 
                              Margin="20"
-                             Visibility="{Binding IsLoggingIn}"/>
+                             Visibility="{Binding VisibilityProgres}"/>
 
                 <TextBlock Text="Email" Style="{StaticResource textDiscription}"/>
 
-                <TextBox>
+                <TextBox Text="{Binding Path= Email, UpdateSourceTrigger=PropertyChanged}">
                     <TextBox.Background>
                         <ImageBrush ImageSource="/Resources/Images/user-icon.png" Stretch="None" AlignmentX="Left"/>
                     </TextBox.Background>
@@ -89,15 +89,15 @@
 
                 <TextBlock Text="Password" Style="{StaticResource textDiscription}"/>
 
-                <TextBox>
+                <TextBox Text="{Binding Path= Password, UpdateSourceTrigger=PropertyChanged}">
                     <TextBox.Background>
                         <ImageBrush ImageSource="/Resources/Images/key-icon.png" Stretch="None" AlignmentX="Left"/>
                     </TextBox.Background>
                 </TextBox>
 
-                <TextBlock Text="{Binding ErrorMessage}" Style="{StaticResource errorText}"/>
+                <TextBlock Text="{Binding Path=ErrorMessage, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource errorText}"/>
 
-                <Button Content="LOG IN"/>
+                <Button Content="LOG IN" Command="{Binding LoginCommand}"/>
 
             </StackPanel>
         </Grid>

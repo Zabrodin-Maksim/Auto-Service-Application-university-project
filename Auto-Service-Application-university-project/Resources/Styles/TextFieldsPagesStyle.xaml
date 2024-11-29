@@ -9,7 +9,7 @@
         <Setter Property="Foreground" Value="DarkGray"/>
     </Style>
 
-    <!-- Style Stack Panel -->
+    <!-- Style Stack Panel Register page -->
     <Style x:Key="mainStackPanel" TargetType="StackPanel">
         <Setter Property="HorizontalAlignment" Value="Center"/>
         <Setter Property="VerticalAlignment" Value="Top"/>
@@ -17,15 +17,15 @@
         <Setter Property="MinWidth" Value="290"/>
     </Style>
 
-    <!-- Style Text-->
+    <!-- Style Text Register page-->
     <Style x:Key="textDiscription" TargetType="TextBlock">
         <Setter Property="Foreground" Value="DarkGray"/>
         <Setter Property="FontSize" Value="12"/>
         <Setter Property="FontWeight" Value="Medium"/>
-        <Setter Property="Margin" Value="0,35,0,0"/>
+        <Setter Property="Margin" Value="0,25,0,0"/>
     </Style>
 
-    <!-- Style Text Box-->
+    <!-- Style Text Box Register page-->
     <Style TargetType="TextBox">
         <Setter Property="FontSize" Value="13"/>
         <Setter Property="FontWeight" Value="Medium"/>
