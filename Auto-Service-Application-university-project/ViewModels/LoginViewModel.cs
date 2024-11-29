@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace Auto_Service_Application_university_project.ViewModels
@@ -23,7 +24,6 @@ namespace Auto_Service_Application_university_project.ViewModels
 
         #region Properties
         public string Email { get => _email; set => SetProperty(ref _email, value, nameof(Email)); }
-        public string Password { get => _password; set => SetProperty(ref _password, value, nameof(Password)); }
         public string ErrorMessage { get => _errorMessage; set => SetProperty(ref _errorMessage, value, nameof(ErrorMessage)); }
 
         public Visibility VisibilityProgres { get => _visibilityLoginProgres; private set => SetProperty(ref _visibilityLoginProgres, value, nameof(VisibilityProgres)); }
@@ -38,14 +38,36 @@ namespace Auto_Service_Application_university_project.ViewModels
         {
             _mainViewModel = mainViewModel;
 
-            LoginCommand = new MyICommand(OnClickLogIn);
+            LoginCommand = new MyICommand<object>(OnClickLogIn);
         }
         // TODO: Добавить команду логин через асинк 
-        private void OnClickLogIn()
+        private void OnClickLogIn(object parameter)
         {
             
             VisibilityProgres = Visibility.Visible;
+            if (parameter is PasswordBox passwordBox)
+            {
+                _password = passwordBox.Password;
+                if (CheckInput())
+                {
+                    // TODO: РЕАЛИЗОВАТЬ ВХОД
+                }
+            }
         }
 
+        private bool CheckInput()
+        {
+            if (string.IsNullOrEmpty(_email) || string.IsNullOrEmpty(_password))
+            {
+                VisibilityProgres = Visibility.Collapsed;
+                ErrorMessage = "";
+                ErrorMessage = "Fill in all the fields to continue.";
+                return false;
+            } else
+            {
+                ErrorMessage = "";
+                return true;
+            }
+        }
     }
 }

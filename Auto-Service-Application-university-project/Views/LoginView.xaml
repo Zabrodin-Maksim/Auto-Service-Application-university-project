@@ -89,15 +89,15 @@
 
                 <TextBlock Text="Password" Style="{StaticResource textDiscription}"/>
 
-                <TextBox Text="{Binding Path= Password, UpdateSourceTrigger=PropertyChanged}">
-                    <TextBox.Background>
+                <PasswordBox x:Name="passwordBox">
+                    <PasswordBox.Background>
                         <ImageBrush ImageSource="/Resources/Images/key-icon.png" Stretch="None" AlignmentX="Left"/>
-                    </TextBox.Background>
-                </TextBox>
+                    </PasswordBox.Background>
+                </PasswordBox>
 
                 <TextBlock Text="{Binding Path=ErrorMessage, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource errorText}"/>
 
-                <Button Content="LOG IN" Command="{Binding LoginCommand}"/>
+                <Button Content="LOG IN" Command="{Binding LoginCommand}" CommandParameter="{Binding ElementName=passwordBox}"/>
 
             </StackPanel>
         </Grid>

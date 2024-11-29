@@ -217,8 +217,10 @@ namespace Auto_Service_Application_university_project.ViewModels
             if (parameter is PasswordBox passwordBox)
             {
                 _userPassword = passwordBox.Password;
-                CheckInputTirdPart();
-                // TODO: РЕАЛИЗОВАТЬ ПЕРЕХОД
+                if (CheckInputTirdPart())
+                {
+                    // TODO: РЕАЛИЗОВАТЬ ПЕРЕХОД
+                }
             }
             else
             {
