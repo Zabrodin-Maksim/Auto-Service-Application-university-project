@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using Auto_Service_Application_university_project.Models;
 
 namespace Auto_Service_Application_university_project.ViewModels
 {
@@ -99,8 +100,8 @@ namespace Auto_Service_Application_university_project.ViewModels
             NextCommand = new MyICommand(OnNext);
             PrevCommand = new MyICommand(OnBack);
             CancelCommand = new MyICommand(OnCancel);
-            // TODO: ДЛЯ АССИНХРОНИЗАЦИИ ОСПОЛЬЗОВАТЬ new MyICommand<object>(async parameter => await OnFinish(parameter));
-            FinishCommand = new MyICommand<object>(OnFinish);
+
+            FinishCommand = new MyICommand<object>(async parameter => await OnFinish(parameter));
         }
 
         #region Navigation between parts
@@ -168,6 +169,16 @@ namespace Auto_Service_Application_university_project.ViewModels
         {
             if (_userTelephoneNumber.All(char.IsDigit) && _userTelephoneNumber.Length <= 12 && !string.IsNullOrEmpty(_userTelephoneNumber))
             {
+                try
+                {
+                    int.Parse(_userTelephoneNumber);
+                }
+                catch (Exception ex)
+                {
+                    ErrorMessage = "";
+                    ErrorMessage = "Enter a valid phone number without + \nfor example '420123456789'";
+                    return false;
+                }
                 ErrorMessage = "";
                 return true;
             }
@@ -199,8 +210,20 @@ namespace Auto_Service_Application_university_project.ViewModels
         {
             if (new[] { _userCountry, _userCity, _userStreet, _userHouseNumber, _userPostCode }.Any(string.IsNullOrEmpty))
             {
+                
                 ErrorMessage = "";
                 ErrorMessage = "Fill in all the fields to continue.";
+                return false;
+            }
+            try
+            {
+                int.Parse(_userHouseNumber);
+                int.Parse(_userPostCode);
+            }
+            catch (Exception ex)
+            {
+                ErrorMessage = "";
+                ErrorMessage = "Fill in all the fields to continue and House Number and Post code without space.";
                 return false;
             }
             ErrorMessage = "";
@@ -209,8 +232,7 @@ namespace Auto_Service_Application_university_project.ViewModels
         #endregion
 
         #region Methods for Third part
-        // TODO: Сделать метод ассинхронным 
-        private void OnFinish(object parameter)
+        private async Task OnFinish(object parameter)
         {
             VisibilityProgres = Visibility.Visible;
 
@@ -219,7 +241,25 @@ namespace Auto_Service_Application_university_project.ViewModels
                 _userPassword = passwordBox.Password;
                 if (CheckInputTirdPart())
                 {
-                    // TODO: РЕАЛИЗОВАТЬ ПЕРЕХОД
+                    User newUser = new User()
+                    {
+                        Name = _userName + " " + _userSurname,
+                        Phone = int.Parse(_userTelephoneNumber),
+                        Address = new Address()
+                        {
+                            Country = _userCountry,
+                            City = _userCity,
+                            Street = _userStreet,
+                            HouseNumber = int.Parse(_userHouseNumber),
+                            IndexAdd = int.Parse(_userPostCode)
+                        },
+                        Username = _userEmail,
+                        Password = _userPassword
+
+                    };
+
+                    await _mainViewModel.AddNewUser(newUser);
+                    _mainViewModel.NavigateToLoginCommand.Execute(null);
                 }
             }
             else
