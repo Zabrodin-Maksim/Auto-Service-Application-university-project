@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -38,10 +39,10 @@ namespace Auto_Service_Application_university_project.ViewModels
         {
             _mainViewModel = mainViewModel;
 
-            LoginCommand = new MyICommand<object>(OnClickLogIn);
+            LoginCommand = new MyICommand<object>(async parameter => await OnClickLogIn(parameter));
         }
         // TODO: Добавить команду логин через асинк 
-        private void OnClickLogIn(object parameter)
+        private async Task OnClickLogIn(object parameter)
         {
             
             VisibilityProgres = Visibility.Visible;
@@ -50,7 +51,18 @@ namespace Auto_Service_Application_university_project.ViewModels
                 _password = passwordBox.Password;
                 if (CheckInput())
                 {
-                    // TODO: РЕАЛИЗОВАТЬ ВХОД
+                    
+                    await _mainViewModel.AuthenticateUser(_email, _password);
+                    if (_mainViewModel.flagUserLogin)
+                    {
+                        // TODO: РЕАЛИЗОВАТЬ ВХОД
+                    }
+                    else
+                    {
+                        VisibilityProgres = Visibility.Collapsed;
+                        ErrorMessage = "";
+                        ErrorMessage = "user not found or password is incorrect";
+                    }
                 }
             }
         }

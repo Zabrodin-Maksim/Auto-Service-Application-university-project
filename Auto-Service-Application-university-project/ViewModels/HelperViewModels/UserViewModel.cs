@@ -22,9 +22,9 @@ namespace Auto_Service_Application_university_project.ViewModels.HelperViewModel
             await _userRepository.AddUser(newUser);
         }
 
-        public async Task Authorization(string userName, string userPassword)
+        public async Task<User> Authorization(string userName, string userPassword)
         {
-            await _userRepository.AuthenticateUserAsync(userName, userPassword);
+            return await _userRepository.AuthenticateUserAsync(userName, userPassword);
         }
     }
 }

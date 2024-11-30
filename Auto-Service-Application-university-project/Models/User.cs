@@ -15,6 +15,8 @@ namespace Auto_Service_Application_university_project.Models
         public int Phone { get; set; }
         public Address Address { get; set; }
 
+        public int RoleId {  get; set; }
+
 
 
     }

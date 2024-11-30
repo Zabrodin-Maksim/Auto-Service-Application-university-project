@@ -26,9 +26,11 @@ namespace Auto_Service_Application_university_project.Data
                 {
                     command.CommandType = CommandType.StoredProcedure;
 
+                    string hashedPassword = _passwordHasher.HashPassword(newUser.Password);
+
                     // Входные параметры
                     command.Parameters.Add("p_username", OracleDbType.Varchar2).Value = newUser.Username;
-                    command.Parameters.Add("p_password", OracleDbType.Varchar2).Value = newUser.Password;
+                    command.Parameters.Add("p_password", OracleDbType.Varchar2).Value = hashedPassword;
                     command.Parameters.Add("p_name", OracleDbType.Varchar2).Value = newUser.Name;
                     command.Parameters.Add("p_phone", OracleDbType.Int64).Value = newUser.Phone;
                     command.Parameters.Add("p_country", OracleDbType.Varchar2).Value = newUser.Address.Country;
@@ -51,7 +53,7 @@ namespace Auto_Service_Application_university_project.Data
             }
         }
 
-        public async Task<User> AuthenticateUserAsync(string username, string password)
+        public async Task<User> AuthenticateUserAsync(string username, string userPassword)
         {
             using (var connection = new OracleConnection(connectionString))
             {
@@ -63,45 +65,74 @@ namespace Auto_Service_Application_university_project.Data
 
                     // Входные параметры
                     command.Parameters.Add("p_username", OracleDbType.Varchar2).Value = username;
-                    command.Parameters.Add("p_password", OracleDbType.Varchar2).Value = password;
 
                     // Выходные параметры
-                    var userIdParam = new OracleParameter("p_user_id", OracleDbType.Int32)
+                    var usernameOutParam = new OracleParameter("p_username_out", OracleDbType.Varchar2, 30)
                     {
                         Direction = ParameterDirection.Output
                     };
-                    command.Parameters.Add(userIdParam);
+                    command.Parameters.Add(usernameOutParam);
 
-                    var nameParam = new OracleParameter("p_name", OracleDbType.Varchar2, 40)
+                    var passwordOutParam = new OracleParameter("p_password", OracleDbType.Varchar2, 100)
                     {
                         Direction = ParameterDirection.Output
                     };
-                    command.Parameters.Add(nameParam);
+                    command.Parameters.Add(passwordOutParam);
 
+                    var userIdOutParam = new OracleParameter("p_user_id", OracleDbType.Int32)
+                    {
+                        Direction = ParameterDirection.Output
+                    };
+                    command.Parameters.Add(userIdOutParam);
+
+                    var nameOutParam = new OracleParameter("p_name", OracleDbType.Varchar2, 40)
+                    {
+                        Direction = ParameterDirection.Output
+                    };
+                    command.Parameters.Add(nameOutParam);
+
+                    var roleIdParam = new OracleParameter("p_role_id", OracleDbType.Int32)
+                    {
+                        Direction = ParameterDirection.Output
+                    };
+                    command.Parameters.Add(roleIdParam);
 
                     try
                     {
                         await command.ExecuteNonQueryAsync();
 
                         // Получение выходных параметров
-                        int userId = Convert.ToInt32(userIdParam.Value.ToString());
-                        string name = nameParam.Value.ToString();
+                        string usernameOut = usernameOutParam.Value.ToString();
+                        string password = passwordOutParam.Value.ToString();
+                        int userId = Convert.ToInt32(userIdOutParam.Value.ToString());
+                        string name = nameOutParam.Value.ToString();
+                        int roleId = Convert.ToInt32(roleIdParam.Value.ToString());
 
-
-                        return new User
+                        if (_passwordHasher.VerifyPassword(userPassword, password))
                         {
-                            UserId = userId,
-                            Username = username,
-                            Name = name,
-                            Password = password,
-                            // Дополнительно можно загрузить Address, если необходимо
-                        };
+                            return new User
+                            {
+                                UserId = userId,
+                                Username = usernameOut,
+                                Password = password,
+                                Name = name,
+                                RoleId = roleId
+                                // Дополнительно можно загрузить Address, если необходимо
+                            };
+                        }else
+                        {
+                            return null;
+                        }
+
+                        
                     }
                     catch (OracleException ex)
                     {
-                        // Обработка ошибок, например, неверный логин/пароль
-                        throw new ApplicationException($"Authentication failed: {ex.Message}", ex);
+                        // Обработка ошибок, например, неверный логин
+                        throw new ApplicationException($"Ошибка при аутентификации: {ex.Message}", ex);
                     }
                 }
             }
+        }
+    }
 }

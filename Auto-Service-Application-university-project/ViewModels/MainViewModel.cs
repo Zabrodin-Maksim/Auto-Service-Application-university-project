@@ -35,6 +35,8 @@ namespace Auto_Service_Application_university_project.ViewModels
 
         //User 
         public bool flagUserLogin;
+
+        public User AuthenticatedUser;
         #endregion
 
         #region Commands
@@ -77,6 +79,31 @@ namespace Auto_Service_Application_university_project.ViewModels
             catch (Exception ex)
             {
                 Debug.WriteLine($"[INFO]Error adding new User: {ex.Message}");
+            }
+        }
+
+        public async Task AuthenticateUser(string userName, string userPassword)
+        {
+            try
+            {
+                AuthenticatedUser = await _userVM.Authorization(userName, userPassword);
+                if (AuthenticatedUser == null)
+                {
+                    flagUserLogin = false;
+                    AuthenticatedUser = null;
+                }
+                else
+                {
+                    Debug.WriteLine($"[INFO] User Authorization successfully: {AuthenticatedUser.Name}");
+                    flagUserLogin = true;
+                }
+                
+            }
+            catch (Exception ex)
+            {
+                flagUserLogin = false;
+                AuthenticatedUser = null;
+                Debug.WriteLine($"[INFO]Error Authenticate User: {ex.Message}");
             }
         }
         #endregion
