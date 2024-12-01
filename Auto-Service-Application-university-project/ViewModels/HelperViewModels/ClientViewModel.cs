@@ -22,5 +22,31 @@ namespace Auto_Service_Application_university_project.ViewModels.HelperViewModel
         {
             return await _clientRepository.GetAllClientsAsync();
         }
+
+        public async Task UpdateClient(int clientId, string clientName, Address clientAdress, int Phone)
+        {
+            await _clientRepository.UpdateClientAsync(new Client()
+            {
+                ClientId = clientId,
+                ClientName = clientName,
+                Address = clientAdress,
+                Phone = Phone
+            });
+        }
+
+        public async Task AddClient (string clientName, Address clientAdress, int Phone)
+        {
+            await _clientRepository.InsertClientAsync(new Client()
+            {
+                ClientName = clientName,
+                Address = clientAdress,
+                Phone = Phone
+            });
+        }
+
+        public async Task DeleteClient(int clientId)
+        {
+            await _clientRepository.DeleteClientAsync(clientId);
+        }
     }
 }

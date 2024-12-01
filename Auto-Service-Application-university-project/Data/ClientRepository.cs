@@ -69,5 +69,94 @@ namespace Auto_Service_Application_university_project.Data
 
             return clients;
         }
+
+        public async Task UpdateClientAsync(Client client)
+        {
+            using (var connection = new OracleConnection(connectionString))
+            {
+                await connection.OpenAsync();
+
+                using (var command = new OracleCommand("client_pkg.update_client", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    // Входные параметры
+                    command.Parameters.Add("p_client_id", OracleDbType.Int32).Value = client.ClientId;
+                    command.Parameters.Add("p_name_customer", OracleDbType.Varchar2).Value = client.ClientName;
+                    command.Parameters.Add("p_country", OracleDbType.Varchar2).Value = client.Address.Country;
+                    command.Parameters.Add("p_city", OracleDbType.Varchar2).Value = client.Address.City;
+                    command.Parameters.Add("p_index_add", OracleDbType.Int32).Value = client.Address.IndexAdd;
+                    command.Parameters.Add("p_street", OracleDbType.Varchar2).Value = client.Address.Street;
+                    command.Parameters.Add("p_house_number", OracleDbType.Int32).Value = client.Address.HouseNumber;
+                    command.Parameters.Add("p_phone", OracleDbType.Int64).Value = client.Phone;
+
+                    try
+                    {
+                        await command.ExecuteNonQueryAsync();
+                    }
+                    catch (OracleException ex)
+                    {
+                        throw new ApplicationException($"Ошибка при обновлении клиента: {ex.Message}", ex);
+                    }
+                }
+            }
+        }
+
+        public async Task InsertClientAsync(Client client)
+        {
+            using (var connection = new OracleConnection(connectionString))
+            {
+                await connection.OpenAsync();
+
+                using (var command = new OracleCommand("client_pkg.insert_client", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    // Входные параметры
+                    command.Parameters.Add("p_name_customer", OracleDbType.Varchar2).Value = client.ClientName;
+                    command.Parameters.Add("p_country", OracleDbType.Varchar2).Value = client.Address.Country;
+                    command.Parameters.Add("p_city", OracleDbType.Varchar2).Value = client.Address.City;
+                    command.Parameters.Add("p_index_add", OracleDbType.Int32).Value = client.Address.IndexAdd;
+                    command.Parameters.Add("p_street", OracleDbType.Varchar2).Value = client.Address.Street;
+                    command.Parameters.Add("p_house_number", OracleDbType.Int32).Value = client.Address.HouseNumber;
+                    command.Parameters.Add("p_phone", OracleDbType.Int64).Value = client.Phone;
+
+                    try
+                    {
+                        await command.ExecuteNonQueryAsync();
+                    }
+                    catch (OracleException ex)
+                    {
+                        // Обработка ошибок, связанных с хранимыми процедурами
+                        throw new ApplicationException($"Ошибка при вставке клиента: {ex.Message}", ex);
+                    }
+                }
+            }
+        }
+
+        public async Task DeleteClientAsync(int clientId)
+        {
+            using (var connection = new OracleConnection(connectionString))
+            {
+                await connection.OpenAsync();
+
+                using (var command = new OracleCommand("client_pkg.delete_client", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    // Входные параметры
+                    command.Parameters.Add("p_client_id", OracleDbType.Int32).Value = clientId;
+
+                    try
+                    {
+                        await command.ExecuteNonQueryAsync();
+                    }
+                    catch (OracleException ex)
+                    {
+                        throw new ApplicationException($"Ошибка при удалении клиента: {ex.Message}", ex);
+                    }
+                }
+            }
+        }
     }
 }

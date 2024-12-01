@@ -67,7 +67,12 @@ namespace Auto_Service_Application_university_project.ViewModels
             { 
                 if(CheckInputsNumber(value))
                 { 
-                    SetProperty(ref _userTelephoneNumber, value, nameof(UserTelephoneNumber)); 
+                    if (value.Length <=9)
+                    { SetProperty(ref _userTelephoneNumber, value, nameof(UserTelephoneNumber)); }
+                    else
+                    {
+                        ErrorMessage = "Maximum 9 numbers of Phone";
+                    }
                 }
             } }
         

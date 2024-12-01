@@ -106,7 +106,7 @@ namespace Auto_Service_Application_university_project.ViewModels
                 {
                     Debug.WriteLine($"[INFO] User Authorization successfully: {authenticatedUser.Name}");
                     flagUserLogin = true;
-                    await FillinOutAllLists();
+                    await FillinOutClientsLists();
                 }
                 
             }
@@ -119,8 +119,45 @@ namespace Auto_Service_Application_university_project.ViewModels
         }
         #endregion
 
-        // TODO: Реализовать после авторитизации заполнение всех листов
-        private async Task FillinOutAllLists()
+        #region Client Data Mehtods
+
+        public async Task UpdateClient(int clientId, string clientName, Address clientAdress, int Phone)
+        {
+            try
+            {
+                await _clientVM.UpdateClient(clientId, clientName, clientAdress, Phone);
+            }
+            catch (Exception ex) 
+            {
+                Debug.WriteLine($"[INFO]Error Update Client: {ex.Message}");
+            }
+        }
+
+        public async Task AddClient(string clientName, Address clientAdress, int Phone)
+        {
+            try
+            {
+                await _clientVM.AddClient(clientName, clientAdress, Phone);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"[INFO]Error Add new Client: {ex.Message}");
+            }
+        }
+
+        public async Task DeleteClient(int clientId)
+        {
+            try
+            {
+                await _clientVM.DeleteClient(clientId);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"[INFO]Error Delete Client: {ex.Message}");
+            }
+        }
+
+        public async Task FillinOutClientsLists()
         {
             if (flagUserLogin)
             {
@@ -131,5 +168,9 @@ namespace Auto_Service_Application_university_project.ViewModels
                 Debug.WriteLine("[INFO] Non Authoricated");
             }
         }
+        #endregion
+
+        // TODO: Реализовать после авторитизации заполнение всех листов
+
     }
 }

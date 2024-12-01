@@ -1,0 +1,199 @@
+﻿<UserControl x:Class="Auto_Service_Application_university_project.Views.OrderView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Auto_Service_Application_university_project.Views"
+             mc:Ignorable="d" 
+                          xmlns:fa="http://schemas.fontawesome.io/icons/" 
+             d:DesignHeight="740" d:DesignWidth="870">
+    <UserControl.Resources>
+
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Resources/Styles/TextFieldsPagesStyle.xaml"/>
+                <ResourceDictionary Source="/Resources/Styles/ColorsStyle.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+
+            <!-- Style Button-->
+            <Style TargetType="Button">
+                <Setter Property="BorderBrush" Value="Transparent"/>
+                <Setter Property="IsDefault" Value="True"/>
+                <Setter Property="Foreground" Value="White"/>
+                <Setter Property="FontSize" Value="22"/>
+                <Setter Property="Cursor" Value="Hand"/>
+
+                <Setter Property="Margin" Value="10,20,10,0"/>
+                <Setter Property="Background" Value="{StaticResource backgroundButton}"/>
+
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Border Background="{TemplateBinding Background}" CornerRadius="20" Padding="25,0,25,0">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+
+                <Style.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="Background" Value="#84cc16"/>
+                        <Setter Property="BorderBrush" Value="Transparent"/>
+                        <Setter Property="Effect">
+                            <Setter.Value>
+                                <DropShadowEffect Color="LightBlue" 
+                                            BlurRadius="25" 
+                                            ShadowDepth="0" 
+                                            Opacity="1"/>
+                            </Setter.Value>
+                        </Setter>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+
+            <!-- Style List Box-->
+            <Style TargetType="ListView" x:Key="ListOfClients">
+                <Setter Property="MaxWidth" Value="440"/>
+                <Setter Property="Background" Value="LightGray"/>
+                <Setter Property="Foreground" Value="red"/>
+                <Setter Property="FontSize" Value="15"/>
+            </Style>
+
+
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+
+    <Grid>
+        <Grid.Background>
+            <ImageBrush ImageSource="/Resources/Images/login-background.jpg" Stretch="UniformToFill"/>
+        </Grid.Background>
+
+        <Grid Background="{StaticResource backgroundMain}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="0.05*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock Style="{StaticResource pageTextDiscription}" Text="Order"/>
+
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Part of Tools -->
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="0.15*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" >
+                        <Button Content="Add New Order" Command="{Binding addUpdateCommand}"/>
+                        <Button Content="Clear" Command="{Binding clearCommand}"/>
+                    </StackPanel>
+
+                    <Separator Grid.Row="1" VerticalAlignment="Top" Height="10"/>
+
+                    <StackPanel Grid.Row="1" Margin="10">
+
+                        <!--#region Client Name-->
+                        <TextBlock Style="{StaticResource textDiscription}" Text="Client Name" Margin="10"/>
+                        <TextBox Text="{Binding Path= ClientName, UpdateSourceTrigger=PropertyChanged}">
+                            <TextBox.Background>
+                                <ImageBrush ImageSource="/Resources/Images/user-icon.png" Stretch="None" AlignmentX="Left"/>
+                            </TextBox.Background>
+                        </TextBox>
+                        <!--#endregion-->
+
+                        <!--#region Client Phone-->
+                        <TextBlock Style="{StaticResource textDiscription}" Text="Client Phone" Margin="10"/>
+                        <TextBox Text="{Binding Path= ClientPhone, UpdateSourceTrigger=PropertyChanged}">
+                            <TextBox.Background>
+                                <ImageBrush ImageSource="/Resources/Images/tel-icon.png" Stretch="None" AlignmentX="Left"/>
+                            </TextBox.Background>
+                        </TextBox>
+                        <!--#endregion-->
+
+                        <!--#region Client Country -->
+                        <TextBlock Style="{StaticResource textDiscription}" Text="Client Country" Margin="10"/>
+                        <TextBox Text="{Binding Path= ClientCountry, UpdateSourceTrigger=PropertyChanged}">
+                            <TextBox.Background>
+                                <ImageBrush ImageSource="/Resources/Images/home-icon.png" Stretch="None" AlignmentX="Left"/>
+                            </TextBox.Background>
+                        </TextBox>
+                        <!--#endregion-->
+
+                        <!--#region Client City -->
+                        <TextBlock Style="{StaticResource textDiscription}" Text="Client City" Margin="10"/>
+                        <TextBox Text="{Binding Path= ClientCity, UpdateSourceTrigger=PropertyChanged}">
+                            <TextBox.Background>
+                                <ImageBrush ImageSource="/Resources/Images/home-icon.png" Stretch="None" AlignmentX="Left"/>
+                            </TextBox.Background>
+                        </TextBox>
+                        <!--#endregion-->
+
+                        <!--#region Client Index -->
+                        <TextBlock Style="{StaticResource textDiscription}" Text="Client Index" Margin="10"/>
+                        <TextBox Text="{Binding Path= ClientIndex, UpdateSourceTrigger=PropertyChanged}">
+                            <TextBox.Background>
+                                <ImageBrush ImageSource="/Resources/Images/home-icon.png" Stretch="None" AlignmentX="Left"/>
+                            </TextBox.Background>
+                        </TextBox>
+                        <!--#endregion-->
+
+                        <!--#region Client Street -->
+                        <TextBlock Style="{StaticResource textDiscription}" Text="Client Street" Margin="10"/>
+                        <TextBox Text="{Binding Path= ClientStreet, UpdateSourceTrigger=PropertyChanged}">
+                            <TextBox.Background>
+                                <ImageBrush ImageSource="/Resources/Images/home-icon.png" Stretch="None" AlignmentX="Left"/>
+                            </TextBox.Background>
+                        </TextBox>
+                        <!--#endregion-->
+
+                        <!--#region Client House Number -->
+                        <TextBlock Style="{StaticResource textDiscription}" Text="Client House Number " Margin="10"/>
+                        <TextBox Text="{Binding Path= ClientHouseNumber, UpdateSourceTrigger=PropertyChanged}">
+                            <TextBox.Background>
+                                <ImageBrush ImageSource="/Resources/Images/home-icon.png" Stretch="None" AlignmentX="Left"/>
+                            </TextBox.Background>
+                        </TextBox>
+                        <!--#endregion-->
+
+                        <!--#region Client House Number -->
+                        <TextBlock Text="{Binding ErrorMessage}" Style="{StaticResource errorText}"/>
+                        <!--#endregion-->
+
+                    </StackPanel>
+                </Grid>
+
+                <!-- Part of Clients -->
+                <Grid Grid.Column="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="0.03*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Text="List of Clients" Style="{StaticResource textDiscription}" Margin="0" Grid.Row="0"/>
+                    <ListView Style="{StaticResource ListOfClients}"  Grid.Row="1"
+                             ItemsSource="{Binding Clients}"
+                             SelectedItem="{Binding SelectedClient}" 
+                             >
+                        <ListView.View >
+                            <GridView >
+                                <GridViewColumn Header="Name" DisplayMemberBinding="{Binding ClientName}" Width="145"/>
+                                <GridViewColumn Header="Phone" DisplayMemberBinding="{Binding Phone}" Width="125"/>
+                                <GridViewColumn Header="Address" DisplayMemberBinding="{Binding ShortAdress}" Width="165"/>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </Grid>
+
+            </Grid>
+        </Grid>
+    </Grid>
+</UserControl>
