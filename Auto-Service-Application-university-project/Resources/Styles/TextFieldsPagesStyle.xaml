@@ -9,7 +9,7 @@
         <Setter Property="Foreground" Value="DarkGray"/>
     </Style>
 
-    <!-- Style Stack Panel Register page -->
+    <!-- Style Stack Panel Register page and Login -->
     <Style x:Key="mainStackPanel" TargetType="StackPanel">
         <Setter Property="HorizontalAlignment" Value="Center"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
@@ -17,7 +17,7 @@
         <Setter Property="MinWidth" Value="290"/>
     </Style>
 
-    <!-- Style Text Register page-->
+    <!-- Style Text Register page and Login -->
     <Style x:Key="textDiscription" TargetType="TextBlock">
         <Setter Property="Foreground" Value="DarkGray"/>
         <Setter Property="FontSize" Value="12"/>
@@ -25,7 +25,7 @@
         <Setter Property="Margin" Value="0,25,0,0"/>
     </Style>
 
-    <!-- Style Text Box Register page-->
+    <!-- Style Text Box Register page and Login -->
     <Style TargetType="TextBox">
         <Setter Property="FontSize" Value="13"/>
         <Setter Property="FontWeight" Value="Medium"/>
@@ -39,7 +39,7 @@
         <Setter Property="Padding" Value="20,0,0,0"/>
     </Style>
 
-    <!-- Style Password Box Register page-->
+    <!-- Style Password Box Register page and Login -->
     <Style TargetType="PasswordBox">
         <Setter Property="FontSize" Value="13"/>
         <Setter Property="FontWeight" Value="Medium"/>

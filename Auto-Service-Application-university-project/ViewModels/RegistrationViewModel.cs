@@ -57,12 +57,20 @@ namespace Auto_Service_Application_university_project.ViewModels
             }
         }
 
+        public string ErrorMessage { get => _errorMessage; set => SetProperty(ref _errorMessage, value, nameof(ErrorMessage)); }
+
         #region First Part
         public Visibility VisibilityFirst { get => _visibilityFirst; private set => SetProperty(ref _visibilityFirst, value, nameof(VisibilityFirst)); }
         public string UserName { get => _userName; set => SetProperty(ref _userName, value, nameof(UserName)); }
         public string UserSurname { get => _userSurname; set => SetProperty(ref _userSurname, value, nameof(UserSurname)); }
-        public string UserTelephoneNumber { get => _userTelephoneNumber; set => SetProperty(ref _userTelephoneNumber, value, nameof(UserTelephoneNumber)); }
-        public string ErrorMessage { get => _errorMessage; set => SetProperty(ref _errorMessage, value, nameof(ErrorMessage)); }
+        public string UserTelephoneNumber { get => _userTelephoneNumber; set  
+            { 
+                if(CheckInputsNumber(value))
+                { 
+                    SetProperty(ref _userTelephoneNumber, value, nameof(UserTelephoneNumber)); 
+                }
+            } }
+        
         #endregion
 
         #region Second Part
@@ -70,8 +78,20 @@ namespace Auto_Service_Application_university_project.ViewModels
         public string UserCountry { get => _userCountry; set => SetProperty(ref _userCountry, value, nameof(UserCountry)); }
         public string UserCity { get => _userCity; set => SetProperty(ref _userCity, value, nameof(UserCity)); }
         public string UserStreet { get => _userStreet; set => SetProperty(ref _userStreet, value, nameof(UserStreet)); }
-        public string UserHouseNumber { get => _userHouseNumber; set => SetProperty(ref _userHouseNumber, value, nameof(UserHouseNumber)); }
-        public string UserPostCode { get => _userPostCode; set => SetProperty(ref _userPostCode, value, nameof(UserPostCode)); }
+        public string UserHouseNumber { get => _userHouseNumber; set  
+            {
+                if (CheckInputsNumber(value))
+                {
+                    SetProperty(ref _userHouseNumber, value, nameof(UserHouseNumber));
+                }
+            } }
+        public string UserPostCode { get => _userPostCode; set 
+            {
+                if (CheckInputsNumber(value))
+                { 
+                    SetProperty(ref _userPostCode, value, nameof(UserPostCode)); 
+                }
+            } }
         #endregion
 
         #region Third Part
@@ -169,16 +189,6 @@ namespace Auto_Service_Application_university_project.ViewModels
         {
             if (_userTelephoneNumber.All(char.IsDigit) && _userTelephoneNumber.Length <= 12 && !string.IsNullOrEmpty(_userTelephoneNumber))
             {
-                try
-                {
-                    int.Parse(_userTelephoneNumber);
-                }
-                catch (Exception ex)
-                {
-                    ErrorMessage = "";
-                    ErrorMessage = "Enter a valid phone number without + \nfor example '420123456789'";
-                    return false;
-                }
                 ErrorMessage = "";
                 return true;
             }
@@ -223,7 +233,7 @@ namespace Auto_Service_Application_university_project.ViewModels
             catch (Exception ex)
             {
                 ErrorMessage = "";
-                ErrorMessage = "Fill in all the fields to continue and House Number and Post code without space.";
+                ErrorMessage = "House Number and Post code without space.";
                 return false;
             }
             ErrorMessage = "";
@@ -284,5 +294,19 @@ namespace Auto_Service_Application_university_project.ViewModels
             return true;
         }
         #endregion
+
+        private bool CheckInputsNumber(string parameterCheck)
+        {
+            if (parameterCheck.All(char.IsDigit))
+            {
+                ErrorMessage = "";
+                return true;
+            }
+            else
+            {
+                ErrorMessage = "Wrong input format!!!";
+                return false;
+            }
+        }
     }
 }

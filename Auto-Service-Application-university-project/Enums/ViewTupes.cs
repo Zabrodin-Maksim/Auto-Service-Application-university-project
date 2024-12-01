@@ -10,6 +10,7 @@ namespace Auto_Service_Application_university_project.Enums
     {
         MainView,
         LoginView,
-        Registration
+        Registration,
+        Clients
     }
 }

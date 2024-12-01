@@ -9,6 +9,7 @@ using Auto_Service_Application_university_project.Enums;
 using Auto_Service_Application_university_project.ViewModels.HelperViewModels;
 using System.Diagnostics;
 using Auto_Service_Application_university_project.Models;
+using System.Collections.ObjectModel;
 
 namespace Auto_Service_Application_university_project.ViewModels
 {
@@ -21,7 +22,11 @@ namespace Auto_Service_Application_university_project.ViewModels
 
 
         #region Data
+        // User
         private UserViewModel _userVM;
+
+        // Clients
+        private ClientViewModel _clientVM;
         #endregion
 
         #endregion
@@ -33,16 +38,21 @@ namespace Auto_Service_Application_university_project.ViewModels
             set => SetProperty(ref _currentViewModel, value, nameof(CurrentViewModel));
         }
 
-        //User 
+        // User 
         public bool flagUserLogin;
 
-        public User AuthenticatedUser;
+        public User authenticatedUser;
+
+        // Clients
+        public ObservableCollection<Client> Clients { get; set; }
         #endregion
 
         #region Commands
         //Navigation
         public ICommand NavigateToLoginCommand { get; }
         public ICommand NavigateToRegistration { get; }
+        public ICommand NavigateToClients { get; }
+
 
         #endregion
 
@@ -55,7 +65,7 @@ namespace Auto_Service_Application_university_project.ViewModels
             // Navigation Commands
             NavigateToLoginCommand = new MyICommand(() => _navigationService.Navigate(ViewTupes.LoginView));
             NavigateToRegistration = new MyICommand(() => _navigationService.Navigate(ViewTupes.Registration));
-
+            NavigateToClients = new MyICommand(() => _navigationService.Navigate(ViewTupes.Clients));
 
             // First Page
             NavigateToLoginCommand.Execute(null);
@@ -63,7 +73,7 @@ namespace Auto_Service_Application_university_project.ViewModels
 
             #region Init Data VM
             _userVM = new UserViewModel();
-
+            _clientVM = new ClientViewModel();
             #endregion
 
         }
@@ -86,26 +96,40 @@ namespace Auto_Service_Application_university_project.ViewModels
         {
             try
             {
-                AuthenticatedUser = await _userVM.Authorization(userName, userPassword);
-                if (AuthenticatedUser == null)
+                authenticatedUser = await _userVM.Authorization(userName, userPassword);
+                if (authenticatedUser == null)
                 {
                     flagUserLogin = false;
-                    AuthenticatedUser = null;
+                    authenticatedUser = null;
                 }
                 else
                 {
-                    Debug.WriteLine($"[INFO] User Authorization successfully: {AuthenticatedUser.Name}");
+                    Debug.WriteLine($"[INFO] User Authorization successfully: {authenticatedUser.Name}");
                     flagUserLogin = true;
+                    await FillinOutAllLists();
                 }
                 
             }
             catch (Exception ex)
             {
                 flagUserLogin = false;
-                AuthenticatedUser = null;
+                authenticatedUser = null;
                 Debug.WriteLine($"[INFO]Error Authenticate User: {ex.Message}");
             }
         }
         #endregion
+
+        // TODO: Реализовать после авторитизации заполнение всех листов
+        private async Task FillinOutAllLists()
+        {
+            if (flagUserLogin)
+            {
+                Clients = await _clientVM.GetAllClients();
+            }
+            else
+            {
+                Debug.WriteLine("[INFO] Non Authoricated");
+            }
+        }
     }
 }

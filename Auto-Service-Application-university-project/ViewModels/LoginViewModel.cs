@@ -55,7 +55,11 @@ namespace Auto_Service_Application_university_project.ViewModels
                     await _mainViewModel.AuthenticateUser(_email, _password);
                     if (_mainViewModel.flagUserLogin)
                     {
-                        // TODO: РЕАЛИЗОВАТЬ ВХОД
+                        // TODO: РЕАЛИЗОВАТЬ переходы в зависимости от ролей 
+                        if (_mainViewModel.authenticatedUser.RoleId == 3)
+                        {
+                            _mainViewModel.NavigateToClients.Execute(null);
+                        }
                     }
                     else
                     {

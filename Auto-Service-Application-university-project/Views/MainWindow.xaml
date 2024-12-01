@@ -132,8 +132,13 @@
             <DataTemplate DataType="{x:Type vm:LoginViewModel}">
                 <local1:LoginView/>
             </DataTemplate>
+            
             <DataTemplate DataType="{x:Type vm:RegistrationViewModel}">
                 <local1:Registration/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vm:ClientsViewModel}">
+                <local1:ClientsView/>
             </DataTemplate>
             <!--#endregion -->
 
@@ -195,10 +200,10 @@
 
                 <!-- Customer -->
 
-                <Button Grid.Row="4" Style="{StaticResource MenuButtons}">
+                <Button Grid.Row="4" Style="{StaticResource MenuButtons}" Command="{Binding NavigateToClients}">
                     <StackPanel Style="{StaticResource StackPanelMenu}" Grid.Row="4" Orientation="Horizontal">
                         <fa:FontAwesome Style="{StaticResource IconsStyle}" Icon="Users"/>
-                        <TextBlock Style="{StaticResource TextBlock}" Text="Customer"/>
+                        <TextBlock Style="{StaticResource TextBlock}" Text="Clients"/>
                     </StackPanel>
                 </Button>
 

@@ -28,6 +28,9 @@ namespace Auto_Service_Application_university_project.Services
                 case ViewTupes.Registration:
                     _mainViewModel.CurrentViewModel = new RegistrationViewModel(_mainViewModel); // To Registration
                     break;
+                case ViewTupes.Clients:
+                    _mainViewModel.CurrentViewModel = new ClientsViewModel(_mainViewModel); // To Clients
+                    break;
             }
         }
 
