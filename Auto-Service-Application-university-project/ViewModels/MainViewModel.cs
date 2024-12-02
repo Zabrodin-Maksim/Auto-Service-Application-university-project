@@ -20,6 +20,8 @@ namespace Auto_Service_Application_university_project.ViewModels
         // Navigation
         private readonly MyNavigationService _navigationService;
         private ViewModelBase _currentViewModel;
+        
+        // Visibles 
 
 
         #region Data
