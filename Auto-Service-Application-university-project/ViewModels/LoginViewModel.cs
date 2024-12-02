@@ -66,6 +66,9 @@ namespace Auto_Service_Application_university_project.ViewModels
                         ErrorMessage = "";
                         ErrorMessage = "user not found or password is incorrect";
                     }
+
+                    // Clear password field
+                    passwordBox.Password = "";
                 }
             }
         }

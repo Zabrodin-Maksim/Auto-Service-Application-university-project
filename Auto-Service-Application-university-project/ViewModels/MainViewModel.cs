@@ -191,6 +191,9 @@ namespace Auto_Service_Application_university_project.ViewModels
         {
             try
             {
+                // Hide before authorization
+                HideAllVisibilites();
+
                 authenticatedUser = await _userVM.Authorization(userName, userPassword);
                 if (authenticatedUser == null)
                 {
