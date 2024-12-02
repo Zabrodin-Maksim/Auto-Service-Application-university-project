@@ -234,6 +234,61 @@ namespace Auto_Service_Application_university_project.Data
             return cars;
         }
 
+        // Обновление резервации.
+        public async Task UpdateReservationAsync(Reservation reservation)
+        {
+            using (var connection = new OracleConnection(connectionString))
+            {
+                await connection.OpenAsync();
+
+                using (var command = new OracleCommand("reservation_pkg.update_reservation", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    // Входные параметры
+                    command.Parameters.Add("p_reservation_id", OracleDbType.Int32).Value = reservation.ReservationId;
+                    command.Parameters.Add("p_date_reservace", OracleDbType.Date).Value = reservation.DateReservace;
+                    command.Parameters.Add("p_office_office_id", OracleDbType.Int32).Value = reservation.Office.OfficeId;
+                    command.Parameters.Add("p_client_client_id", OracleDbType.Int32).Value = reservation.Client.ClientId;
+
+                    try
+                    {
+                        await command.ExecuteNonQueryAsync();
+                    }
+                    catch (OracleException ex)
+                    {
+                        throw new ApplicationException($"Ошибка при обновлении резервации: {ex.Message}", ex);
+                    }
+                }
+            }
+        }
+
+        // Удаление резервации по идентификатору.
+        public async Task DeleteReservationAsync(int reservationId)
+        {
+            using (var connection = new OracleConnection(connectionString))
+            {
+                await connection.OpenAsync();
+
+                using (var command = new OracleCommand("reservation_pkg.delete_reservation", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    // Входные параметры
+                    command.Parameters.Add("p_reservation_id", OracleDbType.Int32).Value = reservationId;
+
+                    try
+                    {
+                        await command.ExecuteNonQueryAsync();
+                    }
+                    catch (OracleException ex)
+                    {
+                        throw new ApplicationException($"Ошибка при удалении резервации: {ex.Message}", ex);
+                    }
+                }
+            }
+        }
+
         // Получение всех резерваций.
         public async Task<ObservableCollection<Reservation>> GetAllReservationsAsync()
         {
