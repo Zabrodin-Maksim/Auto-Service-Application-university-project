@@ -120,6 +120,8 @@ namespace Auto_Service_Application_university_project.ViewModels
         }
         // TODO: РЕАЛИЗОВАТЬ МЕТОД ВИСИБЛЕ ИНТЕРФЕЙСА ПО РОЛИ, В UserLogOut И AuthenticateUser
 
+        
+
         #region User Data Methods
         public async Task AddNewUser(User newUser)
         {

@@ -35,16 +35,19 @@ namespace Auto_Service_Application_university_project.ViewModels
         #endregion
 
         #region Properties
-        public Client SelectedClient { get => _selectedClient; set { 
+        public Client SelectedClient
+        {
+            get => _selectedClient; set
+            {
                 SetProperty(ref _selectedClient, value, nameof(SelectedClient));
                 FillAllParameters(value);
-            } 
+            }
         }
         public ObservableCollection<Client> Clients { get => _clients; set => SetProperty(ref _clients, value, nameof(Clients)); }
 
-        public string ClientName 
-        { 
-            get => _clientName; set 
+        public string ClientName
+        {
+            get => _clientName; set
             {
                 if (_selectedClient != null)
                 {
@@ -57,7 +60,7 @@ namespace Auto_Service_Application_university_project.ViewModels
                 {
                     SetProperty(ref _clientName, value, nameof(ClientName));
                 }
-            } 
+            }
         }
         public string ClientPhone
         {
@@ -157,7 +160,7 @@ namespace Auto_Service_Application_university_project.ViewModels
                 {
                     SetProperty(ref _clientStreet, value, nameof(ClientStreet));
                 }
-                
+
             }
         }
         public string ClientHouseNumber
@@ -197,12 +200,12 @@ namespace Auto_Service_Application_university_project.ViewModels
 
         #region Commands
         public ICommand clearCommand { get; }
-        public ICommand deleteCommand {  get; }
+        public ICommand deleteCommand { get; }
         public ICommand addUpdateCommand { get; }
 
         #endregion
 
-        public ClientsViewModel(MainViewModel mainViewModel) 
+        public ClientsViewModel(MainViewModel mainViewModel)
         {
             _mainViewModel = mainViewModel;
 
@@ -236,7 +239,7 @@ namespace Auto_Service_Application_university_project.ViewModels
                 ClientHouseNumber = client.Address.HouseNumber.ToString();
             }
         }
-        
+
         private void OnClear()
         {
             SelectedClient = null;
@@ -261,9 +264,9 @@ namespace Auto_Service_Application_university_project.ViewModels
             }
             else
             {
-                ErrorMessage = "Not access!";
+                ErrorMessage = "Not access, you need admin or employee access!";
             }
-            
+
         }
 
         private async Task OnAddUpdate(object param)
@@ -271,7 +274,7 @@ namespace Auto_Service_Application_university_project.ViewModels
 
             if (SelectedClient == null)
             {
-                if (CheckAllInputsForAdd()) 
+                if (CheckAllInputsForAdd())
                 {
                     await _mainViewModel.AddClient(ClientName, new Address()
                     {
@@ -314,7 +317,8 @@ namespace Auto_Service_Application_university_project.ViewModels
             {
                 ErrorMessage = "";
                 return true;
-            }else
+            }
+            else
             {
                 ErrorMessage = "";
                 ErrorMessage = "Wrong input format!!!";
@@ -324,12 +328,13 @@ namespace Auto_Service_Application_university_project.ViewModels
 
         private bool CheckInputsNotNull(string input, string nameInput)
         {
-            if (string.IsNullOrEmpty(input)) 
+            if (string.IsNullOrEmpty(input))
             {
                 ErrorMessage = "";
                 ErrorMessage = $"{nameInput} is empty!";
-                return false; 
-            } else { return true; }
+                return false;
+            }
+            else { return true; }
         }
 
         private bool CheckAllInputsForAdd()

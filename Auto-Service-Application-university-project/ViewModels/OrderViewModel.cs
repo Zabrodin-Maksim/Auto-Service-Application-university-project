@@ -71,7 +71,7 @@ namespace Auto_Service_Application_university_project.ViewModels
             Clients = _mainViewModel.Clients;
             Offices = _mainViewModel.Offices;
             
-            if (Offices.Count != 0)
+            if (Offices != null && Offices.Count != 0)
             {
                 SelectedOffice = Offices[0];
             }
