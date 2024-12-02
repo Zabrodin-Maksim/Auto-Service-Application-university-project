@@ -38,7 +38,7 @@ namespace Auto_Service_Application_university_project.ViewModels
         private OfficeViewModel _officeVM;
 
         // Reservation
-        private ReservationViewModel _reservationVM;
+        private ServisOfferViewModel _servisOfferVM;
         #endregion
 
         #endregion
@@ -68,8 +68,8 @@ namespace Auto_Service_Application_university_project.ViewModels
         // Office
         public ObservableCollection<Office> Offices { get; set; }
 
-        // Reservation
-        public ObservableCollection<Reservation> Reservations { get; set; }
+        // Servis Offer
+        public ObservableCollection<ServisOffer> ServisOffers { get; set; }
         #endregion
 
         #region Commands
@@ -104,7 +104,7 @@ namespace Auto_Service_Application_university_project.ViewModels
             _userVM = new UserViewModel();
             _clientVM = new ClientViewModel();
             _officeVM = new OfficeViewModel();
-            _reservationVM = new ReservationViewModel();
+            _servisOfferVM = new ServisOfferViewModel();
             #endregion
 
             UserLogout = new MyICommand(UserLogOut);
@@ -127,7 +127,7 @@ namespace Auto_Service_Application_university_project.ViewModels
                 //TODO: ОТЧИЩЕНИЕ ВСЕХ ЛИСТОВ
                 Clients.Clear();
                 Offices.Clear();
-                Reservations.Clear();
+                ServisOffers.Clear();
 
                 // Navigate to login page
                 NavigateToLoginCommand.Execute(null);
@@ -210,7 +210,7 @@ namespace Auto_Service_Application_university_project.ViewModels
                     //Fields all necessary Lists
                     await FillinOutClientsLists();
                     await FillinOutOfficesList();
-                    await FillinOutReservationsList();
+                    await FillinOutServisOffersList();
 
                     // Allow see meunu pages by user role (1- Admin), (2- Employeer), (3- User)
                     switch (authenticatedUser.RoleId)
@@ -332,46 +332,9 @@ namespace Auto_Service_Application_university_project.ViewModels
         }
         #endregion
 
-        #region Reservation Data Methods
+        #region Servis Offer Data Methods
 
-        public async Task AddReservations(Car car)
-        {
-            if (flagUserLogin)
-            {
-                try
-                {
-                    await _reservationVM.AddReservation(car);
-                    Debug.WriteLine($"[INFO]Add new Reservations: {car.Reservation.Office.ToString}");
-                    MessageBox.Show("Reservation was added!", "Reservation", MessageBoxButton.OK, MessageBoxImage.Information);
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine($"[INFO]Error Add new Reservations: {ex.Message}");
-                }
-            }
-            else
-            {
-                Debug.WriteLine("[INFO] Non Authoricated");
-            }
-        }
-        public async Task FillinOutReservationsList()
-        {
-            if (flagUserLogin)
-            {
-                try
-                {
-                    Reservations = await _reservationVM.GetAllReservations();
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine($"[INFO]Error Fill in Out Reservations Lists: {ex.Message}");
-                }
-            }
-            else
-            {
-                Debug.WriteLine("[INFO] Non Authoricated");
-            }
-        }
+        
         #endregion
 
         // TODO: Реализовать после авторитизации заполнение всех листов

@@ -107,8 +107,8 @@ namespace Auto_Service_Application_university_project.ViewModels
                     Client = SelectedClient
                 }
             };
-
-            await _mainViewModel.AddReservations(car);
+            // TODO: SERVIS OFFER
+            
             OnClear();
 
         }

@@ -55,9 +55,12 @@ namespace Auto_Service_Application_university_project.ViewModels
                     if (_mainViewModel.flagUserLogin)
                     {
                         // TODO: РЕАЛИЗОВАТЬ переходы в зависимости от ролей 
-                        if (_mainViewModel.authenticatedUser.RoleId == 3)
+                        
+                        switch (_mainViewModel.authenticatedUser.RoleId) 
                         {
-                            _mainViewModel.NavigateToClients.Execute(null);
+                            case 1: break;
+                            case 2: break;
+                            case 3: _mainViewModel.NavigateToClients.Execute(null); break;
                         }
                     }
                     else
