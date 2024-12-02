@@ -21,10 +21,11 @@ namespace Auto_Service_Application_university_project.ViewModels
         private readonly MyNavigationService _navigationService;
         private ViewModelBase _currentViewModel;
 
-        // Visibles 
-        private Visibility _isVisibleForUser;
-        private Visibility _isVisibleForEmployee;
-        private Visibility _isVisibleForAdmin;
+        // Visibilities 
+        private Visibility _isVisibleClients;
+        private Visibility _isVisibleOrder;
+        private Visibility _isVisibleVisit;
+        private Visibility _isVisibleEmployee;
 
         #region Data
         // User
@@ -48,6 +49,13 @@ namespace Auto_Service_Application_university_project.ViewModels
             get => _currentViewModel;
             set => SetProperty(ref _currentViewModel, value, nameof(CurrentViewModel));
         }
+
+        // Visibilities 
+        public Visibility IsVisibleClients { get => _isVisibleClients; set => SetProperty(ref _isVisibleClients, value, nameof(IsVisibleClients)); }
+        public Visibility IsVisibleOrder { get => _isVisibleOrder; set => SetProperty(ref _isVisibleOrder, value, nameof(IsVisibleOrder)); }
+        public Visibility IsVisibleVisit { get => _isVisibleVisit; set => SetProperty(ref _isVisibleVisit, value, nameof(IsVisibleVisit)); }
+        public Visibility IsVisibleEmployee { get => _isVisibleEmployee; set => SetProperty(ref _isVisibleEmployee, value, nameof(IsVisibleEmployee)); }
+
 
         // User 
         public bool flagUserLogin;
@@ -100,20 +108,28 @@ namespace Auto_Service_Application_university_project.ViewModels
             #endregion
 
             UserLogout = new MyICommand(UserLogOut);
+
+            // For start when user not login
+            HideAllVisibilites();
         }
 
         private void UserLogOut()
         {
             if (flagUserLogin)
             {
+                // When logout do:
                 authenticatedUser = null;
                 flagUserLogin = false;
+
+                //Hide all buttons
+                HideAllVisibilites();
 
                 //TODO: ОТЧИЩЕНИЕ ВСЕХ ЛИСТОВ
                 Clients.Clear();
                 Offices.Clear();
                 Reservations.Clear();
 
+                // Navigate to login page
                 NavigateToLoginCommand.Execute(null);
             }
             else
@@ -122,9 +138,40 @@ namespace Auto_Service_Application_university_project.ViewModels
             }
             
         }
-        // TODO: РЕАЛИЗОВАТЬ МЕТОД ВИСИБЛЕ ИНТЕРФЕЙСА ПО РОЛИ, В UserLogOut И AuthenticateUser
 
-        
+        #region Visibilities Methods
+        // What will allowed see authenticated User
+        private void ShowForUser()
+        {
+            IsVisibleClients = Visibility.Visible;
+            IsVisibleOrder = Visibility.Visible;
+        }
+
+        // What will allowed see authenticated Employee
+        private void ShowForEmployee()
+        {
+            IsVisibleVisit = Visibility.Visible;
+            IsVisibleEmployee = Visibility.Visible;
+        }
+
+        // What will allowed see authenticated Admin
+        private void ShowForaAdmin()
+        {
+            IsVisibleClients = Visibility.Visible;
+            IsVisibleOrder = Visibility.Visible;
+            IsVisibleVisit = Visibility.Visible;
+            IsVisibleEmployee = Visibility.Visible;
+        }
+
+        // Hide pages in menu for non login user or start condition
+        private void HideAllVisibilites()
+        {
+            IsVisibleClients = Visibility.Collapsed;
+            IsVisibleOrder = Visibility.Collapsed;
+            IsVisibleVisit = Visibility.Collapsed;
+            IsVisibleEmployee = Visibility.Collapsed;
+        }
+        #endregion
 
         #region User Data Methods
         public async Task AddNewUser(User newUser)
@@ -140,7 +187,6 @@ namespace Auto_Service_Application_university_project.ViewModels
             }
         }
 
-        // TODO: В ЗАВИСИМОСТИ ОТ РОЛИ ПОКАЗЫВАТЬ ИНТЕРФЕЙС
         public async Task AuthenticateUser(string userName, string userPassword)
         {
             try
@@ -153,6 +199,7 @@ namespace Auto_Service_Application_university_project.ViewModels
                 }
                 else
                 {
+                    // When successful authentication occurred
                     Debug.WriteLine($"[INFO] User Authorization successfully: {authenticatedUser.Name}");
                     flagUserLogin = true;
 
@@ -161,6 +208,14 @@ namespace Auto_Service_Application_university_project.ViewModels
                     await FillinOutClientsLists();
                     await FillinOutOfficesList();
                     await FillinOutReservationsList();
+
+                    // Allow see meunu pages by user role (1- Admin), (2- Employeer), (3- User)
+                    switch (authenticatedUser.RoleId)
+                    {
+                        case 1: ShowForaAdmin(); break;
+                        case 2: ShowForEmployee(); break;
+                        case 3: ShowForUser(); break;
+                    }
                 }
 
             }

@@ -202,9 +202,9 @@
                     </StackPanel>
                 </Button>
 
-                <!-- Customer -->
+                <!-- Client -->
 
-                <Button Grid.Row="4" Style="{StaticResource MenuButtons}" Command="{Binding NavigateToClients}">
+                <Button Grid.Row="4" Style="{StaticResource MenuButtons}" Command="{Binding NavigateToClients}" Visibility="{Binding IsVisibleClients}">
                     <StackPanel Style="{StaticResource StackPanelMenu}" Grid.Row="4" Orientation="Horizontal">
                         <fa:FontAwesome Style="{StaticResource IconsStyle}" Icon="Users"/>
                         <TextBlock Style="{StaticResource TextBlock}" Text="Clients"/>
@@ -214,7 +214,7 @@
 
                 <!-- Order -->
 
-                <Button Grid.Row="5" Style="{StaticResource MenuButtons}" Command="{Binding NavigateToOrder}">
+                <Button Grid.Row="5" Style="{StaticResource MenuButtons}" Command="{Binding NavigateToOrder}" Visibility="{Binding IsVisibleOrder}">
                     <StackPanel Style="{StaticResource StackPanelMenu}" Grid.Row="5" Orientation="Horizontal">
                         <fa:FontAwesome Style="{StaticResource IconsStyle}" Icon="CheckCircleOutline"/>
                         <TextBlock Style="{StaticResource TextBlock}" Text="Order"/>
@@ -224,7 +224,7 @@
 
                 <!-- Visit -->
 
-                <Button Grid.Row="6" Style="{StaticResource MenuButtons}">
+                <Button Grid.Row="6" Style="{StaticResource MenuButtons}" Visibility="{Binding IsVisibleVisit}">
                     <StackPanel Style="{StaticResource StackPanelMenu}" Grid.Row="6" Orientation="Horizontal">
                         <fa:FontAwesome Style="{StaticResource IconsStyle}" Icon="Calendar"/>
                         <TextBlock Style="{StaticResource TextBlock}" Text="Visit"/>
@@ -234,7 +234,7 @@
 
                 <!-- Employee -->
 
-                <Button Grid.Row="7" Style="{StaticResource MenuButtons}">
+                <Button Grid.Row="7" Style="{StaticResource MenuButtons}" Visibility="{Binding IsVisibleEmployee}">
                     <StackPanel Style="{StaticResource StackPanelMenu}" Grid.Row="7" Orientation="Horizontal">
                         <fa:FontAwesome Style="{StaticResource IconsStyle}" Icon="UserSecret"/>
                         <TextBlock Style="{StaticResource TextBlock}" Text="Employee"/>
