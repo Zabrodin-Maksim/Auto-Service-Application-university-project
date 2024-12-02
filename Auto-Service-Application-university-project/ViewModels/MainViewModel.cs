@@ -274,14 +274,14 @@ namespace Auto_Service_Application_university_project.ViewModels
 
         #region Reservation Data Methods
 
-        public async Task AddReservations(Reservation reservation)
+        public async Task AddReservations(Car car)
         {
             if (flagUserLogin)
             {
                 try
                 {
-                    await _reservationVM.AddReservation(reservation);
-                    Debug.WriteLine($"[INFO]Add new Reservations: {reservation.Office.ToString}");
+                    await _reservationVM.AddReservation(car);
+                    Debug.WriteLine($"[INFO]Add new Reservations: {car.Reservation.Office.ToString}");
                     MessageBox.Show("Reservation was added!", "Reservation", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
                 catch (Exception ex)

@@ -18,11 +18,13 @@ namespace Auto_Service_Application_university_project.ViewModels.HelperViewModel
             _reservationRepository = new ReservationRepository();
         }
 
-        public async Task AddReservation(Reservation reservation)
+        public async Task AddReservation(Car car)
         {
-            await _reservationRepository.InsertReservationAsync(reservation);
+            await _reservationRepository.InsertReservationAsync(car);
         }
 
+
+        //TODO: Поменять тут на машины, сперва репо поменять
         public async Task<ObservableCollection<Reservation>> GetAllReservations()
         {
             return await _reservationRepository.GetAllReservationsAsync();
