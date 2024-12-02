@@ -10,6 +10,7 @@ using Auto_Service_Application_university_project.ViewModels.HelperViewModels;
 using System.Diagnostics;
 using Auto_Service_Application_university_project.Models;
 using System.Collections.ObjectModel;
+using System.Windows;
 
 namespace Auto_Service_Application_university_project.ViewModels
 {
@@ -251,6 +252,7 @@ namespace Auto_Service_Application_university_project.ViewModels
                 {
                     await _reservationVM.AddReservation(reservation);
                     Debug.WriteLine($"[INFO]Add new Reservations: {reservation.Office.ToString}");
+                    MessageBox.Show("Reservation was added!", "Reservation", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
                 catch (Exception ex)
                 {

@@ -103,6 +103,7 @@ namespace Auto_Service_Application_university_project.ViewModels
 
             await _mainViewModel.AddReservations(reservation);
             OnClear();
+
         }
 
         private bool CheckAllInputs()

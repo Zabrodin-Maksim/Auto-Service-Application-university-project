@@ -105,7 +105,7 @@
                         <TextBlock Text="CAR IMORMATION" Style="{StaticResource textDiscription}" Margin="0,10" />
 
                         <!--#region Car SPZ-->
-                        <TextBlock Style="{StaticResource textDiscription}" Text="Client Name" Margin="10"/>
+                        <TextBlock Style="{StaticResource textDiscription}" Text="Car SPZ" Margin="10"/>
                         <TextBox Text="{Binding Path= CarSPZ, UpdateSourceTrigger=PropertyChanged}">
                             <TextBox.Background>
                                 <ImageBrush ImageSource="/Resources/Images/car-icon.png" Stretch="None" AlignmentX="Left"/>
