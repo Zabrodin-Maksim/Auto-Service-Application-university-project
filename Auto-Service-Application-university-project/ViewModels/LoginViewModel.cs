@@ -41,7 +41,6 @@ namespace Auto_Service_Application_university_project.ViewModels
 
             LoginCommand = new MyICommand<object>(async parameter => await OnClickLogIn(parameter));
         }
-        // TODO: Добавить команду логин через асинк 
         private async Task OnClickLogIn(object parameter)
         {
             

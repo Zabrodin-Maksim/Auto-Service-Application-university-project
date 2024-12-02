@@ -13,7 +13,7 @@ using System.Collections.ObjectModel;
 
 namespace Auto_Service_Application_university_project.ViewModels
 {
-    public class MainViewModel :ViewModelBase
+    public class MainViewModel : ViewModelBase
     {
         #region Private Fields
         // Navigation
@@ -27,6 +27,12 @@ namespace Auto_Service_Application_university_project.ViewModels
 
         // Clients
         private ClientViewModel _clientVM;
+
+        // Office
+        private OfficeViewModel _officeVM;
+
+        // Reservation
+        private ReservationViewModel _reservationVM;
         #endregion
 
         #endregion
@@ -45,6 +51,12 @@ namespace Auto_Service_Application_university_project.ViewModels
 
         // Clients
         public ObservableCollection<Client> Clients { get; set; }
+
+        // Office
+        public ObservableCollection<Office> Offices { get; set; }
+
+        // Reservation
+        public ObservableCollection<Reservation> Reservations { get; set; }
         #endregion
 
         #region Commands
@@ -52,7 +64,7 @@ namespace Auto_Service_Application_university_project.ViewModels
         public ICommand NavigateToLoginCommand { get; }
         public ICommand NavigateToRegistration { get; }
         public ICommand NavigateToClients { get; }
-
+        public ICommand NavigateToOrder { get; }
 
         #endregion
 
@@ -66,6 +78,7 @@ namespace Auto_Service_Application_university_project.ViewModels
             NavigateToLoginCommand = new MyICommand(() => _navigationService.Navigate(ViewTupes.LoginView));
             NavigateToRegistration = new MyICommand(() => _navigationService.Navigate(ViewTupes.Registration));
             NavigateToClients = new MyICommand(() => _navigationService.Navigate(ViewTupes.Clients));
+            NavigateToOrder = new MyICommand(() => _navigationService.Navigate(ViewTupes.Order));
 
             // First Page
             NavigateToLoginCommand.Execute(null);
@@ -74,6 +87,8 @@ namespace Auto_Service_Application_university_project.ViewModels
             #region Init Data VM
             _userVM = new UserViewModel();
             _clientVM = new ClientViewModel();
+            _officeVM = new OfficeViewModel();
+            _reservationVM = new ReservationViewModel();
             #endregion
 
         }
@@ -92,6 +107,7 @@ namespace Auto_Service_Application_university_project.ViewModels
             }
         }
 
+        // TODO: В ЗАВИСИМОСТИ ОТ РОЛИ ПОКАЗЫВАТЬ ИНТЕРФЕЙС
         public async Task AuthenticateUser(string userName, string userPassword)
         {
             try
@@ -106,9 +122,14 @@ namespace Auto_Service_Application_university_project.ViewModels
                 {
                     Debug.WriteLine($"[INFO] User Authorization successfully: {authenticatedUser.Name}");
                     flagUserLogin = true;
+
+                    //TODO: ВСЕ СПИСКИ ЗАПОЛНЯЮТСЯ ТУТ
+                    //Fields all necessary Lists
                     await FillinOutClientsLists();
+                    await FillinOutOfficesList();
+                    await FillinOutReservationsList();
                 }
-                
+
             }
             catch (Exception ex)
             {
@@ -123,37 +144,58 @@ namespace Auto_Service_Application_university_project.ViewModels
 
         public async Task UpdateClient(int clientId, string clientName, Address clientAdress, int Phone)
         {
-            try
+            if (flagUserLogin)
             {
-                await _clientVM.UpdateClient(clientId, clientName, clientAdress, Phone);
+                try
+                {
+                    await _clientVM.UpdateClient(clientId, clientName, clientAdress, Phone);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[INFO]Error Update Client: {ex.Message}");
+                }
             }
-            catch (Exception ex) 
+            else
             {
-                Debug.WriteLine($"[INFO]Error Update Client: {ex.Message}");
+                Debug.WriteLine("[INFO] Non Authoricated");
             }
         }
 
         public async Task AddClient(string clientName, Address clientAdress, int Phone)
         {
-            try
+            if (flagUserLogin)
             {
-                await _clientVM.AddClient(clientName, clientAdress, Phone);
+                try
+                {
+                    await _clientVM.AddClient(clientName, clientAdress, Phone);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[INFO]Error Add new Client: {ex.Message}");
+                }
             }
-            catch (Exception ex)
+            else
             {
-                Debug.WriteLine($"[INFO]Error Add new Client: {ex.Message}");
+                Debug.WriteLine("[INFO] Non Authoricated");
             }
         }
 
         public async Task DeleteClient(int clientId)
         {
-            try
+            if (flagUserLogin)
             {
-                await _clientVM.DeleteClient(clientId);
+                try
+                {
+                    await _clientVM.DeleteClient(clientId);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[INFO]Error Delete Client: {ex.Message}");
+                }
             }
-            catch (Exception ex)
+            else
             {
-                Debug.WriteLine($"[INFO]Error Delete Client: {ex.Message}");
+                Debug.WriteLine("[INFO] Non Authoricated");
             }
         }
 
@@ -161,7 +203,77 @@ namespace Auto_Service_Application_university_project.ViewModels
         {
             if (flagUserLogin)
             {
-                Clients = await _clientVM.GetAllClients();
+                try
+                {
+                    Clients = await _clientVM.GetAllClients();
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[INFO]Error Fill in Out Clients Lists: {ex.Message}");
+                }
+            }
+            else
+            {
+                Debug.WriteLine("[INFO] Non Authoricated");
+            }
+        }
+        #endregion
+
+        #region Office Data Methods
+        public async Task FillinOutOfficesList()
+        {
+            if (flagUserLogin)
+            {
+                try
+                {
+                    Offices = await _officeVM.GetAllOffices();
+
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[INFO]Error Fill in Out Offices Lists: {ex.Message}");
+                }
+            }
+            else
+            {
+                Debug.WriteLine("[INFO] Non Authoricated");
+            }
+        }
+        #endregion
+
+        #region Reservation Data Methods
+
+        public async Task AddReservations(Reservation reservation)
+        {
+            if (flagUserLogin)
+            {
+                try
+                {
+                    await _reservationVM.AddReservation(reservation);
+                    Debug.WriteLine($"[INFO]Add new Reservations: {reservation.Office.ToString}");
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[INFO]Error Add new Reservations: {ex.Message}");
+                }
+            }
+            else
+            {
+                Debug.WriteLine("[INFO] Non Authoricated");
+            }
+        }
+        public async Task FillinOutReservationsList()
+        {
+            if (flagUserLogin)
+            {
+                try
+                {
+                    Reservations = await _reservationVM.GetAllReservations();
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[INFO]Error Fill in Out Reservations Lists: {ex.Message}");
+                }
             }
             else
             {

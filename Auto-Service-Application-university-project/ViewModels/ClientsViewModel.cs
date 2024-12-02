@@ -317,18 +317,25 @@ namespace Auto_Service_Application_university_project.ViewModels
 
             if (SelectedClient == null)
             {
-                // TODO: РЕАЛИЗОВАТЬ ДОБОВЛЕНИЕ НОВГО КЛИЕНТА
-                await _mainViewModel.AddClient(ClientName, new Address()
+                if (CheckAllInputsForAdd()) 
                 {
-                    Country = ClientCountry,
-                    City = ClientCity,
-                    IndexAdd = int.Parse(ClientIndex),
-                    Street = ClientStreet,
-                    HouseNumber = int.Parse(ClientHouseNumber)
-                }, int.Parse(ClientPhone)
-                );
-                await _mainViewModel.FillinOutClientsLists();
-                Clients = _mainViewModel.Clients;
+                    await _mainViewModel.AddClient(ClientName, new Address()
+                    {
+                        Country = ClientCountry,
+                        City = ClientCity,
+                        IndexAdd = int.Parse(ClientIndex),
+                        Street = ClientStreet,
+                        HouseNumber = int.Parse(ClientHouseNumber)
+                    }, int.Parse(ClientPhone)
+                    );
+                    await _mainViewModel.FillinOutClientsLists();
+                    Clients = _mainViewModel.Clients;
+                }
+                else
+                {
+                    ErrorMessage = "";
+                    ErrorMessage = "Somes field is empty!";
+                }
             }
             else
             {
@@ -369,6 +376,12 @@ namespace Auto_Service_Application_university_project.ViewModels
                 ErrorMessage = $"{nameInput} is empty!";
                 return false; 
             } else { return true; }
+        }
+
+        private bool CheckAllInputsForAdd()
+        {
+            var fields = new[] { ClientName, ClientCountry, ClientCity, ClientIndex, ClientStreet, ClientHouseNumber, ClientPhone };
+            return fields.All(field => !string.IsNullOrEmpty(field));
         }
     }
 }

@@ -15,8 +15,6 @@ namespace Auto_Service_Application_university_project.Data
     {
         private readonly string connectionString = "User Id=st67280;Password=abcde;Data Source=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=fei-sql3.upceucebny.cz)(PORT=1521))(CONNECT_DATA=(SID=BDAS)))";
 
-        private readonly PasswordHasher _passwordHasher = new PasswordHasher();
-
         public async Task<ObservableCollection<Client>> GetAllClientsAsync()
         {
             var clients = new ObservableCollection<Client>();

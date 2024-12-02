@@ -31,6 +31,9 @@ namespace Auto_Service_Application_university_project.Services
                 case ViewTupes.Clients:
                     _mainViewModel.CurrentViewModel = new ClientsViewModel(_mainViewModel); // To Clients
                     break;
+                case ViewTupes.Order:
+                    _mainViewModel.CurrentViewModel = new OrderViewModel(_mainViewModel); // To Clients
+                    break;
             }
         }
 

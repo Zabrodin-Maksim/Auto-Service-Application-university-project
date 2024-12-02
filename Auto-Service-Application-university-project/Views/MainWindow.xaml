@@ -140,6 +140,10 @@
             <DataTemplate DataType="{x:Type vm:ClientsViewModel}">
                 <local1:ClientsView/>
             </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vm:OrderViewModel}">
+                <local1:OrderView/>
+            </DataTemplate>
             <!--#endregion -->
 
         </ResourceDictionary>
@@ -210,7 +214,7 @@
 
                 <!-- Order -->
 
-                <Button Grid.Row="5" Style="{StaticResource MenuButtons}">
+                <Button Grid.Row="5" Style="{StaticResource MenuButtons}" Command="{Binding NavigateToOrder}">
                     <StackPanel Style="{StaticResource StackPanelMenu}" Grid.Row="5" Orientation="Horizontal">
                         <fa:FontAwesome Style="{StaticResource IconsStyle}" Icon="CheckCircleOutline"/>
                         <TextBlock Style="{StaticResource TextBlock}" Text="Order"/>
