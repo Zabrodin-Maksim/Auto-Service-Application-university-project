@@ -244,18 +244,26 @@ namespace Auto_Service_Application_university_project.ViewModels
 
         private async Task OnDelete(object param)
         {
-            if (SelectedClient == null)
+            if (_mainViewModel.authenticatedUser.RoleId <= 2)
             {
-                ErrorMessage = "No selected Client!";
+                if (SelectedClient == null)
+                {
+                    ErrorMessage = "No selected Client!";
+                }
+                else
+                {
+
+                    await _mainViewModel.DeleteClient(SelectedClient.ClientId);
+                    await _mainViewModel.FillinOutClientsLists();
+                    Clients = _mainViewModel.Clients;
+                    OnClear();
+                }
             }
             else
             {
-
-                await _mainViewModel.DeleteClient(SelectedClient.ClientId);
-                await _mainViewModel.FillinOutClientsLists();
-                Clients = _mainViewModel.Clients;
-                OnClear();
+                ErrorMessage = "Not access!";
             }
+            
         }
 
         private async Task OnAddUpdate(object param)
