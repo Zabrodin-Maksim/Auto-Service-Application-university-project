@@ -260,7 +260,7 @@
                 </StackPanel>-->
 
                 <!-- Logout -->
-                <Button Grid.Row="8" Style="{StaticResource MenuButtons}" FontSize="45" Margin="20,0">
+                <Button Command="{Binding UserLogout}" Grid.Row="8" Style="{StaticResource MenuButtons}" FontSize="45" Margin="20,0">
                     <fa:FontAwesome Icon="SignOut"/>
                 </Button>
             </Grid>

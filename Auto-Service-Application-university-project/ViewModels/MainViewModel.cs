@@ -67,6 +67,9 @@ namespace Auto_Service_Application_university_project.ViewModels
         public ICommand NavigateToClients { get; }
         public ICommand NavigateToOrder { get; }
 
+        // User Logout
+        public ICommand UserLogout {  get; }
+
         #endregion
 
         public MainViewModel()
@@ -92,7 +95,30 @@ namespace Auto_Service_Application_university_project.ViewModels
             _reservationVM = new ReservationViewModel();
             #endregion
 
+            UserLogout = new MyICommand(UserLogOut);
         }
+
+        private void UserLogOut()
+        {
+            if (flagUserLogin)
+            {
+                authenticatedUser = null;
+                flagUserLogin = false;
+
+                //TODO: ОТЧИЩЕНИЕ ВСЕХ ЛИСТОВ
+                Clients.Clear();
+                Offices.Clear();
+                Reservations.Clear();
+
+                NavigateToLoginCommand.Execute(null);
+            }
+            else
+            {
+                MessageBox.Show("User not Authenticated!", "User Logout", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+            
+        }
+        // TODO: РЕАЛИЗОВАТЬ МЕТОД ВИСИБЛЕ ИНТЕРФЕЙСА ПО РОЛИ, В UserLogOut И AuthenticateUser
 
         #region User Data Methods
         public async Task AddNewUser(User newUser)

@@ -207,61 +207,6 @@ namespace Auto_Service_Application_university_project.ViewModels
             _mainViewModel = mainViewModel;
 
             Clients = _mainViewModel.Clients;
-            //Clients = new ObservableCollection<Client>()
-            //{
-            //    new Client()
-            //    {
-            //        ClientName = "r",
-            //        Phone = 111,
-            //        Address = new Address()
-            //        {
-            //            Country = "wed",
-            //            City = "wed",
-            //            IndexAdd =2222,
-            //            Street = "wed",
-            //            HouseNumber = 222
-            //        }
-            //    },
-            //    new Client()
-            //    {
-            //        ClientName = "r",
-            //        Phone = 111,
-            //        Address = new Address()
-            //        {
-            //            Country = "wed",
-            //            City = "wed",
-            //            IndexAdd =2222,
-            //            Street = "wed",
-            //            HouseNumber = 222
-            //        }
-            //    },
-            //    new Client()
-            //    {
-            //        ClientName = "r",
-            //        Phone = 111,
-            //        Address = new Address()
-            //        {
-            //            Country = "wed",
-            //            City = "wed",
-            //            IndexAdd =2222,
-            //            Street = "wed",
-            //            HouseNumber = 222
-            //        }
-            //    },
-            //    new Client()
-            //    {
-            //        ClientName = "r",
-            //        Phone = 111,
-            //        Address = new Address()
-            //        {
-            //            Country = "wed",
-            //            City = "wed",
-            //            IndexAdd =2222,
-            //            Street = "wed",
-            //            HouseNumber = 222
-            //        }
-            //    }
-            //};
 
             clearCommand = new MyICommand(OnClear);
             deleteCommand = new MyICommand<object>(async parametr => await OnDelete(parametr));
@@ -305,11 +250,12 @@ namespace Auto_Service_Application_university_project.ViewModels
             }
             else
             {
+
                 await _mainViewModel.DeleteClient(SelectedClient.ClientId);
                 await _mainViewModel.FillinOutClientsLists();
                 Clients = _mainViewModel.Clients;
+                OnClear();
             }
-            OnClear();
         }
 
         private async Task OnAddUpdate(object param)
