@@ -82,7 +82,14 @@ namespace Auto_Service_Application_university_project.ViewModels
                     }
                     else
                     {
-                        SetProperty(ref _clientPhone, value, nameof(ClientPhone));
+                        if (value.Length <= 9)
+                        {
+                            SetProperty(ref _clientPhone, value, nameof(ClientPhone));
+                        }
+                        else
+                        {
+                            ErrorMessage = "Maximum 9 numbers and minimum 1 number!";
+                        }
                     }
                 }
             }
@@ -140,7 +147,14 @@ namespace Auto_Service_Application_university_project.ViewModels
                     }
                     else
                     {
-                        SetProperty(ref _clientIndex, value, nameof(ClientIndex));
+                        if (value.Length <= 9)
+                        {
+                            SetProperty(ref _clientIndex, value, nameof(ClientIndex));
+                        }
+                        else
+                        {
+                            ErrorMessage = "Maximum 9 numbers and minimum 1 number!";
+                        }
                     }
                 }
             }
@@ -182,7 +196,14 @@ namespace Auto_Service_Application_university_project.ViewModels
                     }
                     else
                     {
-                        SetProperty(ref _clintHouseNumber, value, nameof(ClientHouseNumber));
+                        if (value.Length <= 9)
+                        {
+                            SetProperty(ref _clintHouseNumber, value, nameof(ClientHouseNumber));
+                        }
+                        else
+                        {
+                            ErrorMessage = "Maximum 9 numbers and minimum 1 number!";
+                        }
                     }
                 }
             }
