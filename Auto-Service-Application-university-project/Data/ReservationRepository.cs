@@ -15,20 +15,26 @@ namespace Auto_Service_Application_university_project.Data
 
         private readonly string connectionString = "User Id=st67280;Password=abcde;Data Source=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=fei-sql3.upceucebny.cz)(PORT=1521))(CONNECT_DATA=(SID=BDAS)))";
 
-        public async Task InsertReservationAsync(Reservation reservation)
+        public async Task InsertReservationAsync(Car car)
         {
             using (var connection = new OracleConnection(connectionString))
             {
                 await connection.OpenAsync();
 
-                using (var command = new OracleCommand("reservation_pkg.insert_reservation", connection))
+                using (var command = new OracleCommand("car_pkg.insert_car", connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
 
+                    //Car данные
+                    command.Parameters.Add("p_spz", OracleDbType.Varchar2).Value = car.SPZ;
+                    command.Parameters.Add("p_car_brand", OracleDbType.Varchar2).Value = car.CarBrand;
+                    command.Parameters.Add("p_symptoms", OracleDbType.Varchar2).Value = car.Symptoms;
+
+
                     // Входные параметры
-                    command.Parameters.Add("p_date_reservace", OracleDbType.Date).Value = reservation.DateReservace;
-                    command.Parameters.Add("p_office_office_id", OracleDbType.Int32).Value = reservation.Office.OfficeId;
-                    command.Parameters.Add("p_client_client_id", OracleDbType.Int32).Value = reservation.Client.ClientId;
+                    command.Parameters.Add("p_date_reservace", OracleDbType.Date).Value = car.Reservation.DateReservace;
+                    command.Parameters.Add("p_office_office_id", OracleDbType.Int32).Value = car.Reservation.Office.OfficeId;
+                    command.Parameters.Add("p_client_client_id", OracleDbType.Int32).Value = car.Reservation.Client.ClientId;
 
                     try
                     {
@@ -36,12 +42,50 @@ namespace Auto_Service_Application_university_project.Data
                     }
                     catch (OracleException ex)
                     {
-                        throw new ApplicationException($"Ошибка при вставке резервации: {ex.Message}", ex);
+                        throw new ApplicationException($"Ошибка при вставке резервации и машины: {ex.Message}", ex);
                     }
                 }
             }
         }
 
+
+        public async Task UpdateReservationAsync(Car car)
+        {
+            using (var connection = new OracleConnection(connectionString))
+            {
+                await connection.OpenAsync();
+
+                using (var command = new OracleCommand("car_pkg.update_car", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    // Входные параметры для машины
+                    command.Parameters.Add("p_car_id", OracleDbType.Int32).Value = car.CarId;
+                    command.Parameters.Add("p_spz", OracleDbType.Varchar2).Value = car.SPZ;
+                    command.Parameters.Add("p_car_brand", OracleDbType.Varchar2).Value = car.CarBrand;
+                    command.Parameters.Add("p_symptoms", OracleDbType.Varchar2).Value = car.Symptoms;
+
+                    // Входные параметры для резервации
+                    command.Parameters.Add("p_date_reservace", OracleDbType.Date).Value = car.Reservation.DateReservace;
+                    command.Parameters.Add("p_office_office_id", OracleDbType.Int32).Value = car.Reservation.Office.OfficeId;
+                    command.Parameters.Add("p_client_client_id", OracleDbType.Int32).Value = car.Reservation.Client.ClientId;
+
+                    try
+                    {
+                        await command.ExecuteNonQueryAsync();
+                    }
+                    catch (OracleException ex)
+                    {
+                        throw new ApplicationException($"Ошибка при обновлении машины: {ex.Message}", ex);
+                    }
+                }
+            }
+        }
+
+
+
+
+        //TODO: DELETE CASCADE BASE + CHANGE REPO HERE
         public async Task<ObservableCollection<Reservation>> GetAllReservationsAsync()
         {
             var reservations = new ObservableCollection<Reservation>();

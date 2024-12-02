@@ -94,14 +94,21 @@ namespace Auto_Service_Application_university_project.ViewModels
             {
                 return;
             }
-            Reservation reservation = new Reservation()
+
+            Car car = new Car()
             {
-                DateReservace = SelectedDate,
-                Office = SelectedOffice,
-                Client = SelectedClient
+                SPZ = _carSPZ,
+                CarBrand = _carBrand,
+                Symptoms = _carSymptoms,
+                Reservation = new Reservation()
+                {
+                    DateReservace = SelectedDate,
+                    Office = SelectedOffice,
+                    Client = SelectedClient
+                }
             };
 
-            await _mainViewModel.AddReservations(reservation);
+            await _mainViewModel.AddReservations(car);
             OnClear();
 
         }
