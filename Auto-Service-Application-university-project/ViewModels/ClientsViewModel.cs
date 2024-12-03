@@ -218,7 +218,6 @@ namespace Auto_Service_Application_university_project.ViewModels
         }
         #endregion
 
-
         #region Commands
         public ICommand clearCommand { get; }
         public ICommand deleteCommand { get; }

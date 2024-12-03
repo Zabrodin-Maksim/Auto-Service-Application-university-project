@@ -210,7 +210,6 @@ namespace Auto_Service_Application_university_project.ViewModels
                     //Fields all necessary Lists
                     await FillinOutClientsLists();
                     await FillinOutOfficesList();
-                    await FillinOutServisOffersList();
 
                     // Allow see meunu pages by user role (1- Admin), (2- Employeer), (3- User)
                     switch (authenticatedUser.RoleId)

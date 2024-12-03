@@ -6,8 +6,7 @@ using System.Threading.Tasks;
 
 namespace Auto_Service_Application_university_project.Models
 {
-    public class ServisOffer
+    public class Employer
     {
-        
     }
 }

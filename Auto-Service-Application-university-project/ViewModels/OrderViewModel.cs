@@ -107,7 +107,7 @@ namespace Auto_Service_Application_university_project.ViewModels
                     Client = SelectedClient
                 }
             };
-            // TODO: SERVIS OFFER
+            // TODO: SERVIS OFFER await ...
             
             OnClear();
 
