@@ -12,6 +12,7 @@ namespace Auto_Service_Application_university_project.Enums
         LoginView,
         Registration,
         Clients,
-        Order
+        Order,
+        Visit
     }
 }

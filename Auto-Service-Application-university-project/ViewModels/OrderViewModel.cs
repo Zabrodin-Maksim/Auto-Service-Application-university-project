@@ -5,9 +5,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection.Metadata;
+using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace Auto_Service_Application_university_project.ViewModels
 {
@@ -28,6 +31,15 @@ namespace Auto_Service_Application_university_project.ViewModels
         private ObservableCollection<Office> _offices;
         private Office _officeSelected;
 
+        private ObservableCollection<ServiceType> _serviceTypes;
+        private ServiceType _serviceTypeSelected;
+
+        private Visibility _visibilitySpeciality;
+        private Visibility _visibilityRadiusWheel;
+
+        private string _servisTypeSpeciality;
+        private string _serviceTypeRadiusWheel;
+
         private DateTime _selectedDate;
         #endregion
 
@@ -40,13 +52,47 @@ namespace Auto_Service_Application_university_project.ViewModels
                 SetProperty(ref _selectedClient, value, nameof(SelectedClient));
             }
         }
-        
+
         public string CarSPZ { get => _carSPZ; set => SetProperty(ref _carSPZ, value, nameof(CarSPZ)); }
         public string CarBrand { get => _carBrand; set => SetProperty(ref _carBrand, value, nameof(CarBrand)); }
         public string CarSymptoms { get => _carSymptoms; set => SetProperty(ref _carSymptoms, value, nameof(CarSymptoms)); }
 
         public ObservableCollection<Office> Offices { get => _offices; set => SetProperty(ref _offices, value, nameof(Offices)); }
         public Office SelectedOffice { get => _officeSelected; set => SetProperty(ref _officeSelected, value, nameof(SelectedOffice)); }
+
+        public Visibility VisibleServisTypeSpec { get => _visibilitySpeciality; set => SetProperty(ref _visibilitySpeciality, value, nameof(VisibleServisTypeSpec)); }
+        public Visibility VisibilityRadiusWheel { get => _visibilityRadiusWheel; set => SetProperty(ref _visibilityRadiusWheel, value, nameof(VisibilityRadiusWheel)); }
+
+        public string ServisTypeSpeciality { get => _servisTypeSpeciality; set => SetProperty(ref _servisTypeSpeciality, value, nameof(ServisTypeSpeciality)); }
+        public string RadiusWheel { get => _serviceTypeRadiusWheel; 
+            set  
+            {
+                if (value.All(char.IsDigit))
+                {
+                    SetProperty(ref _serviceTypeRadiusWheel, value, nameof(RadiusWheel));
+                }
+            } 
+        }
+
+        public ObservableCollection<ServiceType> ServiceTypes { get => _serviceTypes; set => SetProperty(ref _serviceTypes, value, nameof(ServiceTypes)); }
+        public ServiceType ServiceTypeSelected { get => _serviceTypeSelected;
+            set
+            {
+                SetProperty(ref _serviceTypeSelected, value, nameof(ServiceTypeSelected));
+                if (_serviceTypeSelected.TypeName == "pneuservise")
+                {
+                    VisibleServisTypeSpec = Visibility.Collapsed;
+                    VisibilityRadiusWheel = Visibility.Visible;
+                }
+                else
+                {
+                    VisibilityRadiusWheel = Visibility.Collapsed;
+                    VisibleServisTypeSpec = Visibility.Visible;
+                }
+            }
+        }
+
+
 
         public DateTime SelectedDate { get => _selectedDate; set => SetProperty(ref _selectedDate, value, nameof(SelectedDate)); }
 
@@ -64,17 +110,25 @@ namespace Auto_Service_Application_university_project.ViewModels
         public ICommand addNewOrderCommand { get; }
         #endregion
 
-        public OrderViewModel(MainViewModel mainViewModel) 
-        { 
+        public OrderViewModel(MainViewModel mainViewModel)
+        {
             _mainViewModel = mainViewModel;
 
             Clients = _mainViewModel.Clients;
             Offices = _mainViewModel.Offices;
-            
+            ServiceTypes = _mainViewModel.ServiceTypes;
+
+
             if (Offices != null && Offices.Count != 0)
             {
                 SelectedOffice = Offices[0];
             }
+
+            if (ServiceTypes != null && ServiceTypes.Count != 0)
+            {
+                ServiceTypeSelected = ServiceTypes[0];
+            }
+
             SelectedDate = DateTime.Now;
 
             clearCommand = new MyICommand(OnClear);
@@ -83,13 +137,17 @@ namespace Auto_Service_Application_university_project.ViewModels
 
         private void OnClear()
         {
-
             SelectedClient = null;
+            CarSPZ = "";
+            CarBrand = "";
+            CarSymptoms = "";
+            ServisTypeSpeciality = "";
+            RadiusWheel = "";
+            ErrorMessage = "";
         }
 
         private async Task OnAddNewOrder(object param)
         {
-            //TODO: ДОДЕЛАТЬ OnAddNewOrder
             if (!CheckAllInputs())
             {
                 return;
@@ -107,8 +165,34 @@ namespace Auto_Service_Application_university_project.ViewModels
                     Client = SelectedClient
                 }
             };
-            // TODO: SERVIS OFFER await ...
-            
+
+            ServiceOffer serviceOffer;
+
+            // Adding Service Offer by Service Type Selected
+            if (_serviceTypeSelected.TypeName == "pneuservise")
+            {
+                serviceOffer = new ServiceOffer()
+                {
+                    Car = car,
+                    ServiceType = ServiceTypeSelected,
+                    RadiusWheel = int.Parse(RadiusWheel)
+                };
+            }
+            else
+            {
+                serviceOffer = new ServiceOffer()
+                {
+                    Car = car,
+                    ServiceType = ServiceTypeSelected,
+                    Speciality = ServisTypeSpeciality,
+                };
+            }
+
+            await _mainViewModel.AddServiceOffer(serviceOffer);
+
+            // Update services Offers List
+            await _mainViewModel.FillinOutServiceOffersList();
+
             OnClear();
 
         }
@@ -121,11 +205,26 @@ namespace Auto_Service_Application_university_project.ViewModels
                 ErrorMessage = "Select Client!";
                 return false;
             }
-            if (string.IsNullOrEmpty(_carSPZ) || string.IsNullOrEmpty(_carBrand) || _officeSelected == null || _selectedDate == null)
+            if (string.IsNullOrEmpty(_carSPZ) || string.IsNullOrEmpty(_carBrand) || _officeSelected == null)
             {
                 ErrorMessage = ErrorMessage + " Please fill up all fields";
                 return false;
             }
+
+            if (_serviceTypeSelected.TypeName == "pneuservise" && !_serviceTypeRadiusWheel.All(char.IsDigit))
+            {
+                ErrorMessage = ErrorMessage + " In Radius Wheel use only numbers!";
+                return false;
+            }
+            else
+            {
+                if (_serviceTypeSelected.TypeName != "pneuservise" && string.IsNullOrEmpty(_servisTypeSpeciality))
+                {
+                    ErrorMessage = ErrorMessage + " Fill Servis Type Speciality!";
+                    return false;
+                }
+            }
+
             ErrorMessage = "";
             return true;
         }

@@ -166,8 +166,8 @@
 
                     <!-- List Of Servis Offers -->
                     <ListView Style="{StaticResource ListOfClients}"  Grid.Row="1"
-                             ItemsSource="{Binding ServisOffers}"
-                             SelectedItem="{Binding SelectedServisOffer}" >
+                             ItemsSource="{Binding ServiceOffers}"
+                             SelectedItem="{Binding SelectedServiceOffer}" >
                         <ListView.View >
                             <GridView >
                                 <GridViewColumn Header="Car" DisplayMemberBinding="{Binding CarInfo}" Width="145"/>

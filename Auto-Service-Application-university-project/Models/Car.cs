@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media;
 
 namespace Auto_Service_Application_university_project.Models
 {
@@ -13,5 +14,6 @@ namespace Auto_Service_Application_university_project.Models
         public string CarBrand { get; set; }
         public string Symptoms { get; set; }
         public Reservation Reservation { get; set; }
+
     }
 }

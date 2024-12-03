@@ -132,6 +132,29 @@
                         </TextBox>
                         <!--#endregion-->
 
+                        <!--#region Service Types -->
+                        <TextBlock Style="{StaticResource textDiscription}" Text="Service Type" Margin="10"/>
+                        <ComboBox SelectedItem="{Binding ServiceTypeSelected, Mode=TwoWay}" ItemsSource="{Binding ServiceTypes}" Width="300" HorizontalAlignment="Left"/>
+                        <!--#endregion-->
+
+                        <!--#region Servis Type speciality -->
+                        <TextBlock Style="{StaticResource textDiscription}" Text="Servis Type speciality" Margin="10" Visibility="{Binding VisibleServisTypeSpec}"/>
+                        <TextBox Text="{Binding Path= ServisTypeSpeciality, UpdateSourceTrigger=PropertyChanged}" Visibility="{Binding VisibleServisTypeSpec}">
+                            <TextBox.Background>
+                                <ImageBrush ImageSource="/Resources/Images/car-icon.png" Stretch="None" AlignmentX="Left"/>
+                            </TextBox.Background>
+                        </TextBox>
+                        <!--#endregion-->
+
+                        <!--#region Radius Wheel -->
+                        <TextBlock Style="{StaticResource textDiscription}" Text="Radius Wheel" Margin="10" Visibility="{Binding VisibilityRadiusWheel}"/>
+                        <TextBox Text="{Binding Path= RadiusWheel, UpdateSourceTrigger=PropertyChanged}" Visibility="{Binding VisibilityRadiusWheel}">
+                            <TextBox.Background>
+                                <ImageBrush ImageSource="/Resources/Images/car-icon.png" Stretch="None" AlignmentX="Left"/>
+                            </TextBox.Background>
+                        </TextBox>
+                        <!--#endregion-->
+                        
                         <!--#endregion-->
 
                         <Separator Grid.Row="1" VerticalAlignment="Top" Height="20"/>

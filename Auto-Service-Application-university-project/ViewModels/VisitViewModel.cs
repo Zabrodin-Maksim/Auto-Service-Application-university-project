@@ -20,12 +20,18 @@ namespace Auto_Service_Application_university_project.ViewModels
         private ObservableCollection<Client> _usedSpareParts;
         private Client _selectedUsedSparePart;
 
+        private ObservableCollection<ServiceOffer> _serviceOffers;
+        private ServiceOffer _selectedServiceOffer;
+
 
         private int _pricePerHour;
         private int _workingHour;
         #endregion
 
         #region Properties
+        public ObservableCollection<ServiceOffer> ServiceOffers { get => _serviceOffers; set => SetProperty(ref _serviceOffers, value, nameof(ServiceOffers)); }
+        public ServiceOffer SelectedServiceOffer { get => _selectedServiceOffer; set => SetProperty(ref _selectedServiceOffer, value, nameof(SelectedServiceOffer)); }
+
         public int PricePerHour { get => _pricePerHour; set => SetProperty(ref _pricePerHour, value, nameof(PricePerHour)); }
         public int WorkingHour { get => _workingHour; set => SetProperty(ref _workingHour, value, nameof(WorkingHour)); }
 
@@ -44,6 +50,8 @@ namespace Auto_Service_Application_university_project.ViewModels
         public VisitViewModel(MainViewModel mainViewModel)
         {
             _mainViewModel = mainViewModel;
+
+            ServiceOffers = _mainViewModel.ServiceOffers;
 
             #region Init Commands
             FinishWorkCommand = new MyICommand<object>(async parametr => await OnFinishWork(parametr));

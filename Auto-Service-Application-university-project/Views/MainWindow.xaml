@@ -144,6 +144,10 @@
             <DataTemplate DataType="{x:Type vm:OrderViewModel}">
                 <local1:OrderView/>
             </DataTemplate>
+            
+            <DataTemplate DataType="{x:Type vm:VisitViewModel}">
+                <local1:VisitView/>
+            </DataTemplate>
             <!--#endregion -->
 
         </ResourceDictionary>
@@ -224,7 +228,7 @@
 
                 <!-- Visit -->
 
-                <Button Grid.Row="6" Style="{StaticResource MenuButtons}" Visibility="{Binding IsVisibleVisit}">
+                <Button Grid.Row="6" Style="{StaticResource MenuButtons}" Command="{Binding NavigateToVisit}" Visibility="{Binding IsVisibleVisit}">
                     <StackPanel Style="{StaticResource StackPanelMenu}" Grid.Row="6" Orientation="Horizontal">
                         <fa:FontAwesome Style="{StaticResource IconsStyle}" Icon="Calendar"/>
                         <TextBlock Style="{StaticResource TextBlock}" Text="Visit"/>

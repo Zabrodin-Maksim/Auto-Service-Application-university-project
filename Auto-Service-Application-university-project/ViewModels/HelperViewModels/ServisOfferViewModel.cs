@@ -18,6 +18,14 @@ namespace Auto_Service_Application_university_project.ViewModels.HelperViewModel
             _reservationRepository = new ServisOfferRepository();
         }
 
-        
+        public async Task AddServiceOffer(ServiceOffer offer)
+        {
+            await _reservationRepository.InsertServiceOfferAsync(offer);
+        }
+
+        public async Task<ObservableCollection<ServiceOffer>> GetAllServiceOffers()
+        {
+            return await _reservationRepository.GetAllServiceOffersAsync();
+        }
     }
 }

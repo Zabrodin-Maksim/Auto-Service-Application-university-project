@@ -37,8 +37,11 @@ namespace Auto_Service_Application_university_project.ViewModels
         // Office
         private OfficeViewModel _officeVM;
 
-        // Reservation
+        // Servis Offer
         private ServisOfferViewModel _servisOfferVM;
+
+        // Service Type
+        private ServiceTypeViewModel _serviceTypeVM;
         #endregion
 
         #endregion
@@ -69,7 +72,10 @@ namespace Auto_Service_Application_university_project.ViewModels
         public ObservableCollection<Office> Offices { get; set; }
 
         // Servis Offer
-        public ObservableCollection<ServisOffer> ServisOffers { get; set; }
+        public ObservableCollection<ServiceOffer> ServiceOffers { get; set; }
+
+        // Service Type
+        public ObservableCollection<ServiceType> ServiceTypes { get; set; }
         #endregion
 
         #region Commands
@@ -78,7 +84,7 @@ namespace Auto_Service_Application_university_project.ViewModels
         public ICommand NavigateToRegistration { get; }
         public ICommand NavigateToClients { get; }
         public ICommand NavigateToOrder { get; }
-
+        public ICommand NavigateToVisit { get; }
         // User Logout
         public ICommand UserLogout {  get; }
 
@@ -95,6 +101,7 @@ namespace Auto_Service_Application_university_project.ViewModels
             NavigateToRegistration = new MyICommand(() => _navigationService.Navigate(ViewTupes.Registration));
             NavigateToClients = new MyICommand(() => _navigationService.Navigate(ViewTupes.Clients));
             NavigateToOrder = new MyICommand(() => _navigationService.Navigate(ViewTupes.Order));
+            NavigateToVisit = new MyICommand(() => _navigationService.Navigate(ViewTupes.Visit));
 
             // First Page
             NavigateToLoginCommand.Execute(null);
@@ -105,6 +112,7 @@ namespace Auto_Service_Application_university_project.ViewModels
             _clientVM = new ClientViewModel();
             _officeVM = new OfficeViewModel();
             _servisOfferVM = new ServisOfferViewModel();
+            _serviceTypeVM = new ServiceTypeViewModel();
             #endregion
 
             UserLogout = new MyICommand(UserLogOut);
@@ -127,7 +135,9 @@ namespace Auto_Service_Application_university_project.ViewModels
                 //TODO: ОТЧИЩЕНИЕ ВСЕХ ЛИСТОВ
                 Clients.Clear();
                 Offices.Clear();
-                ServisOffers.Clear();
+                ServiceOffers.Clear();
+                ServiceTypes.Clear();
+                ServiceOffers.Clear();
 
                 // Navigate to login page
                 NavigateToLoginCommand.Execute(null);
@@ -210,6 +220,8 @@ namespace Auto_Service_Application_university_project.ViewModels
                     //Fields all necessary Lists
                     await FillinOutClientsLists();
                     await FillinOutOfficesList();
+                    await FillinOutServiceTypesList();
+                    await FillinOutServiceOffersList();
 
                     // Allow see meunu pages by user role (1- Admin), (2- Employeer), (3- User)
                     switch (authenticatedUser.RoleId)
@@ -332,8 +344,68 @@ namespace Auto_Service_Application_university_project.ViewModels
         #endregion
 
         #region Servis Offer Data Methods
+        public async Task AddServiceOffer(ServiceOffer offer)
+        {
+            if (flagUserLogin)
+            {
+                try
+                {
+                    await _servisOfferVM.AddServiceOffer(offer);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[INFO]Error Add new Service Offer: {ex.Message}");
+                }
+            }
+            else
+            {
+                Debug.WriteLine("[INFO] Non Authoricated");
+            }
+        }
 
-        
+        public async Task FillinOutServiceOffersList()
+        {
+            if (flagUserLogin)
+            {
+                try
+                {
+                    ServiceOffers = await _servisOfferVM.GetAllServiceOffers();
+
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[INFO]Error Fill in Out Service Offers List: {ex.Message}");
+                }
+            }
+            else
+            {
+                Debug.WriteLine("[INFO] Non Authoricated");
+            }
+        }
+
+
+        #endregion
+
+        #region Service Types Data Methods
+        public async Task FillinOutServiceTypesList()
+        {
+            if (flagUserLogin)
+            {
+                try
+                {
+                    ServiceTypes = await _serviceTypeVM.GetAllServiceTypes();
+
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[INFO]Error Fill in Out Offices Lists: {ex.Message}");
+                }
+            }
+            else
+            {
+                Debug.WriteLine("[INFO] Non Authoricated");
+            }
+        }
         #endregion
 
         // TODO: Реализовать после авторитизации заполнение всех листов

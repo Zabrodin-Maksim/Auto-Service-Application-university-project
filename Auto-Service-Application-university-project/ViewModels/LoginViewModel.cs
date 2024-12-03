@@ -59,7 +59,7 @@ namespace Auto_Service_Application_university_project.ViewModels
                         switch (_mainViewModel.authenticatedUser.RoleId) 
                         {
                             case 1: break;
-                            case 2: break;
+                            case 2: _mainViewModel.NavigateToVisit.Execute(null); break;
                             case 3: _mainViewModel.NavigateToClients.Execute(null); break;
                         }
                     }
