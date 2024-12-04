@@ -156,5 +156,60 @@ namespace Auto_Service_Application_university_project.Data
                 }
             }
         }
+
+        public async Task<Client> GetClientPublicAsync(int clientId)
+        {
+            using (var connection = new OracleConnection(connectionString))
+            {
+                await connection.OpenAsync();
+
+                using (var command = new OracleCommand("client_pkg.get_client_public", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    // Входные параметры
+                    command.Parameters.Add("p_client_id", OracleDbType.Int32).Value = clientId;
+
+                    // Выходные параметры
+                    var cursorParam = new OracleParameter("p_cursor", OracleDbType.RefCursor)
+                    {
+                        Direction = ParameterDirection.Output
+                    };
+                    command.Parameters.Add(cursorParam);
+
+                    try
+                    {
+                        using (var reader = await command.ExecuteReaderAsync(CommandBehavior.CloseConnection))
+                        {
+                            if (await reader.ReadAsync())
+                            {
+                                return new Client
+                                {
+                                    ClientId = reader.GetInt32(reader.GetOrdinal("client_id")),
+                                    ClientName = reader.GetString(reader.GetOrdinal("name_customer")),
+                                    Phone = reader.GetInt32(reader.GetOrdinal("phone")),
+                                    Address = new Address
+                                    {
+                                        Country = reader.GetString(reader.GetOrdinal("country")),
+                                        City = reader.GetString(reader.GetOrdinal("city")),
+                                        Street = reader.GetString(reader.GetOrdinal("street")),
+                                        HouseNumber = reader.GetInt32(reader.GetOrdinal("house_number")),
+                                        IndexAdd = reader.GetInt32(reader.GetOrdinal("index_add"))
+                                    }
+                                };
+                            }
+                            else
+                            {
+                                return null;
+                            }
+                        }
+                    }
+                    catch (OracleException ex)
+                    {
+                        throw new ApplicationException($"Ошибка при получении публичных данных клиента: {ex.Message}", ex);
+                    }
+                }
+            }
+        }
     }
 }

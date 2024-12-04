@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace Auto_Service_Application_university_project.Models
 {
-    public class Reservation
+    public class SparePart
     {
-        public int ReservationId { get; set; }
-        public DateTime DateReservace { get; set; }
+        public int SparePartId { get; set; }
+        public string Speciality { get; set; }
+        public decimal Price { get; set; }
+        public char StockAvailability { get; set; } // 'Y' or 'N'
         public Office Office { get; set; }
-        public Client Client { get; set; }
-
     }
 }

@@ -42,6 +42,12 @@ namespace Auto_Service_Application_university_project.ViewModels
 
         // Service Type
         private ServiceTypeViewModel _serviceTypeVM;
+
+        // Service Spare
+        private ServiceSpareViewModel _serviceSpareVM;
+
+        // Spare Part
+        private SparePartViewModel _sparePartVM;
         #endregion
 
         #endregion
@@ -113,6 +119,8 @@ namespace Auto_Service_Application_university_project.ViewModels
             _officeVM = new OfficeViewModel();
             _servisOfferVM = new ServisOfferViewModel();
             _serviceTypeVM = new ServiceTypeViewModel();
+            _serviceSpareVM = new ServiceSpareViewModel();
+            _sparePartVM = new SparePartViewModel();
             #endregion
 
             UserLogout = new MyICommand(UserLogOut);
@@ -399,6 +407,48 @@ namespace Auto_Service_Application_university_project.ViewModels
                 catch (Exception ex)
                 {
                     Debug.WriteLine($"[INFO]Error Fill in Out Offices Lists: {ex.Message}");
+                }
+            }
+            else
+            {
+                Debug.WriteLine("[INFO] Non Authoricated");
+            }
+        }
+        #endregion
+
+        #region Service Spare Data Methods
+        public async Task AddServiceSpare(ServiceSpare serviceSpare, ServiceOffer serviceOffer)
+        {
+            if (flagUserLogin)
+            {
+                try
+                {
+                    await _serviceSpareVM.AddServiceSpare(serviceSpare, serviceOffer);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[INFO]Error Add new Service Spare: {ex.Message}");
+                }
+            }
+            else
+            {
+                Debug.WriteLine("[INFO] Non Authoricated");
+            }
+        }
+        #endregion
+
+        #region Spare Part Data Methods
+        public async Task InsertSparePart(SparePart sparePart)
+        {
+            if (flagUserLogin)
+            {
+                try
+                {
+                    await _sparePartVM.InsertSparePart(sparePart);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[INFO]Error Add new Spare Part: {ex.Message}");
                 }
             }
             else

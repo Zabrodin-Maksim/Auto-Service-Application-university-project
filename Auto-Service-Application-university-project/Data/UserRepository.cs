@@ -134,5 +134,66 @@ namespace Auto_Service_Application_university_project.Data
                 }
             }
         }
+
+        public async Task UpdateUserAsync(User user)
+        {
+            using (var connection = new OracleConnection(connectionString))
+            {
+                await connection.OpenAsync();
+
+                using (var command = new OracleCommand("users_pkg.update_user", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    string hashedPassword = _passwordHasher.HashPassword(user.Password);
+
+                    // Входные параметры
+                    command.Parameters.Add("p_user_id", OracleDbType.Int32).Value = user.UserId;
+                    command.Parameters.Add("p_username", OracleDbType.Varchar2).Value = user.Username;
+                    command.Parameters.Add("p_password", OracleDbType.Varchar2).Value = hashedPassword; // Отправляем хэш
+                    command.Parameters.Add("p_name", OracleDbType.Varchar2).Value = user.Name;
+                    command.Parameters.Add("p_phone", OracleDbType.Int64).Value = user.Phone;
+                    command.Parameters.Add("p_country", OracleDbType.Varchar2).Value = user.Address.Country;
+                    command.Parameters.Add("p_city", OracleDbType.Varchar2).Value = user.Address.City;
+                    command.Parameters.Add("p_index_add", OracleDbType.Int32).Value = user.Address.IndexAdd;
+                    command.Parameters.Add("p_street", OracleDbType.Varchar2).Value = user.Address.Street;
+                    command.Parameters.Add("p_house_number", OracleDbType.Int32).Value = user.Address.HouseNumber;
+
+                    try
+                    {
+                        await command.ExecuteNonQueryAsync();
+                    }
+                    catch (OracleException ex)
+                    {
+                        throw new ApplicationException($"Ошибка при обновлении пользователя: {ex.Message}", ex);
+                    }
+                }
+            }
+        }
+
+        public async Task DeleteUserAsync(int userId)
+        {
+            using (var connection = new OracleConnection(connectionString))
+            {
+                await connection.OpenAsync();
+
+                using (var command = new OracleCommand("users_pkg.delete_user", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    // Входные параметры
+                    command.Parameters.Add("p_user_id", OracleDbType.Int32).Value = userId;
+
+                    try
+                    {
+                        await command.ExecuteNonQueryAsync();
+                    }
+                    catch (OracleException ex)
+                    {
+                        throw new ApplicationException($"Ошибка при удалении пользователя: {ex.Message}", ex);
+                    }
+                }
+            }
+        }
     }
 }

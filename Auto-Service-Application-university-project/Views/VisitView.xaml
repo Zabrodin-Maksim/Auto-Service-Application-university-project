@@ -55,7 +55,7 @@
 
             <!-- Style List Box-->
             <Style TargetType="ListView" x:Key="ListOfClients">
-                <Setter Property="MaxWidth" Value="440"/>
+                <Setter Property="MaxWidth" Value="420"/>
                 <Setter Property="Background" Value="LightGray"/>
                 <Setter Property="Foreground" Value="red"/>
                 <Setter Property="FontSize" Value="15"/>
