@@ -171,10 +171,8 @@ namespace Auto_Service_Application_university_project.ViewModels
                 ServiceOffers.Clear();
                 ServiceTypes.Clear();
                 ServiceOffers.Clear();
-                ServiceOffersByOffice.Clear();
                 Cars.Clear();
                 SpareParts.Clear();
-                //SparePartsByOffice.Clear();
 
                 // Navigate to login page
                 NavigateToLoginCommand.Execute(null);
@@ -259,7 +257,6 @@ namespace Auto_Service_Application_university_project.ViewModels
                     await FillinOutOfficesList();
                     await FillinOutServiceTypesList();
                     await FillinOutServiceOffersList();
-                    await FillinOutServiceOffersListByOffice();
                     await GetAllCars();
                     await GetAllSpareParts();
 
@@ -625,13 +622,13 @@ namespace Auto_Service_Application_university_project.ViewModels
             }
         }
 
-        public async Task FillinOutServiceOffersListByOffice()
+        public async Task<ObservableCollection<ServiceOffer>> FillinOutServiceOffersListByOffice(int officeId)
         {
             if (flagUserLogin)
             {
                 try
                 {
-                    ServiceOffersByOffice = await _servisOfferVM.GetAllServiceOffers();
+                    return await _servisOfferVM.GetServiceOffersByOfficeIdAsync(officeId);
 
                 }
                 catch (Exception ex)
@@ -643,6 +640,7 @@ namespace Auto_Service_Application_university_project.ViewModels
             {
                 Debug.WriteLine("[INFO] Non Authoricated");
             }
+            return null;
         }
 
         public async Task UpdateServiceOffer(ServiceOffer offer)

@@ -43,6 +43,10 @@ namespace Auto_Service_Application_university_project.ViewModels.HelperViewModel
             return await _reservationRepository.GetServiceOfferAsync(offerId);
         }
 
+        public async Task<ObservableCollection<ServiceOffer>> GetServiceOffersByOfficeIdAsync(int officeId)
+        {
+            return await _reservationRepository.GetServiceOffersByOfficeIdAsync(officeId);
+        }
 
     }
 }

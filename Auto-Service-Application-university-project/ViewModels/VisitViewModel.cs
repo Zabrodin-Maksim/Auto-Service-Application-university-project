@@ -21,7 +21,8 @@ namespace Auto_Service_Application_university_project.ViewModels
         private Visibility _visibilityFinishWork;
         private Visibility _visibilityDelete;
 
-        // For Lists
+        #region For Lists
+
         private ObservableCollection<SparePart> _usedSpareParts;
         private SparePart _selectedUsedSparePart;
 
@@ -30,10 +31,14 @@ namespace Auto_Service_Application_university_project.ViewModels
 
         private ObservableCollection<ServiceOffer> _serviceOffers;
         private ServiceOffer _selectedServiceOffer;
+        #endregion
 
         // Fields
-        private int _pricePerHour;
-        private int _workingHour;
+        private string _pricePerHour;
+        private string _workingHour;
+
+        // Error message
+        private string _errorMessage;
         #endregion
 
         #region Properties
@@ -50,10 +55,34 @@ namespace Auto_Service_Application_university_project.ViewModels
         public ObservableCollection<ServiceOffer> ServiceOffers { get => _serviceOffers; set => SetProperty(ref _serviceOffers, value, nameof(ServiceOffers)); }
         public ServiceOffer SelectedServiceOffer { get => _selectedServiceOffer; set => SetProperty(ref _selectedServiceOffer, value, nameof(SelectedServiceOffer)); }
 
-        public int PricePerHour { get => _pricePerHour; set => SetProperty(ref _pricePerHour, value, nameof(PricePerHour)); }
-        public int WorkingHour { get => _workingHour; set => SetProperty(ref _workingHour, value, nameof(WorkingHour)); }
+        public string PricePerHour { get => _pricePerHour; set
+            {
+                if (value.All(char.IsDigit) && value.Length <= 9 && value.Length >= 1)
+                {
+                    SetProperty(ref _pricePerHour, value, nameof(PricePerHour));
+                }
+                else
+                {
+                    ErrorMessage = "";
+                    ErrorMessage = "Use only numbers! Max 9 numbers";
+                }
+            }
+        }
+        public string WorkingHour { get => _workingHour; set
+            {
+                if (value.All(char.IsDigit))
+                {
+                    SetProperty(ref _workingHour, value, nameof(WorkingHour));
+                }
+                else
+                {
+                    ErrorMessage = "";
+                    ErrorMessage = "Use only numbers!";
+                }
+            }
+        }
 
-
+        public string ErrorMessage { get => _errorMessage; set => SetProperty(ref _errorMessage, value, nameof(ErrorMessage)); }
         #endregion
 
         #region Commands
@@ -72,8 +101,7 @@ namespace Auto_Service_Application_university_project.ViewModels
             SetVisibilitiesByUserRole();
 
             #region fill Lists
-            FillinOutSpareParts();
-            ServiceOffers = _mainViewModel.ServiceOffersByOffice;
+            FillinOutLists();
             #endregion
 
             #region Init Commands
@@ -101,18 +129,10 @@ namespace Auto_Service_Application_university_project.ViewModels
 
         }
 
-        public async Task FillinOutSpareParts()
+        public async Task FillinOutLists()
         {
             SpareParts = await _mainViewModel.GetSparePartsByOffice(_mainViewModel.authenticatedEmployer.Office.OfficeId);
-            try
-            {
-                Office office = new Office { OfficeId = _mainViewModel.authenticatedEmployer.Office.OfficeId };
-                Debug.WriteLine($"[INFO]Error Authenticate User: {office.OfficeId}");
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"[INFO]Error Authenticate User: {ex.Message}");
-            }
+            ServiceOffers = await _mainViewModel.FillinOutServiceOffersListByOffice(_mainViewModel.authenticatedEmployer.Office.OfficeId);
         }
 
 

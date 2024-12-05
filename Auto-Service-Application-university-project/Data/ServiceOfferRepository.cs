@@ -231,7 +231,80 @@ namespace Auto_Service_Application_university_project.Data
             return offer;
         }
 
+        public async Task<ObservableCollection<ServiceOffer>> GetServiceOffersByOfficeIdAsync(int officeId)
+        {
+            var offers = new ObservableCollection<ServiceOffer>();
 
+            using (var connection = new OracleConnection(connectionString))
+            {
+                await connection.OpenAsync();
+
+                using (var command = new OracleCommand("service_offer_pkg.get_service_offers_by_office_id", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    // Входные параметры
+                    command.Parameters.Add("p_office_id", OracleDbType.Int32).Value = officeId;
+
+                    // Выходные параметры
+                    var cursorParam = new OracleParameter("p_cursor", OracleDbType.RefCursor)
+                    {
+                        Direction = ParameterDirection.Output
+                    };
+                    command.Parameters.Add(cursorParam);
+
+                    try
+                    {
+                        using (var reader = await command.ExecuteReaderAsync(CommandBehavior.CloseConnection))
+                        {
+                            while (await reader.ReadAsync())
+                            {
+                                var offer = new ServiceOffer
+                                {
+                                    OfferId = reader.GetInt32(reader.GetOrdinal("offer_id")),
+                                    PricePerHour = reader.IsDBNull(reader.GetOrdinal("price_per_hour")) ? (int?)null : reader.GetInt32(reader.GetOrdinal("price_per_hour")),
+                                    DateOffer = reader.IsDBNull(reader.GetOrdinal("date_offer")) ? (DateTime?)null : reader.GetDateTime(reader.GetOrdinal("date_offer")),
+                                    Employer = reader.IsDBNull(reader.GetOrdinal("employer_employer_id")) ? null : new Employer
+                                    {
+                                        EmployerId = reader.GetInt32(reader.GetOrdinal("employer_employer_id"))
+                                        // Дополнительно заполните поля Employer, если они присутствуют в результате запроса
+                                        // Например:
+                                        // Name = reader.GetString(reader.GetOrdinal("employer_name")),
+                                        // Phone = reader.GetInt32(reader.GetOrdinal("employer_phone")),
+                                        // Address = new Address
+                                        // {
+                                        //     Country = reader.GetString(reader.GetOrdinal("country")),
+                                        //     City = reader.GetString(reader.GetOrdinal("city")),
+                                        //     IndexAdd = reader.GetInt32(reader.GetOrdinal("index_add")),
+                                        //     Street = reader.GetString(reader.GetOrdinal("street")),
+                                        //     HouseNumber = reader.GetInt32(reader.GetOrdinal("house_number"))
+                                        // }
+                                    },
+                                    Car = await carRepository.GetCarAsync(reader.GetInt32(reader.GetOrdinal("car_car_id"))),
+                                    ServiceType = new ServiceType
+                                    {
+                                        ServiceTypeId = reader.GetInt32(reader.GetOrdinal("service_type_id")),
+                                        TypeName = reader.GetString(reader.GetOrdinal("type_name"))
+                                    },
+                                    WorkingHours = reader.IsDBNull(reader.GetOrdinal("working_hours")) ? (int?)null : reader.GetInt32(reader.GetOrdinal("working_hours")),
+                                };
+
+                                // Получение специфичных данных
+                                // Здесь можно добавить дополнительную логику для получения специфичных данных из связанных таблиц
+
+                                offers.Add(offer);
+                            }
+                        }
+                    }
+                    catch (OracleException ex)
+                    {
+                        throw new ApplicationException($"Ошибка при получении ServiceOffers по office_id: {ex.Message}", ex);
+                    }
+                }
+            }
+
+            return offers;
+        }
 
     }
 }
