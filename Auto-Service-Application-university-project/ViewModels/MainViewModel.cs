@@ -53,6 +53,9 @@ namespace Auto_Service_Application_university_project.ViewModels
 
         // Car 
         private CarViewModel _carVM;
+
+        // Bill
+        private BillViewModel _billVM;
         #endregion
 
         #endregion
@@ -96,6 +99,7 @@ namespace Auto_Service_Application_university_project.ViewModels
         // Spare Part
         public ObservableCollection<SparePart> SpareParts { get; set; }
         public ObservableCollection<SparePart> SparePartsByOffice { get; set; }
+
         #endregion
 
         #endregion
@@ -138,6 +142,7 @@ namespace Auto_Service_Application_university_project.ViewModels
             _serviceSpareVM = new ServiceSpareViewModel();
             _sparePartVM = new SparePartViewModel();
             _carVM = new CarViewModel();
+            _billVM = new BillViewModel();
             #endregion
 
             UserLogout = new MyICommand(UserLogOut);
@@ -855,7 +860,7 @@ namespace Auto_Service_Application_university_project.ViewModels
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"[INFO]Error Delete Spare Part: {ex.Message}");
+                    Debug.WriteLine($"[INFO]Error Get all Spare Parts: {ex.Message}");
                 }
             }
             else
@@ -874,7 +879,7 @@ namespace Auto_Service_Application_university_project.ViewModels
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"[INFO]Error Delete Spare Part: {ex.Message}");
+                    Debug.WriteLine($"[INFO]Error get Spare Part by office: {ex.Message}");
                 }
             }
             else
@@ -979,6 +984,105 @@ namespace Auto_Service_Application_university_project.ViewModels
             {
                 Debug.WriteLine("[INFO] Non Authoricated");
             }
+        }
+        #endregion
+
+        #region Bill Data Methods
+        public async Task AddBill(Bill bill)
+        {
+            if (flagUserLogin)
+            {
+                try
+                {
+                    await _billVM.AddBill(bill);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[INFO]Error Add new Bill: {ex.Message}");
+                }
+            }
+            else
+            {
+                Debug.WriteLine("[INFO] Non Authoricated");
+            }
+        }
+
+        public async Task UpdateBill(Bill bill)
+        {
+            if (flagUserLogin)
+            {
+                try
+                {
+                    await _billVM.UpdateBill(bill);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[INFO]Error Update Bill: {ex.Message}");
+                }
+            }
+            else
+            {
+                Debug.WriteLine("[INFO] Non Authoricated");
+            }
+        }
+
+        public async Task DeleteBill(int billId)
+        {
+            if (flagUserLogin)
+            {
+                try
+                {
+                    await _billVM.DeleteBillAsync(billId);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[INFO]Error Delete Bill: {ex.Message}");
+                }
+            }
+            else
+            {
+                Debug.WriteLine("[INFO] Non Authoricated");
+            }
+        }
+
+        public async Task<Bill> GetBillById(int billId)
+        {
+            if (flagUserLogin)
+            {
+                try
+                {
+                    return await _billVM.GetBillByIdAsync(billId);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[INFO]Error Get Bill by id: {ex.Message}");
+                }
+            }
+            else
+            {
+                Debug.WriteLine("[INFO] Non Authoricated");
+            }
+            return null;
+        }
+
+        public async Task<ObservableCollection<Bill>> GetAllBills()
+        {
+            if (flagUserLogin)
+            {
+                try
+                {
+                    return await _billVM.GetAllBillsAsync();
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[INFO]Error Get all Bills: {ex.Message}");
+                }
+            }
+            else
+            {
+                Debug.WriteLine("[INFO] Non Authoricated");
+            }
+            return null;
         }
         #endregion
 
