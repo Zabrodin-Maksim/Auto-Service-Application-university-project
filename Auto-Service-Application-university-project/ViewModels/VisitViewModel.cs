@@ -39,6 +39,7 @@ namespace Auto_Service_Application_university_project.ViewModels
 
         // Error message
         private string _errorMessage;
+        private int flagError;
         #endregion
 
         #region Properties
@@ -57,14 +58,21 @@ namespace Auto_Service_Application_university_project.ViewModels
 
         public string PricePerHour { get => _pricePerHour; set
             {
-                if (value.All(char.IsDigit) && value.Length <= 9 && value.Length >= 1)
+                if (value.All(char.IsDigit))
                 {
-                    SetProperty(ref _pricePerHour, value, nameof(PricePerHour));
+                    if (value.Length <= 9 && value.Length >= 1)
+                    {
+                        SetProperty(ref _pricePerHour, value, nameof(PricePerHour));
+                    }else
+                    {
+                        ErrorMessage = "";
+                        ErrorMessage = "Fill this field! Maximum 9 digits allowed.";
+                    }
                 }
                 else
                 {
                     ErrorMessage = "";
-                    ErrorMessage = "Use only numbers! Max 9 numbers";
+                    ErrorMessage = "Use only numbers!";
                 }
             }
         }
@@ -72,7 +80,15 @@ namespace Auto_Service_Application_university_project.ViewModels
             {
                 if (value.All(char.IsDigit))
                 {
-                    SetProperty(ref _workingHour, value, nameof(WorkingHour));
+                    if (value.Length <= 9 && value.Length >= 1)
+                    {
+                        SetProperty(ref _workingHour, value, nameof(WorkingHour));
+                    }
+                    else
+                    {
+                        ErrorMessage = "";
+                        ErrorMessage = "Fill this field! Maximum 9 digits allowed.";
+                    }
                 }
                 else
                 {
@@ -100,9 +116,11 @@ namespace Auto_Service_Application_university_project.ViewModels
 
             SetVisibilitiesByUserRole();
 
-            #region fill Lists
+            // Init List Used
+            UsedSpareParts = new ObservableCollection<SparePart>();
+
+            // fill Lists
             FillinOutLists();
-            #endregion
 
             #region Init Commands
             FinishWorkCommand = new MyICommand<object>(async parametr => await OnFinishWork(parametr));
@@ -121,7 +139,7 @@ namespace Auto_Service_Application_university_project.ViewModels
                     VisibilityDelete = Visibility.Collapsed;
                     VisibilityFinishWork = Visibility.Visible;
                     break;
-                case 3:
+                case 1:
                     VisibilityDelete = Visibility.Visible;
                     VisibilityFinishWork = Visibility.Collapsed;
                     break;
@@ -131,8 +149,18 @@ namespace Auto_Service_Application_university_project.ViewModels
 
         public async Task FillinOutLists()
         {
-            SpareParts = await _mainViewModel.GetSparePartsByOffice(_mainViewModel.authenticatedEmployer.Office.OfficeId);
-            ServiceOffers = await _mainViewModel.FillinOutServiceOffersListByOffice(_mainViewModel.authenticatedEmployer.Office.OfficeId);
+            // Admin
+            if (_mainViewModel.authenticatedAdmin != null)
+            {
+                SpareParts = await _mainViewModel.GetSparePartsByOffice(_mainViewModel.authenticatedAdmin.Office.OfficeId);
+                ServiceOffers = await _mainViewModel.FillinOutServiceOffersListByOffice(_mainViewModel.authenticatedAdmin.Office.OfficeId);
+            }
+            // Employer
+            else
+            {
+                SpareParts = await _mainViewModel.GetSparePartsByOffice(_mainViewModel.authenticatedEmployer.Office.OfficeId);
+                ServiceOffers = await _mainViewModel.FillinOutServiceOffersListByOffice(_mainViewModel.authenticatedEmployer.Office.OfficeId);
+            }
         }
 
 
@@ -142,18 +170,45 @@ namespace Auto_Service_Application_university_project.ViewModels
         }
         private async Task OnDelete(object param)
         {
+            if (SelectedServiceOffer != null)
+            {
+                _mainViewModel.DeleteServiceOffer(SelectedServiceOffer.OfferId);
 
+                FillinOutLists();
+            }
         }
 
         #region Methods Work witth lists
         private void OnDeleteFromUsedList()
         {
-
+            if (SelectedUsedSparePart != null)
+            {
+                UsedSpareParts.Remove(SelectedUsedSparePart);
+            }
+            else
+            {
+                ErrorMessage = "";
+                ErrorMessage = "You stupit bitch? SELECT USED SPARE PART MATHER F*CKER";
+            }
         }
 
         private void OnAddToUsedList()
         {
-
+            
+            if (SelectedSparePart != null)
+            {
+                UsedSpareParts.Add(SelectedSparePart);
+            }
+            else
+            {
+                ErrorMessage = "";
+                ErrorMessage = "Ouuuu, you realy? SELECT USED SPARE PART MATHER F*CKER";
+                if (flagError >= 3)
+                {
+                    ErrorMessage = "You realy, OK. Well, that's it, you're fired, idiot.";
+                }
+                flagError++;
+            }
         }
         #endregion
     }

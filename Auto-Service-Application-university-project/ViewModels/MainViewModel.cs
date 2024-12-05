@@ -82,6 +82,9 @@ namespace Auto_Service_Application_university_project.ViewModels
         // Employer
         public Employer authenticatedEmployer;
 
+        // Admin
+        public Employer authenticatedAdmin;
+
         #region Observable Collections
 
         // Clients
@@ -161,6 +164,8 @@ namespace Auto_Service_Application_university_project.ViewModels
                 // When logout do:
                 authenticatedUser = null;
                 flagUserLogin = false;
+                authenticatedAdmin = null;
+                authenticatedEmployer = null;
 
                 //Hide all buttons
                 HideAllVisibilites();
@@ -263,13 +268,19 @@ namespace Auto_Service_Application_university_project.ViewModels
                     // Allow see meunu pages by user role (1- Admin), (2- Employeer), (3- User)
                     switch (authenticatedUser.RoleId)
                     {
-                        case 1: ShowForaAdmin(); break;
+                        case 1:
+                            authenticatedAdmin = await _userVM.GetEmployerByPhone(authenticatedUser.Phone);
+                            Debug.WriteLine($"[INFO] Admin Authorization successfully: {authenticatedAdmin.Phone}");
+                            ShowForaAdmin(); 
+                            break;
+
                         case 2: 
                             ShowForEmployee();
 
                             authenticatedEmployer = await _userVM.GetEmployerByPhone(authenticatedUser.Phone);
                             Debug.WriteLine($"[INFO] Employer Authorization successfully: {authenticatedEmployer.Phone}");
                             break;
+
                         case 3: ShowForUser(); break;
                     }
                 }

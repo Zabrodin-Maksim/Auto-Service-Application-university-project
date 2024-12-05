@@ -144,8 +144,8 @@
                         <!--#region Buttons for lists -->
                         <TextBlock Text="Lists management" Style="{StaticResource textDiscription}" Margin="0,10,0,0" Grid.Row="0"/>
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" MinHeight="70" Margin="0">
-                            <Button Content="Delete from used" Command="{Binding DeleteFromUsedSparePartCommand}" Visibility="{Binding VisibilityFinishWork}" Height="50"  Margin="20,0" FontSize="20"/>
-                            <Button Content="Add to Used" Command="{Binding AddToUsedSparePartCommand}" Visibility="{Binding VisibilityDelete}" Height="50"  Margin="20,0" FontSize="20"/>
+                            <Button Content="Delete from used" Command="{Binding DeleteFromUsedSparePartCommand}"  Height="50"  Margin="20,0" FontSize="20"/>
+                            <Button Content="Add to Used" Command="{Binding AddToUsedSparePartCommand}"  Height="50"  Margin="20,0" FontSize="20"/>
                         </StackPanel>
                         <!--#endregion-->
 
