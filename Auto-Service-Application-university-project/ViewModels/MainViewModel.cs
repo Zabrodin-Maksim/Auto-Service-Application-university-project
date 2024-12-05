@@ -89,6 +89,7 @@ namespace Auto_Service_Application_university_project.ViewModels
 
         // Servis Offer
         public ObservableCollection<ServiceOffer> ServiceOffers { get; set; }
+        public ObservableCollection<ServiceOffer> ServiceOffersByOffice { get; set; }
 
         // Service Type
         public ObservableCollection<ServiceType> ServiceTypes { get; set; }
@@ -168,7 +169,10 @@ namespace Auto_Service_Application_university_project.ViewModels
                 ServiceOffers.Clear();
                 ServiceTypes.Clear();
                 ServiceOffers.Clear();
+                ServiceOffersByOffice.Clear();
                 Cars.Clear();
+                //SpareParts.Clear();
+                //SparePartsByOffice.Clear();
 
                 // Navigate to login page
                 NavigateToLoginCommand.Execute(null);
@@ -253,6 +257,9 @@ namespace Auto_Service_Application_university_project.ViewModels
                     await FillinOutOfficesList();
                     await FillinOutServiceTypesList();
                     await FillinOutServiceOffersList();
+                    await FillinOutServiceOffersListByOffice();
+                    await GetAllCars();
+                    await GetAllSpareParts();
 
                     // Allow see meunu pages by user role (1- Admin), (2- Employeer), (3- User)
                     switch (authenticatedUser.RoleId)
@@ -598,6 +605,26 @@ namespace Auto_Service_Application_university_project.ViewModels
                 try
                 {
                     ServiceOffers = await _servisOfferVM.GetAllServiceOffers();
+
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[INFO]Error Fill in Out Service Offers List: {ex.Message}");
+                }
+            }
+            else
+            {
+                Debug.WriteLine("[INFO] Non Authoricated");
+            }
+        }
+
+        public async Task FillinOutServiceOffersListByOffice()
+        {
+            if (flagUserLogin)
+            {
+                try
+                {
+                    ServiceOffersByOffice = await _servisOfferVM.GetAllServiceOffers();
 
                 }
                 catch (Exception ex)
