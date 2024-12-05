@@ -60,7 +60,7 @@ namespace Auto_Service_Application_university_project.ViewModels
         {
             _mainViewModel = mainViewModel;
 
-            UsedSpareParts.Clear();
+            
             SpareParts = _mainViewModel.SparePartsByOffice;
 
             ServiceOffers = _mainViewModel.ServiceOffersByOffice;

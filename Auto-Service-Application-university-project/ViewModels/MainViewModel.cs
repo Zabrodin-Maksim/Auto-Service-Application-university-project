@@ -171,7 +171,7 @@ namespace Auto_Service_Application_university_project.ViewModels
                 ServiceOffers.Clear();
                 ServiceOffersByOffice.Clear();
                 Cars.Clear();
-                //SpareParts.Clear();
+                SpareParts.Clear();
                 //SparePartsByOffice.Clear();
 
                 // Navigate to login page
