@@ -27,5 +27,20 @@ namespace Auto_Service_Application_university_project.ViewModels.HelperViewModel
         {
             return await _reservationRepository.GetAllServiceOffersAsync();
         }
+
+        public async Task UpdateServiceOffer(ServiceOffer offer)
+        {
+            await _reservationRepository.UpdateServiceOfferAsync(offer);
+        }
+
+        public async Task DeleteServiceOffer(int offerId)
+        {
+            await _reservationRepository.DeleteServiceOfferAsync(offerId);
+        }
+
+        public async Task<ServiceOffer> GetServiceOffer(int offerId)
+        {
+            return await _reservationRepository.GetServiceOfferAsync(offerId);
+        }
     }
 }

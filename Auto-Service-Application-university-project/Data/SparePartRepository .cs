@@ -2,6 +2,7 @@
 using Oracle.ManagedDataAccess.Client;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Data;
 using System.Linq;
 using System.Text;
@@ -130,10 +131,7 @@ namespace Auto_Service_Application_university_project.Data
                                     Speciality = reader.GetString(reader.GetOrdinal("speciality")),
                                     Price = reader.GetDecimal(reader.GetOrdinal("price")),
                                     StockAvailability = reader.GetChar(reader.GetOrdinal("stock_availability")),
-                                    Office = _officeRepository.
-                                    {
-                                        OfficeId = reader.GetInt32(reader.GetOrdinal("office_office_id"))
-                                    }
+                                    Office = await _officeRepository.GetOfficeAsync(reader.GetInt32(reader.GetOrdinal("office_office_id")))
                                 };
                             }
                         }
@@ -146,6 +144,105 @@ namespace Auto_Service_Application_university_project.Data
             }
 
             return sparePart;
+        }
+
+        public async Task<ObservableCollection<SparePart>> GetAllSparePartsAsync()
+        {
+            var spareParts = new ObservableCollection<SparePart>();
+
+            using (var connection = new OracleConnection(connectionString))
+            {
+                await connection.OpenAsync();
+
+                using (var command = new OracleCommand("spare_part_pkg.get_all_spare_parts", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    // Выходные параметры
+                    var cursorParam = new OracleParameter("p_cursor", OracleDbType.RefCursor)
+                    {
+                        Direction = ParameterDirection.Output
+                    };
+                    command.Parameters.Add(cursorParam);
+
+                    try
+                    {
+                        using (var reader = await command.ExecuteReaderAsync(CommandBehavior.CloseConnection))
+                        {
+                            while (await reader.ReadAsync())
+                            {
+                                var sparePart = new SparePart
+                                {
+                                    SparePartId = reader.GetInt32(reader.GetOrdinal("spare_part_id")),
+                                    Speciality = reader.GetString(reader.GetOrdinal("speciality")),
+                                    Price = reader.GetDecimal(reader.GetOrdinal("price")),
+                                    StockAvailability = reader.GetChar(reader.GetOrdinal("stock_availability")),
+                                    Office = await _officeRepository.GetOfficeAsync(reader.GetInt32(reader.GetOrdinal("office_office_id")))
+                                };
+
+                                spareParts.Add(sparePart);
+                            }
+                        }
+                    }
+                    catch (OracleException ex)
+                    {
+                        throw new ApplicationException($"Ошибка при получении всех SpareParts: {ex.Message}", ex);
+                    }
+                }
+            }
+
+            return spareParts;
+        }
+
+        public async Task<ObservableCollection<SparePart>> GetSparePartsByOfficeAsync(int officeId)
+        {
+            var spareParts = new ObservableCollection<SparePart>();
+
+            using (var connection = new OracleConnection(connectionString))
+            {
+                await connection.OpenAsync();
+
+                using (var command = new OracleCommand("spare_part_pkg.get_spare_parts_by_office", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    // Входные параметры
+                    command.Parameters.Add("p_office_id", OracleDbType.Int32).Value = officeId;
+
+                    // Выходные параметры
+                    var cursorParam = new OracleParameter("p_cursor", OracleDbType.RefCursor)
+                    {
+                        Direction = ParameterDirection.Output
+                    };
+                    command.Parameters.Add(cursorParam);
+
+                    try
+                    {
+                        using (var reader = await command.ExecuteReaderAsync(CommandBehavior.CloseConnection))
+                        {
+                            while (await reader.ReadAsync())
+                            {
+                                var sparePart = new SparePart
+                                {
+                                    SparePartId = reader.GetInt32(reader.GetOrdinal("spare_part_id")),
+                                    Speciality = reader.GetString(reader.GetOrdinal("speciality")),
+                                    Price = reader.GetDecimal(reader.GetOrdinal("price")),
+                                    StockAvailability = reader.GetChar(reader.GetOrdinal("stock_availability")),
+                                    Office = await _officeRepository.GetOfficeAsync(reader.GetInt32(reader.GetOrdinal("office_office_id")))
+                                };
+
+                                spareParts.Add(sparePart);
+                            }
+                        }
+                    }
+                    catch (OracleException ex)
+                    {
+                        throw new ApplicationException($"Ошибка при получении SpareParts по OfficeId: {ex.Message}", ex);
+                    }
+                }
+            }
+
+            return spareParts;
         }
     }
 }

@@ -14,6 +14,8 @@ namespace Auto_Service_Application_university_project.Data
     {
         private readonly string connectionString = "User Id=st67280;Password=abcde;Data Source=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=fei-sql3.upceucebny.cz)(PORT=1521))(CONNECT_DATA=(SID=BDAS)))";
 
+        private OfficeRepository _officeRepository = new OfficeRepository();
+
         private readonly PasswordHasher _passwordHasher = new PasswordHasher();
 
         public async Task AddUser(User newUser)
@@ -191,6 +193,120 @@ namespace Auto_Service_Application_university_project.Data
                     catch (OracleException ex)
                     {
                         throw new ApplicationException($"Ошибка при удалении пользователя: {ex.Message}", ex);
+                    }
+                }
+            }
+        }
+
+        public async Task AssignRoleAsync(int userId, int roleId)
+        {
+            using (var connection = new OracleConnection(connectionString))
+            {
+                await connection.OpenAsync();
+
+                using (var command = new OracleCommand("users_pkg.assign_role", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    // Входные параметры
+                    command.Parameters.Add("p_user_id", OracleDbType.Int32).Value = userId;
+                    command.Parameters.Add("p_role_id", OracleDbType.Int32).Value = roleId;
+
+                    try
+                    {
+                        await command.ExecuteNonQueryAsync();
+                    }
+                    catch (OracleException ex)
+                    {
+                        throw new ApplicationException($"Ошибка при назначении роли: {ex.Message}", ex);
+                    }
+                }
+            }
+        }
+
+        public async Task InsertEmployerAsync(int userId, int officeId, string speciality)
+        {
+            using (var connection = new OracleConnection(connectionString))
+            {
+                await connection.OpenAsync();
+
+                using (var command = new OracleCommand("users_pkg.insert_employer", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    // Входные параметры
+                    command.Parameters.Add("p_user_id", OracleDbType.Int32).Value = userId;
+                    command.Parameters.Add("p_office_id", OracleDbType.Int32).Value = officeId;
+                    command.Parameters.Add("p_speciality", OracleDbType.Varchar2).Value = speciality;
+
+                    try
+                    {
+                        await command.ExecuteNonQueryAsync();
+                    }
+                    catch (OracleException ex)
+                    {
+                        throw new ApplicationException($"Ошибка при вставке работодателя: {ex.Message}", ex);
+                    }
+                }
+            }
+        }
+
+        public async Task<Employer> GetEmployerByPhoneAsync(long phone)
+        {
+            using (var connection = new OracleConnection(connectionString))
+            {
+                await connection.OpenAsync();
+
+                using (var command = new OracleCommand("users_pkg.get_employer_by_phone", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    // Входные параметры
+                    command.Parameters.Add("p_phone", OracleDbType.Int64).Value = phone;
+
+                    // Выходные параметры
+                    var cursorParam = new OracleParameter("p_cursor", OracleDbType.RefCursor)
+                    {
+                        Direction = ParameterDirection.Output
+                    };
+                    command.Parameters.Add(cursorParam);
+
+                    try
+                    {
+                        using (var reader = await command.ExecuteReaderAsync())
+                        {
+                            if (await reader.ReadAsync())
+                            {
+                                var employer = new Employer
+                                {
+                                    EmployerId = reader.GetInt32(reader.GetOrdinal("employer_id")),
+                                    Speciality = reader.IsDBNull(reader.GetOrdinal("speciality")) ? null : reader.GetString(reader.GetOrdinal("speciality")),
+                                    NameEmployee = reader.GetString(reader.GetOrdinal("name_employee")),
+                                    Phone = reader.GetInt32(reader.GetOrdinal("phone")),
+                                    Office = await _officeRepository.GetOfficeAsync( reader.GetInt32(reader.GetOrdinal("office_office_id"))),
+                                    // EmployerEmployerId убран
+                                    Address = new Address
+                                    {
+                                        AddressId = reader.GetInt32(reader.GetOrdinal("address_address_id")),
+                                        Country = reader.IsDBNull(reader.GetOrdinal("country")) ? null : reader.GetString(reader.GetOrdinal("country")),
+                                        City = reader.IsDBNull(reader.GetOrdinal("city")) ? null : reader.GetString(reader.GetOrdinal("city")),
+                                        IndexAdd = reader.GetInt32(reader.GetOrdinal("index_add")),
+                                        Street = reader.IsDBNull(reader.GetOrdinal("street")) ? null : reader.GetString(reader.GetOrdinal("street")),
+                                        HouseNumber = reader.GetInt32(reader.GetOrdinal("house_number"))
+                                    }
+                                };
+                                return employer;
+                            }
+                            else
+                            {
+                                // Если работодатель с таким телефоном не найден
+                                return null;
+                            }
+                        }
+                    }
+                    catch (OracleException ex)
+                    {
+                        throw new ApplicationException($"Ошибка при получении данных работодателя: {ex.Message}", ex);
                     }
                 }
             }

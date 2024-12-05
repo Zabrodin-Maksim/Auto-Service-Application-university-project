@@ -48,5 +48,10 @@ namespace Auto_Service_Application_university_project.ViewModels.HelperViewModel
         {
             await _clientRepository.DeleteClientAsync(clientId);
         }
+
+        public async Task<Client> GetClientById(int clientId)
+        {
+            return await _clientRepository.GetClientPublicAsync(clientId);
+        }
     }
 }

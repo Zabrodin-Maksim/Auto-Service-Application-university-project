@@ -26,5 +26,30 @@ namespace Auto_Service_Application_university_project.ViewModels.HelperViewModel
         {
             return await _userRepository.AuthenticateUserAsync(userName, userPassword);
         }
+
+        public async Task UpdateUser(User user)
+        {
+            await _userRepository.UpdateUserAsync(user);
+        }
+
+        public async Task DeleteUser(int userId)
+        {
+            await _userRepository.DeleteUserAsync(userId);
+        }
+
+        public async Task AssignRole(int userId, int roleId)
+        {
+            await _userRepository.AssignRoleAsync(userId, roleId);
+        }
+
+        public async Task InsertEmployer(int userId, int officeId, string speciality)
+        {
+            await _userRepository.InsertEmployerAsync(userId, officeId, speciality);
+        }
+
+        public async Task<Employer> GetEmployerByPhone(long phone)
+        {
+            return await _userRepository.GetEmployerByPhoneAsync(phone);
+        }
     }
 }

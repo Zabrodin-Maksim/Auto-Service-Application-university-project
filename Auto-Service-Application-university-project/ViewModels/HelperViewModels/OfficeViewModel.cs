@@ -22,5 +22,25 @@ namespace Auto_Service_Application_university_project.ViewModels.HelperViewModel
         {
             return await _officeRepository.GetAllOfficesAsync();
         }
+
+        public async Task UpdateOffice(Office office)
+        {
+            await _officeRepository.UpdateOfficeAsync(office);
+        }
+
+        public async Task DeleteOffice(int officeId)
+        {
+            await _officeRepository.DeleteOfficeAsync(officeId);
+        }
+
+        public async Task<Office> GetOffice(int officeId)
+        {
+            return await _officeRepository.GetOfficeAsync(officeId);
+        }
+
+        public async Task AddOffice(Office office)
+        {
+            await _officeRepository.InsertOfficeAsync(office);
+        }
     }
 }

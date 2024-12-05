@@ -11,6 +11,8 @@ using System.Diagnostics;
 using Auto_Service_Application_university_project.Models;
 using System.Collections.ObjectModel;
 using System.Windows;
+using System.Runtime.ConstrainedExecution;
+using System.Windows.Controls;
 
 namespace Auto_Service_Application_university_project.ViewModels
 {
@@ -48,6 +50,9 @@ namespace Auto_Service_Application_university_project.ViewModels
 
         // Spare Part
         private SparePartViewModel _sparePartVM;
+
+        // Car 
+        private CarViewModel _carVM;
         #endregion
 
         #endregion
@@ -71,6 +76,8 @@ namespace Auto_Service_Application_university_project.ViewModels
 
         public User authenticatedUser;
 
+        #region Observable Collections
+
         // Clients
         public ObservableCollection<Client> Clients { get; set; }
 
@@ -82,6 +89,15 @@ namespace Auto_Service_Application_university_project.ViewModels
 
         // Service Type
         public ObservableCollection<ServiceType> ServiceTypes { get; set; }
+
+        // Car
+        public ObservableCollection<Car> Cars { get; set; }
+
+        // Spare Part
+        public ObservableCollection<SparePart> SpareParts { get; set; }
+        public ObservableCollection<SparePart> SparePartsByOffice { get; set; }
+        #endregion
+
         #endregion
 
         #region Commands
@@ -121,6 +137,7 @@ namespace Auto_Service_Application_university_project.ViewModels
             _serviceTypeVM = new ServiceTypeViewModel();
             _serviceSpareVM = new ServiceSpareViewModel();
             _sparePartVM = new SparePartViewModel();
+            _carVM = new CarViewModel();
             #endregion
 
             UserLogout = new MyICommand(UserLogOut);
@@ -146,6 +163,7 @@ namespace Auto_Service_Application_university_project.ViewModels
                 ServiceOffers.Clear();
                 ServiceTypes.Clear();
                 ServiceOffers.Clear();
+                Cars.Clear();
 
                 // Navigate to login page
                 NavigateToLoginCommand.Execute(null);
@@ -248,6 +266,102 @@ namespace Auto_Service_Application_university_project.ViewModels
                 Debug.WriteLine($"[INFO]Error Authenticate User: {ex.Message}");
             }
         }
+
+        public async Task UpdateUser(User user)
+        {
+            if (flagUserLogin)
+            {
+                try
+                {
+                    await _userVM.UpdateUser(user);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[INFO]Error Update User: {ex.Message}");
+                }
+            }
+            else
+            {
+                Debug.WriteLine("[INFO] Non Authoricated");
+            }
+        }
+
+        public async Task DeleteUserAsync(int userId)
+        {
+            if (flagUserLogin)
+            {
+                try
+                {
+                    await _userVM.DeleteUser(userId);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[INFO]Error Delete User: {ex.Message}");
+                }
+            }
+            else
+            {
+                Debug.WriteLine("[INFO] Non Authoricated");
+            }
+        }
+
+        public async Task AssignRole(int userId, int roleId)
+        {
+            if (flagUserLogin)
+            {
+                try
+                {
+                    await _userVM.AssignRole(userId, roleId);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[INFO]Error Assign User role: {ex.Message}");
+                }
+            }
+            else
+            {
+                Debug.WriteLine("[INFO] Non Authoricated");
+            }
+        }
+
+        public async Task AddEmployer(int userId, int officeId, string speciality)
+        {
+            if (flagUserLogin)
+            {
+                try
+                {
+                    await _userVM.InsertEmployer(userId, officeId, speciality);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[INFO]Error Add Employer: {ex.Message}");
+                }
+            }
+            else
+            {
+                Debug.WriteLine("[INFO] Non Authoricated");
+            }
+        }
+
+        public async Task<Employer> GetEmployerByPhone(long phone)
+        {
+            if (flagUserLogin)
+            {
+                try
+                {
+                    return await _userVM.GetEmployerByPhone(phone);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[INFO]Error Add Employer: {ex.Message}");
+                }
+            }
+            else
+            {
+                Debug.WriteLine("[INFO] Non Authoricated");
+            }
+            return null;
+        }
         #endregion
 
         #region Client Data Mehtods
@@ -327,6 +441,26 @@ namespace Auto_Service_Application_university_project.ViewModels
                 Debug.WriteLine("[INFO] Non Authoricated");
             }
         }
+
+        public async Task<Client> GetClientById(int clientId)
+        {
+            if (flagUserLogin)
+            {
+                try
+                {
+                    return await _clientVM.GetClientById(clientId);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[INFO]Error get Client by id: {ex.Message}");
+                }
+            }
+            else
+            {
+                Debug.WriteLine("[INFO] Non Authoricated");
+            }
+            return null;
+        }
         #endregion
 
         #region Office Data Methods
@@ -342,6 +476,87 @@ namespace Auto_Service_Application_university_project.ViewModels
                 catch (Exception ex)
                 {
                     Debug.WriteLine($"[INFO]Error Fill in Out Offices Lists: {ex.Message}");
+                }
+            }
+            else
+            {
+                Debug.WriteLine("[INFO] Non Authoricated");
+            }
+        }
+
+        public async Task UpdateOfficeAsync(Office office)
+        {
+            if (flagUserLogin)
+            {
+                try
+                {
+                    await _officeVM.UpdateOffice(office);
+
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[INFO]Error Update Office: {ex.Message}");
+                }
+            }
+            else
+            {
+                Debug.WriteLine("[INFO] Non Authoricated");
+            }
+        }
+
+        public async Task DeleteOfficeAsync(int officeId)
+        {
+            if (flagUserLogin)
+            {
+                try
+                {
+                    await _officeVM.DeleteOffice(officeId);
+
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[INFO]Error Delete Office: {ex.Message}");
+                }
+            }
+            else
+            {
+                Debug.WriteLine("[INFO] Non Authoricated");
+            }
+        }
+
+        public async Task<Office> GetOfficeAsync(int officeId)
+        {
+            if (flagUserLogin)
+            {
+                try
+                {
+                    return await _officeVM.GetOffice(officeId);
+
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[INFO]Error Get by id Office: {ex.Message}");
+                }
+            }
+            else
+            {
+                Debug.WriteLine("[INFO] Non Authoricated");
+            }
+            return null;
+        }
+
+        public async Task InsertOfficeAsync(Office office)
+        {
+            if (flagUserLogin)
+            {
+                try
+                {
+                    await _officeVM.AddOffice(office);
+
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[INFO]Error Add new Office: {ex.Message}");
                 }
             }
             else
@@ -391,7 +606,63 @@ namespace Auto_Service_Application_university_project.ViewModels
             }
         }
 
+        public async Task UpdateServiceOffer(ServiceOffer offer)
+        {
+            if (flagUserLogin)
+            {
+                try
+                {
+                    await _servisOfferVM.UpdateServiceOffer(offer);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[INFO]Error Update Service Offer: {ex.Message}");
+                }
+            }
+            else
+            {
+                Debug.WriteLine("[INFO] Non Authoricated");
+            }
+        }
 
+        public async Task DeleteServiceOffer(int offerId)
+        {
+            if (flagUserLogin)
+            {
+                try
+                {
+                    await _servisOfferVM.DeleteServiceOffer(offerId);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[INFO]Error Delete Service Offer: {ex.Message}");
+                }
+            }
+            else
+            {
+                Debug.WriteLine("[INFO] Non Authoricated");
+            }
+        }
+
+        public async Task<ServiceOffer> GetServiceOffer(int offerId)
+        {
+            if (flagUserLogin)
+            {
+                try
+                {
+                    return await _servisOfferVM.GetServiceOffer(offerId);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[INFO]Error Get Service Offer: {ex.Message}");
+                }
+            }
+            else
+            {
+                Debug.WriteLine("[INFO] Non Authoricated");
+            }
+            return null;
+        }
         #endregion
 
         #region Service Types Data Methods
@@ -435,6 +706,65 @@ namespace Auto_Service_Application_university_project.ViewModels
                 Debug.WriteLine("[INFO] Non Authoricated");
             }
         }
+
+        public async Task RemoveServiceSpare(int serviceOfferId, int sparePartId)
+        {
+            if (flagUserLogin)
+            {
+                try
+                {
+                    await _serviceSpareVM.RemoveServiceSpare(serviceOfferId, sparePartId);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[INFO]Error Add new Service Spare: {ex.Message}");
+                }
+            }
+            else
+            {
+                Debug.WriteLine("[INFO] Non Authoricated");
+            }
+        }
+
+        public async Task<ObservableCollection<ServiceSpare>> GetServiceSparesByOffer(int serviceOfferId)
+        {
+            if (flagUserLogin)
+            {
+                try
+                {
+                    return await _serviceSpareVM.GetServiceSparesByOffer(serviceOfferId);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[INFO]Error Add new Service Spare: {ex.Message}");
+                }
+            }
+            else
+            {
+                Debug.WriteLine("[INFO] Non Authoricated");
+            }
+            return null;
+        }
+
+        public async Task<ObservableCollection<ServiceSpare>> GetAllServiceSparesAsync()
+        {
+            if (flagUserLogin)
+            {
+                try
+                {
+                    return await _serviceSpareVM.GetAllServiceSpares();
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[INFO]Error Add new Service Spare: {ex.Message}");
+                }
+            }
+            else
+            {
+                Debug.WriteLine("[INFO] Non Authoricated");
+            }
+            return null;
+        }
         #endregion
 
         #region Spare Part Data Methods
@@ -444,11 +774,205 @@ namespace Auto_Service_Application_university_project.ViewModels
             {
                 try
                 {
-                    await _sparePartVM.InsertSparePart(sparePart);
+                    await _sparePartVM.AddSparePart(sparePart);
                 }
                 catch (Exception ex)
                 {
                     Debug.WriteLine($"[INFO]Error Add new Spare Part: {ex.Message}");
+                }
+            }
+            else
+            {
+                Debug.WriteLine("[INFO] Non Authoricated");
+            }
+        }
+
+        public async Task UpdateSparePart(SparePart sparePart)
+        {
+            if (flagUserLogin)
+            {
+                try
+                {
+                    await _sparePartVM.UpdateSparePart(sparePart);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[INFO]Error Update Spare Part: {ex.Message}");
+                }
+            }
+            else
+            {
+                Debug.WriteLine("[INFO] Non Authoricated");
+            }
+        }
+
+        public async Task DeleteSparePart(int sparePartId)
+        {
+            if (flagUserLogin)
+            {
+                try
+                {
+                    await _sparePartVM.DeleteSparePart(sparePartId);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[INFO]Error Delete Spare Part: {ex.Message}");
+                }
+            }
+            else
+            {
+                Debug.WriteLine("[INFO] Non Authoricated");
+            }
+        }
+
+        public async Task<SparePart> GetSparePartById(int sparePartId)
+        {
+            if (flagUserLogin)
+            {
+                try
+                {
+                    return await _sparePartVM.GetSparePartById(sparePartId);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[INFO]Error Get Spare Part by id: {ex.Message}");
+                }
+            }
+            else
+            {
+                Debug.WriteLine("[INFO] Non Authoricated");
+            }
+            return null;
+        }
+
+        public async Task GetAllSpareParts()
+        {
+            if (flagUserLogin)
+            {
+                try
+                {
+                    SpareParts = await _sparePartVM.GetAllSpareParts();
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[INFO]Error Delete Spare Part: {ex.Message}");
+                }
+            }
+            else
+            {
+                Debug.WriteLine("[INFO] Non Authoricated");
+            }
+        }
+
+        public async Task GetSparePartsByOffice(int officeId)
+        {
+            if (flagUserLogin)
+            {
+                try
+                {
+                    SparePartsByOffice = await _sparePartVM.GetSparePartsByOffice(officeId);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[INFO]Error Delete Spare Part: {ex.Message}");
+                }
+            }
+            else
+            {
+                Debug.WriteLine("[INFO] Non Authoricated");
+            }
+        }
+        #endregion
+
+        #region Car Data Methods
+        public async Task AddCar(Car car)
+        {
+            if (flagUserLogin)
+            {
+                try
+                {
+                    await _carVM.AddCar(car);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[INFO]Error Add new Car: {ex.Message}");
+                }
+            }
+            else
+            {
+                Debug.WriteLine("[INFO] Non Authoricated");
+            }
+        }
+
+        public async Task UpdateCar(Car car)
+        {
+            if (flagUserLogin)
+            {
+                try
+                {
+                    await _carVM.UpdateCar(car);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[INFO]Error Update Car: {ex.Message}");
+                }
+            }
+            else
+            {
+                Debug.WriteLine("[INFO] Non Authoricated");
+            }
+        }
+
+        public async Task DeleteCar(int carId)
+        {
+            if (flagUserLogin)
+            {
+                try
+                {
+                    await _carVM.DeleteCar(carId);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[INFO]Error Delete Car: {ex.Message}");
+                }
+            }
+            else
+            {
+                Debug.WriteLine("[INFO] Non Authoricated");
+            }
+        }
+
+        public async Task<Car> GetCar(int carId)
+        {
+            if (flagUserLogin)
+            {
+                try
+                {
+                    return await _carVM.GetCar(carId);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[INFO]Error Get Car: {ex.Message}");
+                }
+            }
+            else
+            {
+                Debug.WriteLine("[INFO] Non Authoricated");
+            }
+            return null;
+        }
+
+        public async Task GetAllCars()
+        {
+            if (flagUserLogin)
+            {
+                try
+                {
+                    Cars = await _carVM.GetAllCars();
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[INFO]Error Fill in out list of the Cars: {ex.Message}");
                 }
             }
             else

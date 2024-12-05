@@ -15,6 +15,10 @@ namespace Auto_Service_Application_university_project.Data
 
         private readonly string connectionString = "User Id=st67280;Password=abcde;Data Source=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=fei-sql3.upceucebny.cz)(PORT=1521))(CONNECT_DATA=(SID=BDAS)))";
 
+        private ServisOfferRepository _servisOfferRepository = new ServisOfferRepository();
+
+        private SparePartRepository _partRepository = new SparePartRepository();
+
         public async Task AddServiceSpareAsync(ServiceSpare serviceSpare, ServiceOffer serviceOffer)
         {
             using (var connection = new OracleConnection(connectionString))
@@ -71,97 +75,95 @@ namespace Auto_Service_Application_university_project.Data
             }
         }
 
-        //public async Task<ObservableCollection<ServiceSpare>> GetServiceSparesByOfferAsync(int serviceOfferId)
-        //{
-        //    var serviceSpares = new ObservableCollection<ServiceSpare>();
+        public async Task<ObservableCollection<ServiceSpare>> GetServiceSparesByOfferAsync(int serviceOfferId)
+        {
+            var serviceSpares = new ObservableCollection<ServiceSpare>();
 
-        //    using (var connection = new OracleConnection(connectionString))
-        //    {
-        //        await connection.OpenAsync();
+            using (var connection = new OracleConnection(connectionString))
+            {
+                await connection.OpenAsync();
 
-        //        using (var command = new OracleCommand("service_spare_pkg.get_service_spare_by_offer", connection))
-        //        {
-        //            command.CommandType = CommandType.StoredProcedure;
+                using (var command = new OracleCommand("service_spare_pkg.get_service_spare_by_offer", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
 
-        //            // Входные параметры
-        //            command.Parameters.Add("p_servise_offer_id", OracleDbType.Int32).Value = serviceOfferId;
+                    command.Parameters.Add("p_servise_offer_id", OracleDbType.Int32).Value = serviceOfferId;
 
-        //            // Выходные параметры
-        //            var cursorParam = new OracleParameter("p_cursor", OracleDbType.RefCursor)
-        //            {
-        //                Direction = ParameterDirection.Output
-        //            };
-        //            command.Parameters.Add(cursorParam);
+                    var cursorParam = new OracleParameter("p_cursor", OracleDbType.RefCursor)
+                    {
+                        Direction = ParameterDirection.Output
+                    };
+                    command.Parameters.Add(cursorParam);
 
-        //            try
-        //            {
-        //                using (var reader = await command.ExecuteReaderAsync(CommandBehavior.CloseConnection))
-        //                {
-        //                    while (await reader.ReadAsync())
-        //                    {
-        //                        var serviceSpare = new ServiceSpare
-        //                        {
-        //                            ServiceOfferId = serviceOfferId,
-        //                            SparePartId = reader.GetInt32(reader.GetOrdinal("spare_part_spare_part_id"))
-        //                        };
+                    try
+                    {
+                        using (var reader = await command.ExecuteReaderAsync(CommandBehavior.CloseConnection))
+                        {
+                            while (await reader.ReadAsync())
+                            {
+                                var serviceSpare = new ServiceSpare
+                                {
+                                    ServiceOffer = await _servisOfferRepository.GetServiceOfferAsync( serviceOfferId),
+                                    SparePart = await _partRepository.GetSparePartByIdAsync( reader.GetInt32(reader.GetOrdinal("spare_part_spare_part_id")))
+                                };
 
-        //                        serviceSpares.Add(serviceSpare);
-        //                    }
-        //                }
-        //            }
-        //            catch (OracleException ex)
-        //            {
-        //                throw new ApplicationException($"Ошибка при получении ServiceSpares: {ex.Message}", ex);
-        //            }
-        //        }
-        //    }
+                                serviceSpares.Add(serviceSpare);
+                            }
+                        }
+                    }
+                    catch (OracleException ex)
+                    {
+                        throw new ApplicationException($"Ошибка при получении ServiceSpares: {ex.Message}", ex);
+                    }
+                }
+            }
 
-        //    return serviceSpares;
-        //}
+            return serviceSpares;
+        }
 
-        //public async Task<ObservableCollection<ServiceSpare>> GetAllServiceSparesAsync()
-        //{
-        //    var serviceSpares = new ObservableCollection<ServiceSpare>();
+        public async Task<ObservableCollection<ServiceSpare>> GetAllServiceSparesAsync()
+        {
+            var serviceSpares = new ObservableCollection<ServiceSpare>();
 
-        //    using (var connection = new OracleConnection(connectionString))
-        //    {
-        //        await connection.OpenAsync();
+            using (var connection = new OracleConnection(connectionString))
+            {
+                await connection.OpenAsync();
 
-        //        using (var command = new OracleCommand("service_spare_pkg.get_all_service_spare", connection))
-        //        {
-        //            command.CommandType = CommandType.StoredProcedure;
+                using (var command = new OracleCommand("service_spare_pkg.get_all_service_spare", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
 
-        //            // Выходные параметры
-        //            var cursorParam = new OracleParameter("p_cursor", OracleDbType.RefCursor)
-        //            {
-        //                Direction = ParameterDirection.Output
-        //            };
-        //            command.Parameters.Add(cursorParam);
+                    // Выходные параметры
+                    var cursorParam = new OracleParameter("p_cursor", OracleDbType.RefCursor)
+                    {
+                        Direction = ParameterDirection.Output
+                    };
+                    command.Parameters.Add(cursorParam);
 
-        //            try
-        //            {
-        //                using (var reader = await command.ExecuteReaderAsync(CommandBehavior.CloseConnection))
-        //                {
-        //                    while (await reader.ReadAsync())
-        //                    {
-        //                        var serviceSpare = new ServiceSpare
-        //                        {
-        //                            ServiceOfferId = reader.GetInt32(reader.GetOrdinal("servise_offer_offer_id")),
-        //                            SparePartId = reader.GetInt32(reader.GetOrdinal("spare_part_spare_part_id"))
-        //                        };
+                    try
+                    {
+                        using (var reader = await command.ExecuteReaderAsync(CommandBehavior.CloseConnection))
+                        {
+                            while (await reader.ReadAsync())
+                            {
+                                var serviceSpare = new ServiceSpare
+                                {
+                                    ServiceOffer = await _servisOfferRepository.GetServiceOfferAsync(reader.GetInt32(reader.GetOrdinal("servise_offer_offer_id"))),
+                                    SparePart = await _partRepository.GetSparePartByIdAsync (reader.GetInt32(reader.GetOrdinal("spare_part_spare_part_id")))
+                                };
 
-        //                        serviceSpares.Add(serviceSpare);
-        //                    }
-        //                }
-        //            }
-        //            catch (OracleException ex)
-        //            {
-        //                throw new ApplicationException($"Ошибка при получении всех ServiceSpares: {ex.Message}", ex);
-        //            }
-        //        }
-        //    }
+                                serviceSpares.Add(serviceSpare);
+                            }
+                        }
+                    }
+                    catch (OracleException ex)
+                    {
+                        throw new ApplicationException($"Ошибка при получении всех ServiceSpares: {ex.Message}", ex);
+                    }
+                }
+            }
 
-        //    return serviceSpares;
-        //}
+            return serviceSpares;
+        }
     }
 }
