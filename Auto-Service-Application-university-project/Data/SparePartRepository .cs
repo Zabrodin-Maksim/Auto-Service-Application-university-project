@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -176,7 +177,7 @@ namespace Auto_Service_Application_university_project.Data
                                     SparePartId = reader.GetInt32(reader.GetOrdinal("spare_part_id")),
                                     Speciality = reader.GetString(reader.GetOrdinal("speciality")),
                                     Price = reader.GetDecimal(reader.GetOrdinal("price")),
-                                    StockAvailability = reader.GetChar(reader.GetOrdinal("stock_availability")),
+                                    //StockAvailability = reader.GetChar(reader.GetOrdinal("stock_availability")),
                                     Office = await _officeRepository.GetOfficeAsync(reader.GetInt32(reader.GetOrdinal("office_office_id")))
                                 };
 
@@ -227,7 +228,7 @@ namespace Auto_Service_Application_university_project.Data
                                     SparePartId = reader.GetInt32(reader.GetOrdinal("spare_part_id")),
                                     Speciality = reader.GetString(reader.GetOrdinal("speciality")),
                                     Price = reader.GetDecimal(reader.GetOrdinal("price")),
-                                    StockAvailability = reader.GetChar(reader.GetOrdinal("stock_availability")),
+                                    //StockAvailability = reader.GetChar(reader.GetOrdinal("stock_availability")),
                                     Office = await _officeRepository.GetOfficeAsync(reader.GetInt32(reader.GetOrdinal("office_office_id")))
                                 };
 

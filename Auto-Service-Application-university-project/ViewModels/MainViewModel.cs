@@ -79,6 +79,9 @@ namespace Auto_Service_Application_university_project.ViewModels
 
         public User authenticatedUser;
 
+        // Employer
+        public Employer authenticatedEmployer;
+
         #region Observable Collections
 
         // Clients
@@ -99,7 +102,6 @@ namespace Auto_Service_Application_university_project.ViewModels
 
         // Spare Part
         public ObservableCollection<SparePart> SpareParts { get; set; }
-        public ObservableCollection<SparePart> SparePartsByOffice { get; set; }
 
         #endregion
 
@@ -265,7 +267,12 @@ namespace Auto_Service_Application_university_project.ViewModels
                     switch (authenticatedUser.RoleId)
                     {
                         case 1: ShowForaAdmin(); break;
-                        case 2: ShowForEmployee(); break;
+                        case 2: 
+                            ShowForEmployee();
+
+                            authenticatedEmployer = await _userVM.GetEmployerByPhone(authenticatedUser.Phone);
+                            Debug.WriteLine($"[INFO] Employer Authorization successfully: {authenticatedEmployer.Phone}");
+                            break;
                         case 3: ShowForUser(); break;
                     }
                 }
@@ -896,13 +903,13 @@ namespace Auto_Service_Application_university_project.ViewModels
             }
         }
 
-        public async Task GetSparePartsByOffice(int officeId)
+        public async Task<ObservableCollection<SparePart>> GetSparePartsByOffice(int officeId)
         {
             if (flagUserLogin)
             {
                 try
                 {
-                    SparePartsByOffice = await _sparePartVM.GetSparePartsByOffice(officeId);
+                    return await _sparePartVM.GetSparePartsByOffice(officeId);
                 }
                 catch (Exception ex)
                 {
@@ -913,6 +920,7 @@ namespace Auto_Service_Application_university_project.ViewModels
             {
                 Debug.WriteLine("[INFO] Non Authoricated");
             }
+            return null;
         }
         #endregion
 

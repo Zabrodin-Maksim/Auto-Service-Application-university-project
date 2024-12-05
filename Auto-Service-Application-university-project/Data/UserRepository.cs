@@ -4,6 +4,7 @@ using Oracle.ManagedDataAccess.Client;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -99,6 +100,12 @@ namespace Auto_Service_Application_university_project.Data
                     };
                     command.Parameters.Add(roleIdParam);
 
+                    var phoneOutParam = new OracleParameter("p_phone", OracleDbType.Int32)
+                    {
+                        Direction = ParameterDirection.Output
+                    };
+                    command.Parameters.Add(phoneOutParam);
+
                     try
                     {
                         await command.ExecuteNonQueryAsync();
@@ -109,6 +116,7 @@ namespace Auto_Service_Application_university_project.Data
                         int userId = Convert.ToInt32(userIdOutParam.Value.ToString());
                         string name = nameOutParam.Value.ToString();
                         int roleId = Convert.ToInt32(roleIdParam.Value.ToString());
+                        int phone = Convert.ToInt32(phoneOutParam.Value.ToString());
 
                         if (_passwordHasher.VerifyPassword(userPassword, password))
                         {
@@ -118,7 +126,8 @@ namespace Auto_Service_Application_university_project.Data
                                 Username = usernameOut,
                                 Password = password,
                                 Name = name,
-                                RoleId = roleId
+                                RoleId = roleId,
+                                Phone = phone
                                 // Дополнительно можно загрузить Address, если необходимо
                             };
                         }else
@@ -299,6 +308,7 @@ namespace Auto_Service_Application_university_project.Data
                             }
                             else
                             {
+                                Debug.WriteLine($"[INFO] Employer not aut");
                                 // Если работодатель с таким телефоном не найден
                                 return null;
                             }

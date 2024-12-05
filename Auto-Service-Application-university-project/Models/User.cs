@@ -10,14 +10,11 @@ namespace Auto_Service_Application_university_project.Models
     {
         public int UserId { get; set; }
         public string Username { get; set; }
-        public string Password { get; set; } // Рекомендуется хранить хэш пароля
+        public string Password { get; set; } 
         public string Name { get; set; }
         public int Phone { get; set; }
         public Address Address { get; set; }
 
         public int RoleId {  get; set; }
-
-
-
     }
 }

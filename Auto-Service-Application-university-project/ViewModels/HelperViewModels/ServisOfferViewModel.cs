@@ -42,5 +42,7 @@ namespace Auto_Service_Application_university_project.ViewModels.HelperViewModel
         {
             return await _reservationRepository.GetServiceOfferAsync(offerId);
         }
+
+
     }
 }

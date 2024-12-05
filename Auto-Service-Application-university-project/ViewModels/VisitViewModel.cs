@@ -3,9 +3,11 @@ using Auto_Service_Application_university_project.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 
 namespace Auto_Service_Application_university_project.ViewModels
@@ -15,8 +17,11 @@ namespace Auto_Service_Application_university_project.ViewModels
         #region Private Fields
         private readonly MainViewModel _mainViewModel;
 
+        // Visibilities
+        private Visibility _visibilityFinishWork;
+        private Visibility _visibilityDelete;
+
         // For Lists
-        
         private ObservableCollection<SparePart> _usedSpareParts;
         private SparePart _selectedUsedSparePart;
 
@@ -26,12 +31,16 @@ namespace Auto_Service_Application_university_project.ViewModels
         private ObservableCollection<ServiceOffer> _serviceOffers;
         private ServiceOffer _selectedServiceOffer;
 
-
+        // Fields
         private int _pricePerHour;
         private int _workingHour;
         #endregion
 
         #region Properties
+        // Visibilities
+        public Visibility VisibilityFinishWork { get => _visibilityFinishWork; set => SetProperty(ref _visibilityFinishWork, value, nameof(VisibilityFinishWork)); }
+        public Visibility VisibilityDelete { get => _visibilityDelete; set => SetProperty(ref _visibilityDelete, value, nameof(VisibilityDelete)); }
+
         public ObservableCollection<SparePart> UsedSpareParts { get => _usedSpareParts; set => SetProperty(ref _usedSpareParts, value, nameof(UsedSpareParts)); }
         public SparePart SelectedUsedSparePart { get => _selectedUsedSparePart; set => SetProperty(ref _selectedUsedSparePart, value, nameof(SelectedUsedSparePart)); }
 
@@ -60,10 +69,12 @@ namespace Auto_Service_Application_university_project.ViewModels
         {
             _mainViewModel = mainViewModel;
 
-            
-            SpareParts = _mainViewModel.SparePartsByOffice;
+            SetVisibilitiesByUserRole();
 
+            #region fill Lists
+            FillinOutSpareParts();
             ServiceOffers = _mainViewModel.ServiceOffersByOffice;
+            #endregion
 
             #region Init Commands
             FinishWorkCommand = new MyICommand<object>(async parametr => await OnFinishWork(parametr));
@@ -74,7 +85,37 @@ namespace Auto_Service_Application_university_project.ViewModels
             #endregion
         }
 
-        
+        public void SetVisibilitiesByUserRole()
+        {
+            switch (_mainViewModel.authenticatedUser.RoleId)
+            {
+                case 2: 
+                    VisibilityDelete = Visibility.Collapsed;
+                    VisibilityFinishWork = Visibility.Visible;
+                    break;
+                case 3:
+                    VisibilityDelete = Visibility.Visible;
+                    VisibilityFinishWork = Visibility.Collapsed;
+                    break;
+            }
+
+        }
+
+        public async Task FillinOutSpareParts()
+        {
+            SpareParts = await _mainViewModel.GetSparePartsByOffice(_mainViewModel.authenticatedEmployer.Office.OfficeId);
+            try
+            {
+                Office office = new Office { OfficeId = _mainViewModel.authenticatedEmployer.Office.OfficeId };
+                Debug.WriteLine($"[INFO]Error Authenticate User: {office.OfficeId}");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"[INFO]Error Authenticate User: {ex.Message}");
+            }
+        }
+
+
         private async Task OnFinishWork(object param)
         {
 

@@ -231,5 +231,7 @@ namespace Auto_Service_Application_university_project.Data
             return offer;
         }
 
+
+
     }
 }
