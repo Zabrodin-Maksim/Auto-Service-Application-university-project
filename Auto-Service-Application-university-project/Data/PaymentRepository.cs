@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -25,6 +26,10 @@ namespace Auto_Service_Application_university_project.Data
                 {
                     command.CommandType = CommandType.StoredProcedure;
 
+                    // Установка привязки по имени
+                    command.BindByName = true;
+
+                    // Входные параметры
                     command.Parameters.Add("p_bill_id", OracleDbType.Int32).Value = payment.Bill?.BillId ?? (object)DBNull.Value;
                     command.Parameters.Add("p_payment_type_id", OracleDbType.Int32).Value = payment.PaymentType?.PaymentTypeId ?? (object)DBNull.Value;
                     command.Parameters.Add("p_client_id", OracleDbType.Int32).Value = payment.Client?.ClientId ?? (object)DBNull.Value;
@@ -45,6 +50,7 @@ namespace Auto_Service_Application_university_project.Data
                         command.Parameters.Add("p_taken", OracleDbType.Decimal).Value = DBNull.Value;
                     }
 
+                    // Выходной параметр
                     var paymentIdParam = new OracleParameter("p_payment_id", OracleDbType.Int32)
                     {
                         Direction = ParameterDirection.Output
@@ -55,14 +61,22 @@ namespace Auto_Service_Application_university_project.Data
                     {
                         await command.ExecuteNonQueryAsync();
                         payment.PaymentId = Convert.ToInt32(paymentIdParam.Value.ToString());
+                        Debug.WriteLine($"[INFO]Payment inserted successfully with PaymentId: {payment.PaymentId}");
                     }
                     catch (OracleException ex)
                     {
+                        Debug.WriteLine($"[ERROR]OracleException: {ex.Message}");
                         throw new ApplicationException($"Ошибка при вставке платежа: {ex.Message}", ex);
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine($"[ERROR]General Exception: {ex.Message}");
+                        throw new ApplicationException($"Неизвестная ошибка при вставке платежа: {ex.Message}", ex);
                     }
                 }
             }
         }
+
 
         public async Task UpdatePaymentAsync(Payment payment)
         {

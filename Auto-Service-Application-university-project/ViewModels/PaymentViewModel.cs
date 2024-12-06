@@ -52,7 +52,7 @@ namespace Auto_Service_Application_university_project.ViewModels
                 SetProperty(ref _selectedPaymentType, value, nameof(PaymentTypeSelected));
                 if (_selectedPaymentType != null)
                 {
-                    if (_selectedPaymentType.TypeName == "Card")
+                    if (_selectedPaymentType.TypeName == "card")
                     {
                         VisibilityCashTaken = Visibility.Collapsed;
                         VisibleNumberCard = Visibility.Visible;
@@ -142,45 +142,73 @@ namespace Auto_Service_Application_university_project.ViewModels
             }
         }
 
-       private async Task OnPaid(object parameter)
+        private async Task OnPaid(object parameter)
         {
             if (CheckInputs())
             {
-                if (PaymentTypeSelected.TypeName == "Card" ||
-                    (PaymentTypeSelected.TypeName == "Cash" && decimal.Parse(CashTaken) >= SelectedBills.Price))
+                if (PaymentTypeSelected.TypeName.Equals("card", StringComparison.OrdinalIgnoreCase) ||
+                    (PaymentTypeSelected.TypeName.Equals("cash", StringComparison.OrdinalIgnoreCase) && decimal.TryParse(CashTaken, out decimal cashAmount) && cashAmount >= SelectedBills.Price))
                 {
+                    // Проверка на null для всех связанных объектов
+                    if (SelectedBills?.ServiceOffer?.Car?.Reservation?.Client == null)
+                    {
+                        ErrorMessage = "Не удалось загрузить связанные данные клиента.";
+                        return;
+                    }
+
+                    // Загрузка клиента
+                    var client = await _mainViewModel.GetClientById(SelectedBills.ServiceOffer.Car.Reservation.Client.ClientId);
+                    if (client == null)
+                    {
+                        ErrorMessage = "Клиент не найден.";
+                        return;
+                    }
+
                     var payment = new Payment
                     {
                         Bill = SelectedBills,
-                        PaymentType = PaymentTypeSelected
+                        PaymentType = PaymentTypeSelected,
+                        Client = client
                     };
 
                     // Fill By Type Payment
-                    if (PaymentTypeSelected.TypeName == "Card")
+                    if (PaymentTypeSelected.TypeName.Equals("card", StringComparison.OrdinalIgnoreCase))
                     {
+                        if (!int.TryParse(NumberCard, out int numberCard))
+                        {
+                            ErrorMessage = "Неверный номер карты.";
+                            return;
+                        }
+
                         payment.Card = new Card
                         {
-                            NumberCard = int.Parse(NumberCard)
+                            NumberCard = numberCard
                         };
                     }
-                    else if (PaymentTypeSelected.TypeName == "Cash")
+                    else if (PaymentTypeSelected.TypeName.Equals("cash", StringComparison.OrdinalIgnoreCase))
                     {
+                        if (!decimal.TryParse(CashTaken, out decimal cashTaken))
+                        {
+                            ErrorMessage = "Неверная сумма наличных.";
+                            return;
+                        }
+
                         payment.Cash = new Cash
                         {
-                            Taken = decimal.Parse(CashTaken)
+                            Taken = cashTaken
                         };
                     }
 
-                    payment.Client = await _mainViewModel.GetClientById(SelectedBills.ServiceOffer.Car.Reservation.Client.ClientId);
+                    if (payment.Card != null)
+                        Debug.WriteLine($"[INFO]NumberCard: {payment.Card.NumberCard}");
 
-                    Debug.WriteLine($"[INFO]Error Update Client: {SelectedBills.ServiceOffer.OfferId}");
-                    Debug.WriteLine($"[INFO]Error Update Client: {SelectedBills.ServiceOffer.Car.CarId}");
-                    Debug.WriteLine($"[INFO]Error Update Client: {SelectedBills.ServiceOffer.Car.Reservation.ReservationId}");
-                    Debug.WriteLine($"[INFO]Error Update Client: {SelectedBills.ServiceOffer.Car.Reservation.Client.ClientId}");
+                    if (payment.Cash != null)
+                        Debug.WriteLine($"[INFO]CashTaken: {payment.Cash.Taken}");
 
+                    // Вызов метода для сохранения платежа
                     await _mainViewModel.AddPayment(payment);
 
-                    if (PaymentTypeSelected.TypeName == "Cash")
+                    if (PaymentTypeSelected.TypeName.Equals("cash", StringComparison.OrdinalIgnoreCase))
                     {
                         MessageBox.Show($"Must give change = {decimal.Parse(CashTaken) - SelectedBills.Price}.",
                                         "Change", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -194,6 +222,7 @@ namespace Auto_Service_Application_university_project.ViewModels
                 }
             }
         }
+
 
         private void OnClear() 
         {
@@ -209,7 +238,7 @@ namespace Auto_Service_Application_university_project.ViewModels
         {
             if (SelectedBills != null)
             {
-                if (PaymentTypeSelected.TypeName == "Card" && !string.IsNullOrEmpty(NumberCard) || PaymentTypeSelected.TypeName == "Cash" && !string.IsNullOrEmpty(CashTaken))
+                if (PaymentTypeSelected.TypeName == "card" && !string.IsNullOrEmpty(NumberCard) || PaymentTypeSelected.TypeName == "cash" && !string.IsNullOrEmpty(CashTaken))
                 {
                     return true;
                 }

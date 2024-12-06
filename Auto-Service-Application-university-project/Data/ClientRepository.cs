@@ -168,10 +168,10 @@ namespace Auto_Service_Application_university_project.Data
                 {
                     command.CommandType = CommandType.StoredProcedure;
 
-                    // Входные параметры
+                    // Входной параметр
                     command.Parameters.Add("p_client_id", OracleDbType.Int32).Value = clientId;
 
-                    // Выходные параметры
+                    // Выходной параметр
                     var cursorParam = new OracleParameter("p_cursor", OracleDbType.RefCursor)
                     {
                         Direction = ParameterDirection.Output
@@ -182,8 +182,15 @@ namespace Auto_Service_Application_university_project.Data
                     {
                         using (var reader = await command.ExecuteReaderAsync(CommandBehavior.CloseConnection))
                         {
+                            // Если данные есть, возвращаем клиента
                             if (await reader.ReadAsync())
                             {
+                                // Проверяем на случай, если данные клиента отсутствуют
+                                if (reader.IsDBNull(reader.GetOrdinal("client_id")))
+                                {
+                                    return null;
+                                }
+
                                 return new Client
                                 {
                                     ClientId = reader.GetInt32(reader.GetOrdinal("client_id")),
@@ -199,10 +206,9 @@ namespace Auto_Service_Application_university_project.Data
                                     }
                                 };
                             }
-                            else
-                            {
-                                return null;
-                            }
+
+                            // Если запись не найдена
+                            return null;
                         }
                     }
                     catch (OracleException ex)
@@ -212,5 +218,6 @@ namespace Auto_Service_Application_university_project.Data
                 }
             }
         }
+
     }
 }
