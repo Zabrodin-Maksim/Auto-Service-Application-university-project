@@ -21,7 +21,7 @@ namespace Auto_Service_Application_university_project.Models
         public int? RadiusWheel { get; set; } // for 'pneuservise'
 
         // Info for List
-        public string CarInfo { get => Car.SPZ + " " + Car.CarBrand + " " + Car.Symptoms; }
+        public string CarInfo { get => Car.SPZ + " " + Car.CarBrand + " " + Car.Symptoms ; }
         public string DateReservation { get => Car.Reservation.DateReservace.ToString("dd.MM.yyyy"); }
         public string Typ { get => ServiceType.ToString(); }
 

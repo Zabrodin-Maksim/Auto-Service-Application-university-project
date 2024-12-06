@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -146,9 +147,15 @@ namespace Auto_Service_Application_university_project.Data
                                             OfficeId = reader.GetInt32(reader.GetOrdinal("office_office_id"))
                                             // Дополнительно можно загрузить данные офиса при необходимости
                                         },
-                                        Client = await clientRepository.GetClientPublicAsync(reader.GetInt32(reader.GetOrdinal("client_client_id")))
+                                        //Client = await clientRepository.GetClientPublicAsync(reader.GetInt32(reader.GetOrdinal("client_client_id")))
+                                        Client = new Client
+                                        {
+                                            ClientId = reader.GetInt32(reader.GetOrdinal("client_client_id"))
+                                            // Дополнительно можно загрузить данные клиента при необходимости
+                                        }
                                     }
                                 };
+
                             }
                             else
                             {

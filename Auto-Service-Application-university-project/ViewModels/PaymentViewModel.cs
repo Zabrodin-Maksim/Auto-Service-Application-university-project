@@ -3,6 +3,7 @@ using Auto_Service_Application_university_project.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -141,25 +142,48 @@ namespace Auto_Service_Application_university_project.ViewModels
             }
         }
 
-        private async Task OnPaid(object parametr)
+       private async Task OnPaid(object parameter)
         {
             if (CheckInputs())
             {
-                if (PaymentTypeSelected.TypeName == "Card" || PaymentTypeSelected.TypeName == "Cash" && decimal.Parse(CashTaken) >= SelectedBills.Price)
+                if (PaymentTypeSelected.TypeName == "Card" ||
+                    (PaymentTypeSelected.TypeName == "Cash" && decimal.Parse(CashTaken) >= SelectedBills.Price))
                 {
-                    await _mainViewModel.AddPayment(new Payment
+                    var payment = new Payment
                     {
                         Bill = SelectedBills,
-                        Client = SelectedBills.ServiceOffer.Car.Reservation.Client,
-                        PaymentType = PaymentTypeSelected,
+                        PaymentType = PaymentTypeSelected
+                    };
 
-                        //TODO: ДОБАВИТЬ Card ИЛИ Cash
+                    // Fill By Type Payment
+                    if (PaymentTypeSelected.TypeName == "Card")
+                    {
+                        payment.Card = new Card
+                        {
+                            NumberCard = int.Parse(NumberCard)
+                        };
+                    }
+                    else if (PaymentTypeSelected.TypeName == "Cash")
+                    {
+                        payment.Cash = new Cash
+                        {
+                            Taken = decimal.Parse(CashTaken)
+                        };
+                    }
 
-                    });
+                    payment.Client = await _mainViewModel.GetClientById(SelectedBills.ServiceOffer.Car.Reservation.Client.ClientId);
+
+                    Debug.WriteLine($"[INFO]Error Update Client: {SelectedBills.ServiceOffer.OfferId}");
+                    Debug.WriteLine($"[INFO]Error Update Client: {SelectedBills.ServiceOffer.Car.CarId}");
+                    Debug.WriteLine($"[INFO]Error Update Client: {SelectedBills.ServiceOffer.Car.Reservation.ReservationId}");
+                    Debug.WriteLine($"[INFO]Error Update Client: {SelectedBills.ServiceOffer.Car.Reservation.Client.ClientId}");
+
+                    await _mainViewModel.AddPayment(payment);
 
                     if (PaymentTypeSelected.TypeName == "Cash")
                     {
-                        MessageBox.Show($"Must give change = {decimal.Parse(CashTaken) - SelectedBills.Price} .", "Change", MessageBoxButton.OK, MessageBoxImage.Information);
+                        MessageBox.Show($"Must give change = {decimal.Parse(CashTaken) - SelectedBills.Price}.",
+                                        "Change", MessageBoxButton.OK, MessageBoxImage.Information);
                     }
 
                     OnClear();

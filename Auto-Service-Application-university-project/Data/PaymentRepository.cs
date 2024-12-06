@@ -173,8 +173,7 @@ namespace Auto_Service_Application_university_project.Data
                                     },
                                     PaymentType = new PaymentType
                                     {
-                                        PaymentTypeId = reader.GetInt32(reader.GetOrdinal("type_name")) // Предполагается, что type_name числовой ID, иначе скорректируйте
-                                                                                                        // Заполните другие свойства PaymentType при необходимости
+                                        TypeName = reader.GetString(reader.GetOrdinal("type_name"))
                                     },
                                     Card = reader.IsDBNull(reader.GetOrdinal("number_card")) ? null : new Card
                                     {
