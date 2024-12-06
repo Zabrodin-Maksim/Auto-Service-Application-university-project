@@ -159,6 +159,7 @@ namespace Auto_Service_Application_university_project.ViewModels
 
                     MessageBox.Show($"Must give change = {decimal.Parse(CashTaken) - SelectedBills.Price} .", "Change", MessageBoxButton.OK, MessageBoxImage.Information);
 
+                    OnClear();
                 }
                 else
                 {
