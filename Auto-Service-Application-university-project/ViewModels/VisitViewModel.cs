@@ -60,18 +60,17 @@ namespace Auto_Service_Application_university_project.ViewModels
             {
                 if (value.All(char.IsDigit))
                 {
-                    if (value.Length <= 9 && value.Length >= 1)
+                    if (value.Length <= 9)
                     {
+                        ErrorMessage = "";
                         SetProperty(ref _pricePerHour, value, nameof(PricePerHour));
                     }else
                     {
-                        ErrorMessage = "";
                         ErrorMessage = "Fill this field! Maximum 9 digits allowed.";
                     }
                 }
                 else
                 {
-                    ErrorMessage = "";
                     ErrorMessage = "Use only numbers!";
                 }
             }
@@ -80,19 +79,18 @@ namespace Auto_Service_Application_university_project.ViewModels
             {
                 if (value.All(char.IsDigit))
                 {
-                    if (value.Length <= 9 && value.Length >= 1)
+                    if (value.Length <= 9)
                     {
+                        ErrorMessage = "";
                         SetProperty(ref _workingHour, value, nameof(WorkingHour));
                     }
                     else
                     {
-                        ErrorMessage = "";
                         ErrorMessage = "Fill this field! Maximum 9 digits allowed.";
                     }
                 }
                 else
                 {
-                    ErrorMessage = "";
                     ErrorMessage = "Use only numbers!";
                 }
             }
@@ -163,18 +161,66 @@ namespace Auto_Service_Application_university_project.ViewModels
             }
         }
 
+        public bool CheckInputs()
+        {
+            if (!string.IsNullOrEmpty(PricePerHour) && !string.IsNullOrEmpty(WorkingHour) && PricePerHour.All(char.IsDigit) && WorkingHour.All(char.IsDigit))
+            {
+                return true;
+            }
+            ErrorMessage = "Please, Fill all fields using numbers!";
+            return false;
+        }
 
         private async Task OnFinishWork(object param)
         {
+            if (SelectedServiceOffer != null)
+            {
+                if (CheckInputs())
+                {
+                    ErrorMessage = "";
+                    // Update Service Offer
+                    ServiceOffer UpdatedserviceOffer = SelectedServiceOffer;
+                    UpdatedserviceOffer.PricePerHour = int.Parse(PricePerHour);
+                    UpdatedserviceOffer.DateOffer = DateTime.Now;
+                    UpdatedserviceOffer.Employer = _mainViewModel.authenticatedEmployer;
+                    UpdatedserviceOffer.WorkingHours = int.Parse(WorkingHour);
 
+                    await _mainViewModel.UpdateServiceOffer(UpdatedserviceOffer);
+
+                    // Math price used spair parts
+                    decimal price = 0;
+                    foreach (SparePart usedSparePart in UsedSpareParts)
+                    {
+                        price = price + usedSparePart.Price;
+                    }
+
+                    // Add new Bill
+                    //Bill bill = new Bill
+                    //{
+                    //    ServiceOffer = UpdatedserviceOffer,
+                    //    DateBill = DateTime.Now,
+                    //    Price = (decimal)UpdatedserviceOffer.PricePerHour * (decimal)UpdatedserviceOffer.WorkingHours + price
+                    //};
+                    //await _mainViewModel.AddBill(bill);
+                }
+            }
+            else
+            {
+                ErrorMessage = "Select Servis Offer!";
+            }
         }
         private async Task OnDelete(object param)
         {
             if (SelectedServiceOffer != null)
             {
+                ErrorMessage = "";
                 _mainViewModel.DeleteServiceOffer(SelectedServiceOffer.OfferId);
 
                 FillinOutLists();
+            }
+            else
+            {
+                ErrorMessage = "Select Servis Offer!";
             }
         }
 
@@ -183,11 +229,11 @@ namespace Auto_Service_Application_university_project.ViewModels
         {
             if (SelectedUsedSparePart != null)
             {
+                ErrorMessage = "";
                 UsedSpareParts.Remove(SelectedUsedSparePart);
             }
             else
             {
-                ErrorMessage = "";
                 ErrorMessage = "You stupit bitch? SELECT USED SPARE PART MATHER F*CKER";
             }
         }
@@ -197,11 +243,11 @@ namespace Auto_Service_Application_university_project.ViewModels
             
             if (SelectedSparePart != null)
             {
+                ErrorMessage = "";
                 UsedSpareParts.Add(SelectedSparePart);
             }
             else
             {
-                ErrorMessage = "";
                 ErrorMessage = "Ouuuu, you realy? SELECT USED SPARE PART MATHER F*CKER";
                 if (flagError >= 3)
                 {
