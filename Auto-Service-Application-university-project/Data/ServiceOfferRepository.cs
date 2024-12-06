@@ -121,23 +121,12 @@ namespace Auto_Service_Application_university_project.Data
                 {
                     command.CommandType = CommandType.StoredProcedure;
 
-                    // Входные параметры
+
                     command.Parameters.Add("p_offer_id", OracleDbType.Int32).Value = offer.OfferId;
                     command.Parameters.Add("p_price_per_hour", OracleDbType.Int32).Value = (object)offer.PricePerHour ?? DBNull.Value;
                     command.Parameters.Add("p_date_offer", OracleDbType.Date).Value = (object)offer.DateOffer ?? DBNull.Value;
-                    command.Parameters.Add("p_employer_employer_id", OracleDbType.Int32).Value = (object)offer.Employer?.EmployerId ?? DBNull.Value;
-                    command.Parameters.Add("p_car_spz", OracleDbType.Varchar2).Value = (object)offer.Car.SPZ ?? DBNull.Value;
-                    command.Parameters.Add("p_car_car_brand", OracleDbType.Varchar2).Value = (object)offer.Car.CarBrand ?? DBNull.Value;
-                    command.Parameters.Add("p_car_symptoms", OracleDbType.Varchar2).Value = (object)offer.Car?.Symptoms ?? DBNull.Value;
-                    command.Parameters.Add("p_date_reservace", OracleDbType.Date).Value = (object)offer.Car.Reservation?.DateReservace ?? DBNull.Value;
-                    command.Parameters.Add("p_office_office_id", OracleDbType.Int32).Value = (object)offer.Car?.Reservation?.Office.OfficeId ?? DBNull.Value;
-                    command.Parameters.Add("p_client_client_id", OracleDbType.Int32).Value = (object)offer.Car?.Reservation?.Client.ClientId ?? DBNull.Value;
-                    command.Parameters.Add("p_service_type_id", OracleDbType.Int32).Value = (object)offer.ServiceType?.ServiceTypeId ?? DBNull.Value;
+                    command.Parameters.Add("p_employer_id", OracleDbType.Int32).Value = (object)offer.Employer?.EmployerId ?? DBNull.Value;
                     command.Parameters.Add("p_working_hours", OracleDbType.Int32).Value = (object)offer.WorkingHours ?? DBNull.Value;
-
-                    // Специфичные параметры
-                    command.Parameters.Add("p_speciality", OracleDbType.Varchar2).Value = (object)offer.Speciality ?? DBNull.Value;
-                    command.Parameters.Add("p_radius_wheel", OracleDbType.Int32).Value = (object)offer.RadiusWheel ?? DBNull.Value;
 
                     try
                     {

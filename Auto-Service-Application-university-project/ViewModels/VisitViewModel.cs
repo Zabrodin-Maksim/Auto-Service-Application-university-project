@@ -147,17 +147,30 @@ namespace Auto_Service_Application_university_project.ViewModels
 
         public async Task FillinOutLists()
         {
+            ObservableCollection<ServiceOffer> NotSortedServiceOffers;
+
+            ServiceOffers = new ObservableCollection<ServiceOffer>();
+
             // Admin
             if (_mainViewModel.authenticatedAdmin != null)
             {
                 SpareParts = await _mainViewModel.GetSparePartsByOffice(_mainViewModel.authenticatedAdmin.Office.OfficeId);
-                ServiceOffers = await _mainViewModel.FillinOutServiceOffersListByOffice(_mainViewModel.authenticatedAdmin.Office.OfficeId);
+                NotSortedServiceOffers = await _mainViewModel.FillinOutServiceOffersListByOffice(_mainViewModel.authenticatedAdmin.Office.OfficeId);
             }
             // Employer
             else
             {
                 SpareParts = await _mainViewModel.GetSparePartsByOffice(_mainViewModel.authenticatedEmployer.Office.OfficeId);
-                ServiceOffers = await _mainViewModel.FillinOutServiceOffersListByOffice(_mainViewModel.authenticatedEmployer.Office.OfficeId);
+                NotSortedServiceOffers = await _mainViewModel.FillinOutServiceOffersListByOffice(_mainViewModel.authenticatedEmployer.Office.OfficeId);
+            }
+
+            // Sorting List of ServiceOffers wich not finish
+            foreach (ServiceOffer serviceOffer in NotSortedServiceOffers)
+            {
+                if(serviceOffer.Employer == null)
+                {
+                    ServiceOffers.Add(serviceOffer);
+                }
             }
         }
 
@@ -169,6 +182,14 @@ namespace Auto_Service_Application_university_project.ViewModels
             }
             ErrorMessage = "Please, Fill all fields using numbers!";
             return false;
+        }
+
+        public void ClearAllInputs()
+        {
+            UsedSpareParts = new ObservableCollection<SparePart>();
+            PricePerHour = "";
+            WorkingHour = "";
+            FillinOutLists();
         }
 
         private async Task OnFinishWork(object param)
@@ -192,16 +213,22 @@ namespace Auto_Service_Application_university_project.ViewModels
                     foreach (SparePart usedSparePart in UsedSpareParts)
                     {
                         price = price + usedSparePart.Price;
+                        // Add Service Spair
+                        await _mainViewModel.AddServiceSpare(usedSparePart, UpdatedserviceOffer);
                     }
 
                     // Add new Bill
-                    //Bill bill = new Bill
-                    //{
-                    //    ServiceOffer = UpdatedserviceOffer,
-                    //    DateBill = DateTime.Now,
-                    //    Price = (decimal)UpdatedserviceOffer.PricePerHour * (decimal)UpdatedserviceOffer.WorkingHours + price
-                    //};
-                    //await _mainViewModel.AddBill(bill);
+                    Bill bill = new Bill
+                    {
+                        ServiceOffer = UpdatedserviceOffer,
+                        DateBill = DateTime.Now,
+                        Price = (decimal)UpdatedserviceOffer.PricePerHour * (decimal)UpdatedserviceOffer.WorkingHours + price
+                    };
+                    await _mainViewModel.AddBill(bill);
+
+                    
+
+                    ClearAllInputs();
                 }
             }
             else

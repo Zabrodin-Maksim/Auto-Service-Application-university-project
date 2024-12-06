@@ -170,6 +170,9 @@ namespace Auto_Service_Application_university_project.ViewModels
                 //Hide all buttons
                 HideAllVisibilites();
 
+                // Navigate to login page
+                NavigateToLoginCommand.Execute(null);
+
                 //TODO: ОТЧИЩЕНИЕ ВСЕХ ЛИСТОВ
                 Clients.Clear();
                 Offices.Clear();
@@ -178,9 +181,6 @@ namespace Auto_Service_Application_university_project.ViewModels
                 ServiceOffers.Clear();
                 Cars.Clear();
                 SpareParts.Clear();
-
-                // Navigate to login page
-                NavigateToLoginCommand.Execute(null);
             }
             else
             {
@@ -736,13 +736,13 @@ namespace Auto_Service_Application_university_project.ViewModels
         #endregion
 
         #region Service Spare Data Methods
-        public async Task AddServiceSpare(ServiceSpare serviceSpare, ServiceOffer serviceOffer)
+        public async Task AddServiceSpare(SparePart sparePart, ServiceOffer serviceOffer)
         {
             if (flagUserLogin)
             {
                 try
                 {
-                    await _serviceSpareVM.AddServiceSpare(serviceSpare, serviceOffer);
+                    await _serviceSpareVM.AddServiceSpare(sparePart, serviceOffer);
                 }
                 catch (Exception ex)
                 {

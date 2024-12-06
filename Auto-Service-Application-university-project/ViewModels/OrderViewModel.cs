@@ -53,7 +53,20 @@ namespace Auto_Service_Application_university_project.ViewModels
             }
         }
 
-        public string CarSPZ { get => _carSPZ; set => SetProperty(ref _carSPZ, value, nameof(CarSPZ)); }
+        public string CarSPZ
+        {
+            get => _carSPZ; set
+            {
+                if (value.Length <= 7)
+                {
+                    SetProperty(ref _carSPZ, value, nameof(CarSPZ));
+                }
+                else
+                {
+                    ErrorMessage = "Maximum 7 charakters";
+                }
+            }
+        }
         public string CarBrand { get => _carBrand; set => SetProperty(ref _carBrand, value, nameof(CarBrand)); }
         public string CarSymptoms { get => _carSymptoms; set => SetProperty(ref _carSymptoms, value, nameof(CarSymptoms)); }
 
@@ -64,30 +77,37 @@ namespace Auto_Service_Application_university_project.ViewModels
         public Visibility VisibilityRadiusWheel { get => _visibilityRadiusWheel; set => SetProperty(ref _visibilityRadiusWheel, value, nameof(VisibilityRadiusWheel)); }
 
         public string ServisTypeSpeciality { get => _servisTypeSpeciality; set => SetProperty(ref _servisTypeSpeciality, value, nameof(ServisTypeSpeciality)); }
-        public string RadiusWheel { get => _serviceTypeRadiusWheel; 
-            set  
+        public string RadiusWheel
+        {
+            get => _serviceTypeRadiusWheel;
+            set
             {
                 if (value.All(char.IsDigit))
                 {
                     SetProperty(ref _serviceTypeRadiusWheel, value, nameof(RadiusWheel));
                 }
-            } 
+            }
         }
 
         public ObservableCollection<ServiceType> ServiceTypes { get => _serviceTypes; set => SetProperty(ref _serviceTypes, value, nameof(ServiceTypes)); }
-        public ServiceType ServiceTypeSelected { get => _serviceTypeSelected;
+        public ServiceType ServiceTypeSelected
+        {
+            get => _serviceTypeSelected;
             set
             {
                 SetProperty(ref _serviceTypeSelected, value, nameof(ServiceTypeSelected));
-                if (_serviceTypeSelected.TypeName == "pneuservise")
+                if (_serviceTypeSelected != null)
                 {
-                    VisibleServisTypeSpec = Visibility.Collapsed;
-                    VisibilityRadiusWheel = Visibility.Visible;
-                }
-                else
-                {
-                    VisibilityRadiusWheel = Visibility.Collapsed;
-                    VisibleServisTypeSpec = Visibility.Visible;
+                    if (_serviceTypeSelected.TypeName == "pneuservise")
+                    {
+                        VisibleServisTypeSpec = Visibility.Collapsed;
+                        VisibilityRadiusWheel = Visibility.Visible;
+                    }
+                    else
+                    {
+                        VisibilityRadiusWheel = Visibility.Collapsed;
+                        VisibleServisTypeSpec = Visibility.Visible;
+                    }
                 }
             }
         }

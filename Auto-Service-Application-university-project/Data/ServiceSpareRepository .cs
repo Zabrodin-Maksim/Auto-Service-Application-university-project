@@ -19,23 +19,18 @@ namespace Auto_Service_Application_university_project.Data
 
         private SparePartRepository _partRepository = new SparePartRepository();
 
-        public async Task AddServiceSpareAsync(ServiceSpare serviceSpare, ServiceOffer serviceOffer)
+        public async Task AddServiceSpareAsync(SparePart sparepart, ServiceOffer serviceOffer)
         {
             using (var connection = new OracleConnection(connectionString))
             {
                 await connection.OpenAsync();
 
-                using (var command = new OracleCommand("service_spare_pkg.add_service_spare", connection))
+                using (var command = new OracleCommand("service_spare_pkg.insert_service_spare", connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
 
-                    // Входные параметры
                     command.Parameters.Add("p_servise_offer_id", OracleDbType.Int32).Value = serviceOffer.OfferId;
-                    command.Parameters.Add("p_spare_part_id", OracleDbType.Int32).Value = serviceSpare.SparePart.SparePartId;
-                    command.Parameters.Add("p_price_per_hour", OracleDbType.Int32).Value = (object)serviceOffer.PricePerHour ?? DBNull.Value;
-                    command.Parameters.Add("p_date_offer", OracleDbType.Date).Value = (object)serviceOffer.DateOffer ?? DBNull.Value;
-                    command.Parameters.Add("p_employer_id", OracleDbType.Int32).Value = (object)serviceOffer.Employer.EmployerId ?? DBNull.Value;
-                    command.Parameters.Add("p_working_hours", OracleDbType.Int32).Value = (object)serviceOffer.WorkingHours ?? DBNull.Value;
+                    command.Parameters.Add("p_spare_part_id", OracleDbType.Int32).Value = sparepart.SparePartId;
 
                     try
                     {

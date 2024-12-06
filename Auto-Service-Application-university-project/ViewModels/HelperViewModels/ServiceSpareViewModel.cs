@@ -18,9 +18,10 @@ namespace Auto_Service_Application_university_project.ViewModels.HelperViewModel
             _repository = new ServiceSpareRepository();
         }
 
-        public async Task AddServiceSpare(ServiceSpare serviceSpare, ServiceOffer serviceOffer)
+        public async Task AddServiceSpare(SparePart sparePart, ServiceOffer serviceOffer)
         {
-            await _repository.AddServiceSpareAsync(serviceSpare, serviceOffer);
+
+            await _repository.AddServiceSpareAsync(sparePart, serviceOffer);
         }
 
         public async Task RemoveServiceSpare(int serviceOfferId, int sparePartId)
