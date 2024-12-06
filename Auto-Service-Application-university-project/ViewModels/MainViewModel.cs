@@ -62,7 +62,7 @@ namespace Auto_Service_Application_university_project.ViewModels
         private PaymentTypeViewModel _paymentTypeVM;
 
         // Payment
-        private Payment _paymentVM;
+        private PaymentDataViewModel _paymentVM;
         #endregion
 
         #endregion
@@ -1191,7 +1191,99 @@ namespace Auto_Service_Application_university_project.ViewModels
         #region Payment Data Methods
         public async Task InsertPayment(Payment payment)
         {
+            if (flagUserLogin)
+            {
+                try
+                {
+                    await _paymentVM.AddPayment(payment);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[INFO]Error Add new Payment: {ex.Message}");
+                }
+            }
+            else
+            {
+                Debug.WriteLine("[INFO] Non Authoricated");
+            }
+        }
 
+        public async Task UpdatePayment(Payment payment)
+        {
+            if (flagUserLogin)
+            {
+                try
+                {
+                    await _paymentVM.UpdatePayment(payment);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[INFO]Error Update Payment: {ex.Message}");
+                }
+            }
+            else
+            {
+                Debug.WriteLine("[INFO] Non Authoricated");
+            }
+        }
+
+        public async Task DeletePayment(int paymentId)
+        {
+            if (flagUserLogin)
+            {
+                try
+                {
+                    await _paymentVM.DeletePayment(paymentId);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[INFO]Error Delete Payment: {ex.Message}");
+                }
+            }
+            else
+            {
+                Debug.WriteLine("[INFO] Non Authoricated");
+            }
+        }
+
+        public async Task<ObservableCollection<Payment>> GetAllPayments()
+        {
+            if (flagUserLogin)
+            {
+                try
+                {
+                    return await _paymentVM.GetAllPayments();
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[INFO]Error get all Payments: {ex.Message}");
+                }
+            }
+            else
+            {
+                Debug.WriteLine("[INFO] Non Authoricated");
+            }
+            return null;
+        }
+
+        public async Task<Payment> GetPaymentByIdAsync(int paymentId)
+        {
+            if (flagUserLogin)
+            {
+                try
+                {
+                    return await _paymentVM.GetPaymentByIdAsync(paymentId);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[INFO]Error get all Payments by id: {ex.Message}");
+                }
+            }
+            else
+            {
+                Debug.WriteLine("[INFO] Non Authoricated");
+            }
+            return null;
         }
         #endregion
 
