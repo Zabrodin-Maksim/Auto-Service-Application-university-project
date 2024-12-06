@@ -24,5 +24,8 @@ namespace Auto_Service_Application_university_project.Models
         public string CarInfo { get => Car.SPZ + " " + Car.CarBrand + " " + Car.Symptoms; }
         public string DateReservation { get => Car.Reservation.DateReservace.ToString("dd.MM.yyyy"); }
         public string Typ { get => ServiceType.ToString(); }
+
+        public string SmallInfoReservation { get => $"{Car.SPZ} {Car.Reservation.Client.ClientName}"; }
+        public string InfoEmployer { get => Employer.NameEmployee; }
     }
 }

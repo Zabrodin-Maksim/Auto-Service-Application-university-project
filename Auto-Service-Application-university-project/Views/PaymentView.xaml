@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Auto_Service_Application_university_project.Views"
              mc:Ignorable="d" 
-                                       xmlns:fa="http://schemas.fontawesome.io/icons/" 
+             xmlns:fa="http://schemas.fontawesome.io/icons/" 
              d:DesignHeight="740" d:DesignWidth="870">
     <UserControl.Resources>
 
@@ -55,7 +55,7 @@
 
             <!-- Style List Box-->
             <Style TargetType="ListView" x:Key="ListOfClients">
-                <Setter Property="MaxWidth" Value="420"/>
+                <Setter Property="MaxWidth" Value="440"/>
                 <Setter Property="Background" Value="LightGray"/>
                 <Setter Property="Foreground" Value="red"/>
                 <Setter Property="FontSize" Value="15"/>
@@ -77,7 +77,7 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <TextBlock Style="{StaticResource pageTextDiscription}" Text="Visit"/>
+            <TextBlock Style="{StaticResource pageTextDiscription}" Text="Order"/>
 
             <Grid Grid.Row="1">
                 <Grid.ColumnDefinitions>
@@ -94,108 +94,67 @@
 
                     <!-- Buttons -->
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" >
-                        <Button Content="Finish Work" Command="{Binding FinishWorkCommand}" Visibility="{Binding VisibilityFinishWork}"/>
-                        <Button Content="Delete" Command="{Binding DeleteCommand}" Visibility="{Binding VisibilityDelete}"/>
+                        <Button Content="Paid" Command="{Binding PaidCommand}"/>
+                        <Button Content="Clear" Command="{Binding clearCommand}"/>
                     </StackPanel>
 
                     <Separator Grid.Row="1" VerticalAlignment="Top" Height="10"/>
 
                     <StackPanel Grid.Row="1" Margin="10">
 
-                        <TextBlock Text="Information about work" Style="{StaticResource textDiscription}" Margin="0,10" />
+                        <TextBlock Text="Payment Information" Style="{StaticResource textDiscription}" Margin="0,10" />
 
-                        <!--#region Price per hour-->
-                        <TextBlock Style="{StaticResource textDiscription}" Text="Price per hour" Margin="10"/>
-                        <TextBox Text="{Binding Path= PricePerHour, UpdateSourceTrigger=PropertyChanged}">
+                        <!--#region Payment Type -->
+                        <TextBlock Style="{StaticResource textDiscription}" Text="Payment Type" Margin="10"/>
+                        <ComboBox SelectedItem="{Binding PaymentTypeSelected, Mode=TwoWay}" ItemsSource="{Binding PaymentTypes}" Width="300" HorizontalAlignment="Left"/>
+                        <!--#endregion-->
+
+                        <!--#region Number Card -->
+                        <TextBlock Style="{StaticResource textDiscription}" Text="Number Card" Margin="10" Visibility="{Binding VisibleNumberCard}"/>
+                        <TextBox Text="{Binding Path= NumberCard, UpdateSourceTrigger=PropertyChanged}" Visibility="{Binding VisibleNumberCard}">
                             <TextBox.Background>
                                 <ImageBrush ImageSource="/Resources/Images/coins-icon.png" Stretch="None" AlignmentX="Left"/>
                             </TextBox.Background>
                         </TextBox>
                         <!--#endregion-->
 
-                        <!--#region Working hour-->
-                        <TextBlock Style="{StaticResource textDiscription}" Text="Working hour" Margin="10"/>
-                        <TextBox Text="{Binding Path= WorkingHour, UpdateSourceTrigger=PropertyChanged}">
+                        <!--#region Cash Taken -->
+                        <TextBlock Style="{StaticResource textDiscription}" Text="Cash Taken" Margin="10" Visibility="{Binding VisibilityCashTaken}"/>
+                        <TextBox Text="{Binding Path= CashTaken, UpdateSourceTrigger=PropertyChanged}" Visibility="{Binding VisibilityCashTaken}">
                             <TextBox.Background>
                                 <ImageBrush ImageSource="/Resources/Images/coins-icon.png" Stretch="None" AlignmentX="Left"/>
                             </TextBox.Background>
                         </TextBox>
+                        
                         <!--#endregion-->
 
-                        <!--#region Used Spare part -->
-                        <Grid Grid.Column="1" MinHeight="300">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="0.03*"/>
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
-
-                            <TextBlock Text="Used Spare parts" Style="{StaticResource textDiscription}" Margin="0,20,0,10" Grid.Row="0"/>
-                            <ListView Style="{StaticResource ListOfClients}"  Grid.Row="1" ItemsSource="{Binding UsedSpareParts}" SelectedItem="{Binding SelectedUsedSparePart}" >
-                                <ListView.View >
-                                    <GridView >
-                                        <GridViewColumn Header="Speciality" DisplayMemberBinding="{Binding Speciality}" Width="200"/>
-                                        <GridViewColumn Header="Price" DisplayMemberBinding="{Binding Price}" Width="200"/>
-                                    </GridView>
-                                </ListView.View>
-                            </ListView>
-                        </Grid>
+                        <!--#region Client House Number -->
+                        <TextBlock Text="{Binding ErrorMessage}" Style="{StaticResource errorText}"/>
                         <!--#endregion-->
-
-                        <!--#region Buttons for lists -->
-                        <TextBlock Text="Lists management" Style="{StaticResource textDiscription}" Margin="0,10,0,0" Grid.Row="0"/>
-                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" MinHeight="70" Margin="0">
-                            <Button Content="Delete from used" Command="{Binding DeleteFromUsedSparePartCommand}"  Height="50"  Margin="20,0" FontSize="20"/>
-                            <Button Content="Add to Used" Command="{Binding AddToUsedSparePartCommand}"  Height="50"  Margin="20,0" FontSize="20"/>
-                        </StackPanel>
-                        <!--#endregion-->
-
-                        <TextBlock Text="{Binding ErrorMessage}" Style="{StaticResource errorText}" Margin="0"/>
 
                     </StackPanel>
                 </Grid>
 
-                <!-- Part of Offers and Spare parts -->
+                <!-- Part of Clients -->
                 <Grid Grid.Column="1">
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="0.06*"/>
-                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="0.03*"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
 
-                    <TextBlock Text="List of Offers" Style="{StaticResource textDiscription}" Margin="0" Grid.Row="0"/>
-
-                    <!-- List Of Servis Offers -->
+                    <TextBlock Text="List of Not paid Bills" Style="{StaticResource textDiscription}" Margin="0" Grid.Row="0"/>
                     <ListView Style="{StaticResource ListOfClients}"  Grid.Row="1"
-                             ItemsSource="{Binding ServiceOffers}"
-                             SelectedItem="{Binding SelectedServiceOffer}" >
+                             ItemsSource="{Binding Bills}"
+                             SelectedItem="{Binding SelectedBills}" 
+                             >
                         <ListView.View >
                             <GridView >
-                                <GridViewColumn Header="Car" DisplayMemberBinding="{Binding CarInfo}" Width="145"/>
-                                <GridViewColumn Header="Date rezervation" DisplayMemberBinding="{Binding DateReservation}" Width="125"/>
-                                <GridViewColumn Header="Typ" DisplayMemberBinding="{Binding Typ}" Width="165"/>
+                                <GridViewColumn Header="Reservation info" DisplayMemberBinding="{Binding InfoOfferReservation}" Width="145"/>
+                                <GridViewColumn Header="Employer" DisplayMemberBinding="{Binding EmployerWasWork}" Width="125"/>
+                                <GridViewColumn Header="Bill Price and Date" DisplayMemberBinding="{Binding PriceAndDate}" Width="165"/>
                             </GridView>
                         </ListView.View>
                     </ListView>
-
-                    <!--#region Spare part -->
-                    <Grid Grid.Row="2" MinHeight="200">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="0.06*"/>
-                            <RowDefinition Height="*"/>
-                        </Grid.RowDefinitions>
-
-                        <TextBlock Text="Spare parts in Office" Style="{StaticResource textDiscription}" Margin="0" Grid.Row="0"/>
-                        <ListView Style="{StaticResource ListOfClients}"  Grid.Row="1" ItemsSource="{Binding SpareParts}" SelectedItem="{Binding SelectedSparePart}" >
-                            <ListView.View >
-                                <GridView >
-                                    <GridViewColumn Header="Speciality" DisplayMemberBinding="{Binding Speciality}" Width="200"/>
-                                    <GridViewColumn Header="Price" DisplayMemberBinding="{Binding Price}" Width="200"/>
-                                </GridView>
-                            </ListView.View>
-                        </ListView>
-                    </Grid>
-                    <!--#endregion-->
-
                 </Grid>
 
             </Grid>
