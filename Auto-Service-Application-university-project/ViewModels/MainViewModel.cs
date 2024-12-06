@@ -28,6 +28,7 @@ namespace Auto_Service_Application_university_project.ViewModels
         private Visibility _isVisibleOrder;
         private Visibility _isVisibleVisit;
         private Visibility _isVisibleEmployee;
+        private Visibility _isVisiblePayment;
 
         #region Data
         // User
@@ -56,6 +57,9 @@ namespace Auto_Service_Application_university_project.ViewModels
 
         // Bill
         private BillViewModel _billVM;
+
+        // Payment Type
+        private PaymentTypeViewModel _paymentTypeVM;
         #endregion
 
         #endregion
@@ -72,6 +76,7 @@ namespace Auto_Service_Application_university_project.ViewModels
         public Visibility IsVisibleOrder { get => _isVisibleOrder; set => SetProperty(ref _isVisibleOrder, value, nameof(IsVisibleOrder)); }
         public Visibility IsVisibleVisit { get => _isVisibleVisit; set => SetProperty(ref _isVisibleVisit, value, nameof(IsVisibleVisit)); }
         public Visibility IsVisibleEmployee { get => _isVisibleEmployee; set => SetProperty(ref _isVisibleEmployee, value, nameof(IsVisibleEmployee)); }
+        public Visibility IsVisiblePayment { get => _isVisiblePayment; set => SetProperty(ref _isVisiblePayment, value, nameof(IsVisiblePayment)); }
 
 
         // User 
@@ -117,6 +122,8 @@ namespace Auto_Service_Application_university_project.ViewModels
         public ICommand NavigateToClients { get; }
         public ICommand NavigateToOrder { get; }
         public ICommand NavigateToVisit { get; }
+        public ICommand NavigateToPayment { get; }
+
         // User Logout
         public ICommand UserLogout {  get; }
 
@@ -134,6 +141,7 @@ namespace Auto_Service_Application_university_project.ViewModels
             NavigateToClients = new MyICommand(() => _navigationService.Navigate(ViewTupes.Clients));
             NavigateToOrder = new MyICommand(() => _navigationService.Navigate(ViewTupes.Order));
             NavigateToVisit = new MyICommand(() => _navigationService.Navigate(ViewTupes.Visit));
+            NavigateToPayment = new MyICommand(() => _navigationService.Navigate(ViewTupes.Payment));
 
             // First Page
             NavigateToLoginCommand.Execute(null);
@@ -149,6 +157,7 @@ namespace Auto_Service_Application_university_project.ViewModels
             _sparePartVM = new SparePartViewModel();
             _carVM = new CarViewModel();
             _billVM = new BillViewModel();
+            _paymentTypeVM = new PaymentTypeViewModel();
             #endregion
 
             UserLogout = new MyICommand(UserLogOut);
@@ -195,6 +204,7 @@ namespace Auto_Service_Application_university_project.ViewModels
         {
             IsVisibleClients = Visibility.Visible;
             IsVisibleOrder = Visibility.Visible;
+            IsVisiblePayment = Visibility.Visible;
         }
 
         // What will allowed see authenticated Employee
@@ -211,6 +221,7 @@ namespace Auto_Service_Application_university_project.ViewModels
             IsVisibleOrder = Visibility.Visible;
             IsVisibleVisit = Visibility.Visible;
             IsVisibleEmployee = Visibility.Visible;
+            IsVisiblePayment = Visibility.Visible;
         }
 
         // Hide pages in menu for non login user or start condition
@@ -220,6 +231,7 @@ namespace Auto_Service_Application_university_project.ViewModels
             IsVisibleOrder = Visibility.Collapsed;
             IsVisibleVisit = Visibility.Collapsed;
             IsVisibleEmployee = Visibility.Collapsed;
+            IsVisiblePayment = Visibility.Collapsed;
         }
         #endregion
 
@@ -1120,6 +1132,48 @@ namespace Auto_Service_Application_university_project.ViewModels
                 catch (Exception ex)
                 {
                     Debug.WriteLine($"[INFO]Error Get all Bills: {ex.Message}");
+                }
+            }
+            else
+            {
+                Debug.WriteLine("[INFO] Non Authoricated");
+            }
+            return null;
+        }
+
+        public async Task<ObservableCollection<Bill>> GetBillsByOfficeIdAsync(int officeId)
+        {
+            if (flagUserLogin)
+            {
+                try
+                {
+                    return await _billVM.GetBillsByOfficeId(officeId);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[INFO]Error Get all Bills by office: {ex.Message}");
+                }
+            }
+            else
+            {
+                Debug.WriteLine("[INFO] Non Authoricated");
+            }
+            return null;
+        }
+        #endregion
+
+        #region Payment Type Data Methods
+        public async Task<ObservableCollection<PaymentType>> GetAllPaymentTypes()
+        {
+            if (flagUserLogin)
+            {
+                try
+                {
+                    return await _paymentTypeVM.GetAllPaymentTypes();
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[INFO]Error Get all Payment Types: {ex.Message}");
                 }
             }
             else

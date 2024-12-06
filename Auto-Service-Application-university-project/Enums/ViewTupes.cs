@@ -13,6 +13,7 @@ namespace Auto_Service_Application_university_project.Enums
         Registration,
         Clients,
         Order,
-        Visit
+        Visit,
+        Payment
     }
 }

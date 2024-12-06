@@ -190,5 +190,59 @@ namespace Auto_Service_Application_university_project.Data
 
             return bills;
         }
+
+        public async Task<ObservableCollection<Bill>> GetBillsByOfficeIdAsync(int officeId)
+        {
+            var bills = new ObservableCollection<Bill>();
+
+            using (var connection = new OracleConnection(connectionString))
+            {
+                await connection.OpenAsync();
+
+                using (var command = new OracleCommand("bill_pkg.get_bills_by_office_id", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    // Входной параметр
+                    var officeIdParam = new OracleParameter("p_office_id", OracleDbType.Int32)
+                    {
+                        Direction = ParameterDirection.Input,
+                        Value = officeId
+                    };
+                    command.Parameters.Add(officeIdParam);
+
+                    // Параметр OUT для курсора
+                    var cursorParam = new OracleParameter("p_cursor", OracleDbType.RefCursor)
+                    {
+                        Direction = ParameterDirection.Output
+                    };
+                    command.Parameters.Add(cursorParam);
+
+                    try
+                    {
+                        using (var reader = await command.ExecuteReaderAsync(CommandBehavior.CloseConnection))
+                        {
+                            while (await reader.ReadAsync())
+                            {
+                                var bill = new Bill
+                                {
+                                    BillId = reader.GetInt32(reader.GetOrdinal("bill_id")),
+                                    ServiceOffer = await _offerRepository.GetServiceOfferAsync( reader.GetInt32(reader.GetOrdinal("servise_offer_offer_id"))),
+                                    DateBill = reader.GetDateTime(reader.GetOrdinal("date_bill")),
+                                    Price = reader.GetDecimal(reader.GetOrdinal("price"))
+                                };
+                                bills.Add(bill);
+                            }
+                        }
+                    }
+                    catch (OracleException ex)
+                    {
+                        throw new ApplicationException($"Ошибка при получении счетов по office_id: {ex.Message}", ex);
+                    }
+                }
+            }
+
+            return bills;
+        }
     }
 }

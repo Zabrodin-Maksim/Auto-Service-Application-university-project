@@ -42,5 +42,10 @@ namespace Auto_Service_Application_university_project.ViewModels.HelperViewModel
         {
             return await _billRepository.GetAllBillsAsync();
         }
+
+        public async Task<ObservableCollection<Bill>> GetBillsByOfficeId(int officeId)
+        {
+            return await _billRepository.GetBillsByOfficeIdAsync(officeId);
+        }
     }
 }

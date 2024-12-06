@@ -148,6 +148,10 @@
             <DataTemplate DataType="{x:Type vm:VisitViewModel}">
                 <local1:VisitView/>
             </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vm:PaymentViewModel}">
+                <local1:PaymentView/>
+            </DataTemplate>
             <!--#endregion -->
 
         </ResourceDictionary>
@@ -168,16 +172,17 @@
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="*"/>
-                    <!--<RowDefinition Height="*"/>
-                    <RowDefinition Height="*"/>-->
+                    <RowDefinition Height="*"/>
                     <RowDefinition Height="1.2*"/>
                 </Grid.RowDefinitions>
 
+                
                 <!-- Head -->
 
                 <TextBlock Style="{StaticResource HeadText}" Grid.Row="0" Text="Auto Servis"/>
                 <Separator VerticalAlignment="Bottom" Height="2" Margin="20,0"/>
 
+                
                 <!-- Home -->
 
                 <Button Grid.Row="1" Style="{StaticResource MenuButtons}">
@@ -187,6 +192,7 @@
                     </StackPanel>
                 </Button>
 
+                
                 <!-- Login -->
 
                 <Button Command="{Binding NavigateToLoginCommand}" Grid.Row="2" Style="{StaticResource MenuButtons}">
@@ -236,9 +242,18 @@
                 </Button>
 
 
+                <!-- Payment -->
+
+                <Button Grid.Row="7" Style="{StaticResource MenuButtons}" Command="{Binding NavigateToPayment}" Visibility="{Binding IsVisiblePayment}">
+                    <StackPanel Style="{StaticResource StackPanelMenu}" Grid.Row="6" Orientation="Horizontal">
+                        <fa:FontAwesome Style="{StaticResource IconsStyle}" Icon="Money"/>
+                        <TextBlock Style="{StaticResource TextBlock}" Text="Payment"/>
+                    </StackPanel>
+                </Button>
+
                 <!-- Employee -->
 
-                <Button Grid.Row="7" Style="{StaticResource MenuButtons}" Visibility="{Binding IsVisibleEmployee}">
+                <Button Grid.Row="8" Style="{StaticResource MenuButtons}" Visibility="{Binding IsVisibleEmployee}">
                     <StackPanel Style="{StaticResource StackPanelMenu}" Grid.Row="7" Orientation="Horizontal">
                         <fa:FontAwesome Style="{StaticResource IconsStyle}" Icon="UserSecret"/>
                         <TextBlock Style="{StaticResource TextBlock}" Text="Employee"/>
@@ -246,25 +261,8 @@
                 </Button>
 
 
-                <!-- Order -->
-                <!--
-                <StackPanel Style="{StaticResource StackPanelMenu}" Grid.Row="8" Orientation="Horizontal">
-                    <Button Style="{StaticResource MenuButtons}">
-                        <fa:FontAwesome Icon="Home"/>
-                    </Button>
-                </StackPanel>
-                
-                -->
-                <!-- Visit -->
-                <!--
-                <StackPanel Style="{StaticResource StackPanelMenu}" Grid.Row="9" Orientation="Horizontal">
-                    <Button Style="{StaticResource MenuButtons}">
-                        <fa:FontAwesome Icon="Home"/>
-                    </Button>
-                </StackPanel>-->
-
                 <!-- Logout -->
-                <Button Command="{Binding UserLogout}" Grid.Row="8" Style="{StaticResource MenuButtons}" FontSize="45" Margin="20,0">
+                <Button Command="{Binding UserLogout}" Grid.Row="9" Style="{StaticResource MenuButtons}" FontSize="45" Margin="20,0">
                     <fa:FontAwesome Icon="SignOut"/>
                 </Button>
             </Grid>
