@@ -60,6 +60,9 @@ namespace Auto_Service_Application_university_project.ViewModels
 
         // Payment Type
         private PaymentTypeViewModel _paymentTypeVM;
+
+        // Payment
+        private Payment _paymentVM;
         #endregion
 
         #endregion
@@ -125,7 +128,7 @@ namespace Auto_Service_Application_university_project.ViewModels
         public ICommand NavigateToPayment { get; }
 
         // User Logout
-        public ICommand UserLogout {  get; }
+        public ICommand UserLogout { get; }
 
         #endregion
 
@@ -158,6 +161,7 @@ namespace Auto_Service_Application_university_project.ViewModels
             _carVM = new CarViewModel();
             _billVM = new BillViewModel();
             _paymentTypeVM = new PaymentTypeViewModel();
+            _paymentVM = new PaymentDataViewModel();
             #endregion
 
             UserLogout = new MyICommand(UserLogOut);
@@ -195,7 +199,7 @@ namespace Auto_Service_Application_university_project.ViewModels
             {
                 MessageBox.Show("User not Authenticated!", "User Logout", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
-            
+
         }
 
         #region Visibilities Methods
@@ -283,10 +287,10 @@ namespace Auto_Service_Application_university_project.ViewModels
                         case 1:
                             authenticatedAdmin = await _userVM.GetEmployerByPhone(authenticatedUser.Phone);
                             Debug.WriteLine($"[INFO] Admin Authorization successfully: {authenticatedAdmin.Phone}");
-                            ShowForaAdmin(); 
+                            ShowForaAdmin();
                             break;
 
-                        case 2: 
+                        case 2:
                             ShowForEmployee();
 
                             authenticatedEmployer = await _userVM.GetEmployerByPhone(authenticatedUser.Phone);
@@ -1181,6 +1185,13 @@ namespace Auto_Service_Application_university_project.ViewModels
                 Debug.WriteLine("[INFO] Non Authoricated");
             }
             return null;
+        }
+        #endregion
+
+        #region Payment Data Methods
+        public async Task InsertPayment(Payment payment)
+        {
+
         }
         #endregion
 
