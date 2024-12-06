@@ -14,6 +14,8 @@ namespace Auto_Service_Application_university_project.Data
     {
         private readonly string connectionString = "User Id=st67280;Password=abcde;Data Source=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=fei-sql3.upceucebny.cz)(PORT=1521))(CONNECT_DATA=(SID=BDAS)))";
 
+        private ClientRepository clientRepository = new ClientRepository();
+
         public async Task InsertCarAsync(Car car)
         {
             using (var connection = new OracleConnection(connectionString))
@@ -144,11 +146,7 @@ namespace Auto_Service_Application_university_project.Data
                                             OfficeId = reader.GetInt32(reader.GetOrdinal("office_office_id"))
                                             // Дополнительно можно загрузить данные офиса при необходимости
                                         },
-                                        Client = new Client
-                                        {
-                                            ClientId = reader.GetInt32(reader.GetOrdinal("client_client_id"))
-                                            // Дополнительно можно загрузить данные клиента при необходимости
-                                        }
+                                        Client = await clientRepository.GetClientPublicAsync(reader.GetInt32(reader.GetOrdinal("client_client_id")))
                                     }
                                 };
                             }

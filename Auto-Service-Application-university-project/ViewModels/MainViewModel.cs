@@ -63,6 +63,7 @@ namespace Auto_Service_Application_university_project.ViewModels
 
         // Payment
         private PaymentDataViewModel _paymentVM;
+
         #endregion
 
         #endregion
@@ -253,6 +254,20 @@ namespace Auto_Service_Application_university_project.ViewModels
             }
         }
 
+        public async Task<ObservableCollection<User>> GetAllUsers()
+        {
+            try
+            {
+                return await _userVM.GetAllUsers();
+                
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"[INFO]Error adding new User: {ex.Message}");
+            }
+            return null;
+        }
+
         public async Task AuthenticateUser(string userName, string userPassword)
         {
             try
@@ -402,6 +417,19 @@ namespace Auto_Service_Application_university_project.ViewModels
             else
             {
                 Debug.WriteLine("[INFO] Non Authoricated");
+            }
+            return null;
+        }
+
+        public async Task<Employer> GetEmployer(int employerId)
+        {
+            try
+            {
+                return await _userVM.GetEmployer(employerId);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"[INFO]Error adding new User: {ex.Message}");
             }
             return null;
         }
@@ -1189,7 +1217,7 @@ namespace Auto_Service_Application_university_project.ViewModels
         #endregion
 
         #region Payment Data Methods
-        public async Task InsertPayment(Payment payment)
+        public async Task AddPayment(Payment payment)
         {
             if (flagUserLogin)
             {

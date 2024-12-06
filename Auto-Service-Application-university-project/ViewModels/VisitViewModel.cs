@@ -241,9 +241,9 @@ namespace Auto_Service_Application_university_project.ViewModels
             if (SelectedServiceOffer != null)
             {
                 ErrorMessage = "";
-                _mainViewModel.DeleteServiceOffer(SelectedServiceOffer.OfferId);
+                await _mainViewModel.DeleteServiceOffer(SelectedServiceOffer.OfferId);
 
-                FillinOutLists();
+                await FillinOutLists();
             }
             else
             {

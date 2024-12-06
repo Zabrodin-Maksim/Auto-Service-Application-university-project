@@ -18,6 +18,7 @@ namespace Auto_Service_Application_university_project.Data
         private readonly string connectionString = "User Id=st67280;Password=abcde;Data Source=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=fei-sql3.upceucebny.cz)(PORT=1521))(CONNECT_DATA=(SID=BDAS)))";
 
         private CarRepository carRepository = new CarRepository();
+        private UserRepository userRepository = new UserRepository();   
 
         public async Task InsertServiceOfferAsync(ServiceOffer offer)
         {
@@ -198,7 +199,7 @@ namespace Auto_Service_Application_university_project.Data
                                     OfferId = reader.GetInt32(reader.GetOrdinal("offer_id")),
                                     PricePerHour = reader.IsDBNull(reader.GetOrdinal("price_per_hour")) ? (int?)null : reader.GetInt32(reader.GetOrdinal("price_per_hour")),
                                     DateOffer = reader.IsDBNull(reader.GetOrdinal("date_offer")) ? (DateTime?)null : reader.GetDateTime(reader.GetOrdinal("date_offer")),
-                                    Employer = reader.IsDBNull(reader.GetOrdinal("employer_employer_id")) ? null : new Employer { EmployerId = reader.GetInt32(reader.GetOrdinal("employer_employer_id")) },
+                                    Employer = reader.IsDBNull(reader.GetOrdinal("employer_employer_id")) ? null : await userRepository.GetEmployerAsync( reader.GetInt32(reader.GetOrdinal("employer_employer_id")) ),
                                     Car = await carRepository.GetCarAsync(reader.GetInt32(reader.GetOrdinal("car_car_id"))), 
                                     ServiceType = new ServiceType { ServiceTypeId = reader.GetInt32(reader.GetOrdinal("service_type_id")), TypeName = reader.GetString(reader.GetOrdinal("type_name")) },
                                     WorkingHours = reader.IsDBNull(reader.GetOrdinal("working_hours")) ? (int?)null : reader.GetInt32(reader.GetOrdinal("working_hours"))

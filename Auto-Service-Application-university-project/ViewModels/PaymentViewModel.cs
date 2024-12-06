@@ -51,7 +51,7 @@ namespace Auto_Service_Application_university_project.ViewModels
                 SetProperty(ref _selectedPaymentType, value, nameof(PaymentTypeSelected));
                 if (_selectedPaymentType != null)
                 {
-                    if (_selectedPaymentType.TypeName == "card")
+                    if (_selectedPaymentType.TypeName == "Card")
                     {
                         VisibilityCashTaken = Visibility.Collapsed;
                         VisibleNumberCard = Visibility.Visible;
@@ -124,10 +124,8 @@ namespace Auto_Service_Application_university_project.ViewModels
 
             FillinOutAllLists();
 
-            
-
             #region Init Commands
-            PaidCommand = new MyICommand(OnPaid);
+            PaidCommand = new MyICommand<object>(async parametr => await OnPaid(parametr));
             ClearCommand = new MyICommand(OnClear);
             #endregion
         }
@@ -136,11 +134,37 @@ namespace Auto_Service_Application_university_project.ViewModels
         {
             Bills = await _mainViewModel.GetAllBills();
             PaymentTypes = await _mainViewModel.GetAllPaymentTypes();
+
+            if (PaymentTypes != null && PaymentTypes.Count != 0)
+            {
+                PaymentTypeSelected = PaymentTypes[0];
+            }
         }
 
-        private void OnPaid()
+        private async Task OnPaid(object parametr)
         {
+            if (CheckInputs())
+            {
+                if (PaymentTypeSelected.TypeName == "Card" || PaymentTypeSelected.TypeName == "Cash" && decimal.Parse(CashTaken) >= SelectedBills.Price)
+                {
+                    await _mainViewModel.AddPayment(new Payment
+                    {
+                        Bill = SelectedBills,
+                        Client = SelectedBills.ServiceOffer.Car.Reservation.Client,
+                        PaymentType = PaymentTypeSelected,
 
+                        //TODO: ДОБАВИТЬ Card ИЛИ Cash
+
+                    });
+
+                    MessageBox.Show($"Must give change = {decimal.Parse(CashTaken) - SelectedBills.Price} .", "Change", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                }
+                else
+                {
+                    ErrorMessage = "Need more money!!!";
+                }
+            }
         }
 
         private void OnClear() 
@@ -149,10 +173,28 @@ namespace Auto_Service_Application_university_project.ViewModels
 
             NumberCard = "";
             CashTaken = "";
+
+            ErrorMessage = "";
         }
 
         private bool CheckInputs()
         {
+            if (SelectedBills != null)
+            {
+                if (PaymentTypeSelected.TypeName == "Card" && !string.IsNullOrEmpty(NumberCard) || PaymentTypeSelected.TypeName == "Cash" && !string.IsNullOrEmpty(CashTaken))
+                {
+                    return true;
+                }
+                else
+                {
+                    ErrorMessage = "Fill field!";
+                }
+            }
+            else
+            {
+                ErrorMessage = "Select Bill!";
+            }
+
             return false;
         }
     }

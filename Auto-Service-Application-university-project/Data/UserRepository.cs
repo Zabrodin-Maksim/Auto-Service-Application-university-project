@@ -3,6 +3,7 @@ using Auto_Service_Application_university_project.Services;
 using Oracle.ManagedDataAccess.Client;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Data;
 using System.Diagnostics;
 using System.Linq;
@@ -54,6 +55,61 @@ namespace Auto_Service_Application_university_project.Data
                 }
 
             }
+        }
+
+        public async Task<ObservableCollection<User>> GetAllUsersAsync()
+        {
+            var users = new ObservableCollection<User>();
+
+            using (var connection = new OracleConnection(connectionString))
+            {
+                await connection.OpenAsync();
+
+                using (var command = new OracleCommand("users_pkg.get_all_users", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    var cursorParam = new OracleParameter("p_cursor", OracleDbType.RefCursor)
+                    {
+                        Direction = ParameterDirection.Output
+                    };
+                    command.Parameters.Add(cursorParam);
+
+                    try
+                    {
+                        using (var reader = await command.ExecuteReaderAsync(CommandBehavior.CloseConnection))
+                        {
+                            while (await reader.ReadAsync())
+                            {
+                                var user = new User
+                                {
+                                    UserId = reader.GetInt32(reader.GetOrdinal("user_id")),
+                                    Username = reader.GetString(reader.GetOrdinal("username")),
+                                    Password = reader.GetString(reader.GetOrdinal("password")),
+                                    Name = reader.GetString(reader.GetOrdinal("name")),
+                                    Phone = reader.GetInt32(reader.GetOrdinal("phone")),
+                                    RoleId = reader.GetInt32(reader.GetOrdinal("role_id")),
+                                    Address = new Address
+                                    {
+                                        Country = reader.GetString(reader.GetOrdinal("country")),
+                                        City = reader.GetString(reader.GetOrdinal("city")),
+                                        Street = reader.GetString(reader.GetOrdinal("street")),
+                                        HouseNumber = reader.GetInt32(reader.GetOrdinal("house_number")),
+                                        IndexAdd = reader.GetInt32(reader.GetOrdinal("index_add"))
+                                    }
+                                };
+                                users.Add(user);
+                            }
+                        }
+                    }
+                    catch (OracleException ex)
+                    {
+                        throw new ApplicationException($"Ошибка при получении пользователей: {ex.Message}", ex);
+                    }
+                }
+            }
+
+            return users;
         }
 
         public async Task<User> AuthenticateUserAsync(string username, string userPassword)
@@ -317,6 +373,72 @@ namespace Auto_Service_Application_university_project.Data
                     catch (OracleException ex)
                     {
                         throw new ApplicationException($"Ошибка при получении данных работодателя: {ex.Message}", ex);
+                    }
+                }
+            }
+        }
+
+        public async Task<Employer> GetEmployerAsync(int employerId)
+        {
+            using (var connection = new OracleConnection(connectionString))
+            {
+                await connection.OpenAsync();
+
+                using (var command = new OracleCommand("employer_pkg.get_employer", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    // Входные параметры
+                    command.Parameters.Add("p_employer_id", OracleDbType.Int32).Value = employerId;
+
+                    // Выходные параметры
+                    var cursorParam = new OracleParameter("p_cursor", OracleDbType.RefCursor)
+                    {
+                        Direction = ParameterDirection.Output
+                    };
+                    command.Parameters.Add(cursorParam);
+
+                    try
+                    {
+                        using (var reader = await command.ExecuteReaderAsync(CommandBehavior.CloseConnection))
+                        {
+                            if (await reader.ReadAsync())
+                            {
+                                return new Employer
+                                {
+                                    EmployerId = reader.GetInt32(reader.GetOrdinal("employer_id")),
+                                    NameEmployee = reader.GetString(reader.GetOrdinal("name_employee")),
+                                    Speciality = reader.IsDBNull(reader.GetOrdinal("speciality")) ? null : reader.GetString(reader.GetOrdinal("speciality")),
+                                    Phone = reader.GetInt32(reader.GetOrdinal("phone")),
+                                    Office = new Office
+                                    {
+                                        OfficeId = reader.GetInt32(reader.GetOrdinal("office_office_id"))
+                                        // Дополнительно можно загрузить данные офиса при необходимости
+                                    },
+                                    Supervisor = new Employer
+                                    {
+                                        EmployerId = reader.IsDBNull(reader.GetOrdinal("employer_employer_id")) ? 0 : reader.GetInt32(reader.GetOrdinal("employer_employer_id"))
+                                        // Дополнительно можно загрузить данные руководителя при необходимости
+                                    },
+                                    Address = new Address
+                                    {
+                                        Country = reader.GetString(reader.GetOrdinal("country")),
+                                        City = reader.GetString(reader.GetOrdinal("city")),
+                                        Street = reader.GetString(reader.GetOrdinal("street")),
+                                        HouseNumber = reader.GetInt32(reader.GetOrdinal("house_number")),
+                                        IndexAdd = reader.GetInt32(reader.GetOrdinal("index_add"))
+                                    }
+                                };
+                            }
+                            else
+                            {
+                                return null;
+                            }
+                        }
+                    }
+                    catch (OracleException ex)
+                    {
+                        throw new ApplicationException($"Ошибка при получении данных работника: {ex.Message}", ex);
                     }
                 }
             }
