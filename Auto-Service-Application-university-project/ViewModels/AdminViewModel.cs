@@ -417,30 +417,33 @@ namespace Auto_Service_Application_university_project.ViewModels
                 case EnumAdminMenuItems.ServisSpair:
                     if (SelectedItems == null)
                     {
+                        await AddServiceSpare(param);
                     }
                     else
                     {
-
+                        await AddServiceSpare(param);
                     }
                     break;
 
                 case EnumAdminMenuItems.Bills:
                     if (SelectedItems == null)
                     {
+                        await AddBill(param);
                     }
                     else
                     {
-
+                        await UpdateBill(param);
                     }
                     break;
 
                 case EnumAdminMenuItems.Payments:
                     if (SelectedItems == null)
                     {
+                        await AddPayment(param);
                     }
                     else
                     {
-
+                        await UpdatePayment(param);
                     }
                     break;
             }
@@ -476,13 +479,13 @@ namespace Auto_Service_Application_university_project.ViewModels
                         await DeleteSpairParts(param);
                         break;
                     case EnumAdminMenuItems.ServisSpair:
-
+                        await DeleteServiceSpare(param);
                         break;
                     case EnumAdminMenuItems.Bills:
-
+                        await DeleteBill(param);
                         break;
                     case EnumAdminMenuItems.Payments:
-
+                        await DeletePayment(param);
                         break;
                 }
             }
@@ -1293,7 +1296,7 @@ namespace Auto_Service_Application_university_project.ViewModels
             var spareParts = _mainViewModel.SpareParts;
             ListItems = new ObservableCollection<object>(spareParts.Cast<object>());
 
-            // Fill in Combo box Offices
+            // Fill in Combo box SpairParts
             var offices =  _mainViewModel.Offices;
             ItemsFirstCombo = new ObservableCollection<object>(offices.Cast<object>());
 
@@ -1409,29 +1412,387 @@ namespace Auto_Service_Application_university_project.ViewModels
         #region Servis Spair Methods
         private async Task OnServisSpairCommand(object param)
         {
+            ChangeMenuOnFields();
+
+            // Needed Fields
+            VisibleFirstCombo = Visibility.Visible;
+            VisibleSecondCombo = Visibility.Visible;
+
+            // Fill in List
+            var serviceSpares = await _mainViewModel.GetAllServiceSparesAsync();
+            ListItems = new ObservableCollection<object>(serviceSpares.Cast<object>());
+
+            // Fill in Combo box ServisSpair
+            var spareParts = _mainViewModel.SpareParts;
+            ItemsFirstCombo = new ObservableCollection<object>(spareParts.Cast<object>());
+
+            var serviceOffer = _mainViewModel.ServiceOffers;
+            ItemsSecondCombo = new ObservableCollection<object>(serviceOffer.Cast<object>());
+
+
+            // Fill Text Discriptions
+            TextDiscrFirstCombo = "Spare Part";
+            TextDiscrSecondCombo = "Service Offer";
+
+
+            currentMenuItem = EnumAdminMenuItems.ServisSpair;
+        }
+
+        private async Task AddServiceSpare(object param)
+        {
+            if (SelectedFirstCombo != null && SelectedSecondCombo != null)
+            {
+                try
+                {
+                    // Add ServiceSpare
+                    await _mainViewModel.AddServiceSpare((SparePart)SelectedFirstCombo, (ServiceOffer)SelectedSecondCombo);
+
+                    // Update List of ServiceSpare 
+                    var serviceSpars = await _mainViewModel.GetAllServiceSparesAsync();
+                    ListItems = new ObservableCollection<object>(serviceSpars.Cast<object>());
+
+                    // Clear 
+                    ClearAllInputs();
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[Error] Add ServiceSpare {ex.Message}");
+                }
+            }
+            else
+            {
+                ErrorMessage = "Fill all fields!";
+            }
 
         }
+
+        private async Task DeleteServiceSpare(object param)
+        {
+            try
+            {
+                SparePart sparePart = (SparePart)SelectedFirstCombo;
+                ServiceOffer serviceOffer = (ServiceOffer)SelectedSecondCombo;
+                await _mainViewModel.RemoveServiceSpare(sparePart.SparePartId, serviceOffer.OfferId);
+
+                // Update List of ServiceSpare 
+                var serviceSpars = await _mainViewModel.GetAllServiceSparesAsync();
+                ListItems = new ObservableCollection<object>(serviceSpars.Cast<object>());
+
+                // Clear 
+                ClearAllInputs();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"[Error] Delete ServiceSpare {ex.Message}");
+            }
+        }
+
         #endregion
 
         #region Bills Methods
         private async Task OnBillsCommand(object param)
         {
+            ChangeMenuOnFields();
 
+            // Needed Fields
+            VisibleFirstCombo = Visibility.Visible;
+
+            VisibleDate = Visibility.Visible;
+
+            VisibleFirstTextBox = Visibility.Visible;
+
+            // Fill in List
+            var bills = await _mainViewModel.GetAllBills();
+            ListItems = new ObservableCollection<object>(bills.Cast<object>());
+
+            // Fill in Combo box 
+            var serviceOffers = _mainViewModel.ServiceOffers;
+            ItemsFirstCombo = new ObservableCollection<object>(serviceOffers.Cast<object>());
+
+
+            // Fill Text Discriptions
+            TextDiscrFirstCombo = "Service Offer";
+
+            TextDiscrDate = "Date Bill";
+
+            TextDiscrFirstTextBox = "Price";
+
+            currentMenuItem = EnumAdminMenuItems.Bills;
+        }
+
+        private async Task UpdateBill(object param)
+        {
+            if (SelectedDate != null && SelectedFirstCombo != null && !string.IsNullOrEmpty(FirstTextBox) && FirstTextBox.All(char.IsDigit))
+            {
+                try
+                {
+                    // Update Bill
+                    Bill selectedBill = (Bill)SelectedItems;
+                    Bill bill = new Bill
+                    {
+                        BillId = selectedBill.BillId,
+                        Price = decimal.Parse(FirstTextBox),
+                        ServiceOffer = (ServiceOffer)SelectedFirstCombo,
+                        DateBill = SelectedDate
+                    };
+
+                    await _mainViewModel.UpdateBill(bill);
+
+                    // Update List of Bill 
+                    var bills = await _mainViewModel.GetAllBills();
+                    ListItems = new ObservableCollection<object>(bills.Cast<object>());
+
+                    // Clear 
+                    ClearAllInputs();
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[Error] Update Bill {ex.Message}");
+                }
+            }
+            else
+            {
+                ErrorMessage = "Fill all fields!";
+            }
+
+        }
+
+        private async Task AddBill(object param)
+        {
+            if (SelectedDate != null && SelectedFirstCombo != null && !string.IsNullOrEmpty(FirstTextBox) && FirstTextBox.All(char.IsDigit))
+            {
+                try
+                {
+                    // Add Bill
+                    Bill bill = new Bill
+                    {
+                        Price = decimal.Parse(FirstTextBox),
+                        ServiceOffer = (ServiceOffer)SelectedFirstCombo,
+                        DateBill = SelectedDate
+                    };
+
+                    await _mainViewModel.AddBill(bill);
+
+                    // Update List of Bill 
+                    var bills = await _mainViewModel.GetAllBills();
+                    ListItems = new ObservableCollection<object>(bills.Cast<object>());
+
+                    // Clear 
+                    ClearAllInputs();
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[Error] Add Bill {ex.Message}");
+                }
+            }
+            else
+            {
+                ErrorMessage = "Fill all fields!";
+            }
+
+        }
+
+        private async Task DeleteBill(object param)
+        {
+            try
+            {
+                Bill bill = (Bill)SelectedItems;
+                await _mainViewModel.DeleteBill(bill.BillId);
+
+                // Update List of Bill 
+                var bills = await _mainViewModel.GetAllBills();
+                ListItems = new ObservableCollection<object>(bills.Cast<object>());
+
+                // Clear 
+                ClearAllInputs();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"[Error] Delete Bill {ex.Message}");
+            }
         }
         #endregion
 
         #region Payments Methods
         private async Task OnPaymentsCommand(object param)
         {
+            ChangeMenuOnFields();
+
+            // Needed Fields
+            VisibleFirstCombo = Visibility.Visible;
+            VisibleSecondCombo = Visibility.Visible;
+            VisibleThirdCombo = Visibility.Visible;
+
+            VisibleFirstTextBox = Visibility.Visible;
+            VisibleSecondTextBox = Visibility.Visible;
+
+            // Fill in List
+            var payments = await _mainViewModel.GetAllPayments();
+            ListItems = new ObservableCollection<object>(payments.Cast<object>());
+
+            // Fill in Combo box 
+            var bills = await _mainViewModel.GetAllBills();
+            ItemsFirstCombo = new ObservableCollection<object>(bills.Cast<object>());
+
+            var clients =  _mainViewModel.Clients;
+            ItemsSecondCombo = new ObservableCollection<object>(clients.Cast<object>());
+
+            var paymentTypes = await _mainViewModel.GetAllPaymentTypes();
+            ItemsThirdCombo = new ObservableCollection<object>(paymentTypes.Cast<object>());
+
+
+            // Fill Text Discriptions
+            TextDiscrFirstCombo = "Bill";
+            TextDiscrSecondCombo = "Client";
+            TextDiscrThirdCombo = "Payment Type";
+
+
+            TextDiscrFirstTextBox = "Card";
+            TextDiscrSecondTextBox = "Cash";
+
+            currentMenuItem = EnumAdminMenuItems.Payments;
+        }
+
+        private async Task UpdatePayment(object param)
+        {
+            if (SelectedFirstCombo != null && SelectedSecondCombo != null && SelectedThirdCombo != null)
+            {
+                try
+                {
+                    // Update Payment
+                    Payment selectedPayment = (Payment)SelectedItems;
+                    Payment payment = new Payment
+                    {
+                        PaymentId = selectedPayment.PaymentId,
+                        Bill = (Bill)SelectedFirstCombo,
+                        Client = (Client)SelectedSecondCombo,
+                        PaymentType = (PaymentType)SelectedThirdCombo,
+                    };
+
+                    if(!string.IsNullOrEmpty(FirstTextBox) && FirstTextBox.All(char.IsDigit))
+                    {
+                        payment.Card = new Card 
+                        {
+                            PaymentId = payment.PaymentId,
+                            NumberCard = int.Parse(FirstTextBox) 
+                        };
+                    }
+                    else if (!string.IsNullOrEmpty(SecondTextBox) && SecondTextBox.All(char.IsDigit))
+                    {
+                        payment.Cash = new Cash
+                        {
+                            PaymentId = payment.PaymentId,
+                            Taken = int.Parse(SecondTextBox),
+                            Given = int.Parse(SecondTextBox) - payment.Bill.Price
+                        };
+                    }
+                    else
+                    {
+                        ErrorMessage = "Fill Card or cash numbers!";
+                        return;
+                    }
+
+                    await _mainViewModel.AddPayment(payment);
+
+                    // Update List of Payment 
+                    var payments = await _mainViewModel.GetAllPayments();
+                    ListItems = new ObservableCollection<object>(payments.Cast<object>());
+
+                    // Clear 
+                    ClearAllInputs();
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[Error] Update Payment {ex.Message}");
+                }
+            }
+            else
+            {
+                ErrorMessage = "Fill all fields!";
+            }
 
         }
+
+        private async Task AddPayment(object param)
+        {
+            if (SelectedFirstCombo != null && SelectedSecondCombo != null && SelectedThirdCombo != null)
+            {
+                try
+                {
+                    // Update Payment
+                    Payment selectedPayment = (Payment)SelectedItems;
+                    Payment payment = new Payment
+                    {
+                        Bill = (Bill)SelectedFirstCombo,
+                        Client = (Client)SelectedSecondCombo,
+                        PaymentType = (PaymentType)SelectedThirdCombo,
+                    };
+
+                    if (!string.IsNullOrEmpty(FirstTextBox) && FirstTextBox.All(char.IsDigit))
+                    {
+                        payment.Card = new Card
+                        {
+                            PaymentId = payment.PaymentId,
+                            NumberCard = int.Parse(FirstTextBox)
+                        };
+                    }
+                    else if (!string.IsNullOrEmpty(SecondTextBox) && SecondTextBox.All(char.IsDigit))
+                    {
+                        payment.Cash = new Cash
+                        {
+                            PaymentId = payment.PaymentId,
+                            Taken = int.Parse(SecondTextBox),
+                            Given = int.Parse(SecondTextBox) - payment.Bill.Price
+                        };
+                    }
+                    else
+                    {
+                        ErrorMessage = "Fill Card or cash numbers!";
+                        return;
+                    }
+
+                    await _mainViewModel.AddPayment(payment);
+
+                    // Update List of Payment 
+                    var payments = await _mainViewModel.GetAllPayments();
+                    ListItems = new ObservableCollection<object>(payments.Cast<object>());
+
+                    // Clear 
+                    ClearAllInputs();
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[Error] Add Payment {ex.Message}");
+                }
+            }
+            else
+            {
+                ErrorMessage = "Fill all fields!";
+            }
+
+        }
+
+        private async Task DeletePayment(object param)
+        {
+            try
+            {
+                Payment payment = (Payment)SelectedItems;
+                await _mainViewModel.DeletePayment(payment.PaymentId);
+
+                // Update List of Payment 
+                var payments = await _mainViewModel.GetAllPayments();
+                ListItems = new ObservableCollection<object>(payments.Cast<object>());
+
+                // Clear 
+                ClearAllInputs();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"[Error] Delete Payment {ex.Message}");
+            }
+        }
+
         #endregion
 
-        private async Task FillinOutLists()
-        {
-            var bills = await _mainViewModel.GetAllBills();
-
-            ListItems = new ObservableCollection<object>(bills.Cast<object>());
-        }
     }
 }

@@ -27,5 +27,10 @@ namespace Auto_Service_Application_university_project.Models
 
         public string SmallInfoReservation { get => $"{Car.SPZ} {Car.Reservation.Client.ClientName}"; }
         public string InfoEmployer { get => Employer.NameEmployee; }
+
+        public override string ToString()
+        {
+            return $"Price Per Hour {PricePerHour},Working Hours {WorkingHours}, Date Offer {DateOffer}, Car {Car.SPZ}, Service Type {ServiceType}, ";
+        }
     }
 }

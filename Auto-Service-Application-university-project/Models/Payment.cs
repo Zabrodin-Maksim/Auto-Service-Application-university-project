@@ -17,5 +17,10 @@ namespace Auto_Service_Application_university_project.Models
         public Card Card { get; set; }
 
         public Cash Cash { get; set; }
+
+        public override string ToString()
+        {
+            return $"Bill {Bill}, Payment Type {PaymentType}, Client {Client.ClientName}";
+        }
     }
 }

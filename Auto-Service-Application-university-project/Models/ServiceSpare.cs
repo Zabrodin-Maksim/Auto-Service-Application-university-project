@@ -10,5 +10,6 @@ namespace Auto_Service_Application_university_project.Models
     {
         public SparePart SparePart { get; set; }
         public ServiceOffer ServiceOffer { get; set; }
+
     }
 }

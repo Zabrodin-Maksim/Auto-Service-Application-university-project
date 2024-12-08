@@ -16,5 +16,10 @@ namespace Auto_Service_Application_university_project.Models
         public string InfoOfferReservation { get => ServiceOffer.SmallInfoReservation; }
         public string EmployerWasWork { get => ServiceOffer.InfoEmployer; }
         public string PriceAndDate { get => $"{Price.ToString()} {DateBill.ToString("dd.MM.yyyy")}"; }
+
+        public override string ToString()
+        {
+            return $"Service Offer {ServiceOffer}, Date Bill {DateBill.ToString("dd.MM.yyyy")}, Price {Price}";
+        }
     }
 }

@@ -837,7 +837,7 @@ namespace Auto_Service_Application_university_project.ViewModels
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"[INFO]Error Add new Service Spare: {ex.Message}");
+                    Debug.WriteLine($"[INFO]Error Delete Service Spare: {ex.Message}");
                 }
             }
             else
@@ -856,7 +856,7 @@ namespace Auto_Service_Application_university_project.ViewModels
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"[INFO]Error Add new Service Spare: {ex.Message}");
+                    Debug.WriteLine($"[INFO]Error get all Service Spare by id: {ex.Message}");
                 }
             }
             else
@@ -876,7 +876,7 @@ namespace Auto_Service_Application_university_project.ViewModels
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"[INFO]Error Add new Service Spare: {ex.Message}");
+                    Debug.WriteLine($"[INFO]Error get all Service Spare: {ex.Message}");
                 }
             }
             else

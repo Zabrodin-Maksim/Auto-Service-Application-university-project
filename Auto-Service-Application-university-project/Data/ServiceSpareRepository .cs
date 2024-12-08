@@ -128,42 +128,67 @@ namespace Auto_Service_Application_university_project.Data
         {
             var serviceSpares = new ObservableCollection<ServiceSpare>();
 
-            using (var connection = new OracleConnection(connectionString))
+            try
             {
-                await connection.OpenAsync();
-
-                using (var command = new OracleCommand("service_spare_pkg.get_all_service_spare", connection))
+                using (var connection = new OracleConnection(connectionString))
                 {
-                    command.CommandType = CommandType.StoredProcedure;
+                    await connection.OpenAsync();
 
-                    // Выходные параметры
-                    var cursorParam = new OracleParameter("p_cursor", OracleDbType.RefCursor)
+                    using (var command = new OracleCommand("service_spare_pkg.get_all_service_spare", connection))
                     {
-                        Direction = ParameterDirection.Output
-                    };
-                    command.Parameters.Add(cursorParam);
+                        command.CommandType = CommandType.StoredProcedure;
 
-                    try
-                    {
+                        // Выходные параметры
+                        var cursorParam = new OracleParameter("p_cursor", OracleDbType.RefCursor)
+                        {
+                            Direction = ParameterDirection.Output
+                        };
+                        command.Parameters.Add(cursorParam);
+
                         using (var reader = await command.ExecuteReaderAsync(CommandBehavior.CloseConnection))
                         {
                             while (await reader.ReadAsync())
                             {
+                                // Используем Convert.ToInt32 для безопасного преобразования
+                                int serviceOfferId = reader.IsDBNull(reader.GetOrdinal("servise_offer_offer_id"))
+                                    ? 0
+                                    : Convert.ToInt32(reader["servise_offer_offer_id"]);
+
+                                int sparePartId = reader.IsDBNull(reader.GetOrdinal("spare_part_spare_part_id"))
+                                    ? 0
+                                    : Convert.ToInt32(reader["spare_part_spare_part_id"]);
+
+                                // Проверка наличия идентификаторов
+                                if (serviceOfferId == 0 || sparePartId == 0)
+                                {
+                                    // Логирование предупреждения или пропуск записи
+                                    // Например:
+                                    // _logger.LogWarning($"Некорректная запись: ServiceOfferId={serviceOfferId}, SparePartId={sparePartId}");
+                                    continue;
+                                }
+
+                                // Асинхронные вызовы репозиториев
+                                var serviceOfferTask = _servisOfferRepository.GetServiceOfferAsync(serviceOfferId);
+                                var sparePartTask = _partRepository.GetSparePartByIdAsync(sparePartId);
+
+                                // Ждём выполнения обоих задач параллельно
+                                await Task.WhenAll(serviceOfferTask, sparePartTask);
+
                                 var serviceSpare = new ServiceSpare
                                 {
-                                    ServiceOffer = await _servisOfferRepository.GetServiceOfferAsync(reader.GetInt32(reader.GetOrdinal("servise_offer_offer_id"))),
-                                    SparePart = await _partRepository.GetSparePartByIdAsync (reader.GetInt32(reader.GetOrdinal("spare_part_spare_part_id")))
+                                    ServiceOffer = serviceOfferTask.Result,
+                                    SparePart = sparePartTask.Result
                                 };
 
                                 serviceSpares.Add(serviceSpare);
                             }
                         }
                     }
-                    catch (OracleException ex)
-                    {
-                        throw new ApplicationException($"Ошибка при получении всех ServiceSpares: {ex.Message}", ex);
-                    }
                 }
+            }
+            catch (OracleException ex)
+            {
+                throw new ApplicationException($"Ошибка при получении всех ServiceSpares: {ex.Message}", ex);
             }
 
             return serviceSpares;
