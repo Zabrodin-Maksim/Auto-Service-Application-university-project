@@ -7,6 +7,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace Auto_Service_Application_university_project.Data
 {
@@ -88,7 +89,14 @@ namespace Auto_Service_Application_university_project.Data
                     }
                     catch (OracleException ex)
                     {
-                        throw new ApplicationException($"Ошибка при удалении резервации: {ex.Message}", ex);
+                        if (ex.Number == 2292) // ORA-02292
+                        {
+                            MessageBox.Show("Unable to delete the record because it is linked to other data. Please delete the related records first.");
+                        }
+                        else
+                        {
+                            throw new ApplicationException($"Ошибка при удалении резервации: {ex.Message}", ex);
+                        }
                     }
                 }
             }

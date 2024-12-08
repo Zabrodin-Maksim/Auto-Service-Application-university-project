@@ -208,6 +208,7 @@ namespace Auto_Service_Application_university_project.ViewModels
                 };
             }
 
+            await _mainViewModel.InsertReservation(car.Reservation);
             await _mainViewModel.AddServiceOffer(serviceOffer);
 
             // Update services Offers List

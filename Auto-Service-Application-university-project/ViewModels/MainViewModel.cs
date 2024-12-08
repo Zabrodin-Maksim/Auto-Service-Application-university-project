@@ -67,6 +67,9 @@ namespace Auto_Service_Application_university_project.ViewModels
 
         // Address 
         private AddressViewModel _addressVM;
+
+        // Reservation 
+        private ReservationViewModel _reservationVM;
         #endregion
 
         #endregion
@@ -169,6 +172,7 @@ namespace Auto_Service_Application_university_project.ViewModels
             _paymentTypeVM = new PaymentTypeViewModel();
             _paymentVM = new PaymentDataViewModel();
             _addressVM = new AddressViewModel();
+            _reservationVM = new ReservationViewModel();    
             #endregion
 
             UserLogout = new MyICommand(UserLogOut);
@@ -1428,6 +1432,125 @@ namespace Auto_Service_Application_university_project.ViewModels
                 catch (Exception ex)
                 {
                     Debug.WriteLine($"[INFO]Error get all Address: {ex.Message}");
+                }
+            }
+            else
+            {
+                Debug.WriteLine("[INFO] Non Authoricated");
+            }
+            return null;
+        }
+        #endregion
+
+        #region Reservation Data Methods
+        public async Task InsertReservation(Reservation reservation)
+        {
+            if (flagUserLogin)
+            {
+                try
+                {
+                    await _reservationVM.InsertReservation(reservation);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[INFO]Error Add new Reservation: {ex.Message}");
+                }
+            }
+            else
+            {
+                Debug.WriteLine("[INFO] Non Authoricated");
+            }
+        }
+
+        public async Task UpdateReservation(Reservation reservation)
+        {
+            if (flagUserLogin)
+            {
+                try
+                {
+                    await _reservationVM.UpdateReservation(reservation);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[INFO]Error Update Reservation: {ex.Message}");
+                }
+            }
+            else
+            {
+                Debug.WriteLine("[INFO] Non Authoricated");
+            }
+        }
+
+        public async Task DeleteReservation(int reservationId)
+        {
+            if (flagUserLogin)
+            {
+                try
+                {
+                    await _reservationVM.DeleteReservation(reservationId);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[INFO]Error Delete Reservation: {ex.Message}");
+                }
+            }
+            else
+            {
+                Debug.WriteLine("[INFO] Non Authoricated");
+            }
+        }
+
+        public async Task<ObservableCollection<Reservation>> GetAllReservations()
+        {
+            if (flagUserLogin)
+            {
+                try
+                {
+                    return await _reservationVM.GetAllReservations();
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[INFO]Error get all Reservation: {ex.Message}");
+                }
+            }
+            else
+            {
+                Debug.WriteLine("[INFO] Non Authoricated");
+            }
+            return null;
+        }
+
+        public async Task<ObservableCollection<Reservation>> GetReservationsByClient(int clientId)
+        {
+            if (flagUserLogin)
+            {
+                try
+                {
+                    return await _reservationVM.GetReservationsByClient(clientId);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[INFO]Error get all Reservation by Client: {ex.Message}");
+                }
+            }
+            else
+            {
+                Debug.WriteLine("[INFO] Non Authoricated");
+            }
+            return null;
+        }
+
+        public async Task<ObservableCollection<Reservation>> GetReservationsByOffice(int officeId)
+        {
+            if (flagUserLogin)
+            {
+                try
+                {
+                    return await _reservationVM.GetReservationsByOffice(officeId);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[INFO]Error get all Reservation by Office: {ex.Message}");
                 }
             }
             else
