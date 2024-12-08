@@ -215,7 +215,7 @@
                 </Grid>
 
                 <!-- Part of List-->
-                <Grid Grid.Column="1">
+                <Grid Grid.Column="1" Visibility="{Binding VisibleListItem}">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="0.03*"/>
                         <RowDefinition Height="*"/>
@@ -225,6 +225,33 @@
                     <ListView Style="{StaticResource ListOfClients}"  Grid.Row="1"
                              ItemsSource="{Binding ListItems}"
                              SelectedItem="{Binding SelectedItems}" />
+                </Grid>
+
+                <!-- Part of Lsit Menu -->
+                <Grid Grid.Column="1" Visibility="{Binding VisibilityMenu}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="0.06*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Text="List of Logs" Style="{StaticResource textDiscription}" Margin="0" Grid.Row="0"/>
+
+                    <!-- List Of LOGS -->
+                    <ListView Style="{StaticResource ListOfClients}"  Grid.Row="1" ItemsSource="{Binding Logs}"/>
+
+                    <!--#region System Catalog -->
+                    <Grid Grid.Row="2" MinHeight="200" >
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="0.06*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Text="System Catalog" Style="{StaticResource textDiscription}" Margin="0" Grid.Row="0"/>
+                        <ListView Style="{StaticResource ListOfClients}"  Grid.Row="1" ItemsSource="{Binding SystemCatalog}"  />
+                    </Grid>
+                    <!--#endregion-->
+
                 </Grid>
 
             </Grid>

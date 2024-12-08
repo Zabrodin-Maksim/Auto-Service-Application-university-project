@@ -70,6 +70,13 @@ namespace Auto_Service_Application_university_project.ViewModels
 
         // Reservation 
         private ReservationViewModel _reservationVM;
+
+        // Logs
+        private LogsViewModel _logsVM;
+
+        // Catalog Oracle
+        private OracleObjectViewModel _oracleObjectVM;
+
         #endregion
 
         #endregion
@@ -172,7 +179,9 @@ namespace Auto_Service_Application_university_project.ViewModels
             _paymentTypeVM = new PaymentTypeViewModel();
             _paymentVM = new PaymentDataViewModel();
             _addressVM = new AddressViewModel();
-            _reservationVM = new ReservationViewModel();    
+            _reservationVM = new ReservationViewModel();
+            _logsVM = new LogsViewModel();
+            _oracleObjectVM = new OracleObjectViewModel();
             #endregion
 
             UserLogout = new MyICommand(UserLogOut);
@@ -1561,5 +1570,48 @@ namespace Auto_Service_Application_university_project.ViewModels
         }
         #endregion
 
+        #region Logs Data Methods
+        public async Task<ObservableCollection<Logs>> GetAllLogsAsync()
+        {
+            if (flagUserLogin)
+            {
+                try
+                {
+                    return await _logsVM.GetAllLogsAsync();
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[INFO]Error get all Logs: {ex.Message}");
+                }
+            }
+            else
+            {
+                Debug.WriteLine("[INFO] Non Authoricated");
+            }
+            return null;
+        }
+        #endregion
+
+        #region Catalog Oracle Methods
+        public async Task<ObservableCollection<OracleObject>> GetSystemObjectsAsync()
+        {
+            if (flagUserLogin)
+            {
+                try
+                {
+                    return await _oracleObjectVM.GetSystemObjectsAsync();
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[INFO]Error get all CATALOGS ORACLE: {ex.Message}");
+                }
+            }
+            else
+            {
+                Debug.WriteLine("[INFO] Non Authoricated");
+            }
+            return null;
+        }
+        #endregion
     }
 }

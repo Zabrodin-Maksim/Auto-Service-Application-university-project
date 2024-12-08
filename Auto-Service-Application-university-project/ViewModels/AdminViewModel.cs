@@ -25,6 +25,9 @@ namespace Auto_Service_Application_university_project.ViewModels
         // Filds
         private Visibility _visibilityFilds;
 
+        //List Items
+        private Visibility _visibleListItem;
+
         // Menu
         private Visibility _visibilityMenu;
 
@@ -58,9 +61,14 @@ namespace Auto_Service_Application_university_project.ViewModels
         #endregion
 
 
-        // List
+        // List Items
         private ObservableCollection<Object> _listItems;
         private Object _selectedItems;
+
+        // List menu
+        private ObservableCollection<Logs> _Listlogs;
+        private ObservableCollection<OracleObject> _ListOracleObjects;
+
 
         #region Combo Boxes
         // First
@@ -124,6 +132,9 @@ namespace Auto_Service_Application_university_project.ViewModels
         // Fields
         public Visibility VisibilityFilds { get => _visibilityFilds; set => SetProperty(ref _visibilityFilds, value, nameof(VisibilityFilds)); }
 
+        // List 
+        public Visibility VisibleListItem { get => _visibleListItem; set => SetProperty(ref _visibleListItem, value, nameof(VisibleListItem)); }
+
         // Menu
         public Visibility VisibilityMenu { get => _visibilityMenu; set => SetProperty(ref _visibilityMenu, value, nameof(VisibilityMenu)); }
 
@@ -156,10 +167,13 @@ namespace Auto_Service_Application_university_project.ViewModels
         #endregion
 
 
-        // List
+        // List Items
         public ObservableCollection<object> ListItems { get => _listItems; set => SetProperty(ref _listItems, value, nameof(ListItems)); }
         public object SelectedItems { get => _selectedItems; set => SetProperty(ref _selectedItems, value, nameof(SelectedItems)); }
 
+        // List menu
+        public ObservableCollection<Logs> Logs { get => _Listlogs; set => SetProperty(ref _Listlogs, value, nameof(Logs)); }
+        public ObservableCollection<OracleObject> SystemCatalog { get => _ListOracleObjects; set => SetProperty(ref _ListOracleObjects, value, nameof(SystemCatalog)); }
 
         #region Observable Collections and Selected for ComboBox
         // First
@@ -259,6 +273,8 @@ namespace Auto_Service_Application_university_project.ViewModels
         {
             _mainViewModel = mainViewModel;
 
+            
+
             #region Init List
             ListItems = new ObservableCollection<object>();
             #endregion
@@ -295,9 +311,14 @@ namespace Auto_Service_Application_university_project.ViewModels
             #endregion
 
             HideAllFields();
-
+            FillLogsAndCatalog();
         }
 
+        private async Task FillLogsAndCatalog()
+        {
+            Logs = await _mainViewModel.GetAllLogsAsync();
+            SystemCatalog = await _mainViewModel.GetSystemObjectsAsync();
+        }
 
         private void ClearAllInputs()
         {
@@ -316,6 +337,8 @@ namespace Auto_Service_Application_university_project.ViewModels
 
         private async Task OnBackCommand(object param)
         {
+            await FillLogsAndCatalog();
+
             HideAllFields();
             VisibilityMenu = Visibility.Visible;
             VisibilityFilds = Visibility.Collapsed;
@@ -500,10 +523,14 @@ namespace Auto_Service_Application_university_project.ViewModels
         {
             VisibilityMenu = Visibility.Collapsed;
             VisibilityFilds = Visibility.Visible;
+            VisibleListItem = Visibility.Visible;
         }
 
         private void HideAllFields()
         {
+            // List Items
+            VisibleListItem = Visibility.Collapsed;
+
             // ComboBoxes 
             VisibleFirstCombo = Visibility.Collapsed;
             VisibleSecondCombo = Visibility.Collapsed;
@@ -522,6 +549,8 @@ namespace Auto_Service_Application_university_project.ViewModels
 
             // Role Buttons
             VisibilitiButtonsRole = Visibility.Collapsed;
+
+
         }
 
 
@@ -842,43 +871,42 @@ namespace Auto_Service_Application_university_project.ViewModels
         }
         #endregion
 
-        #region Employers Methods
-        private async Task OnEmployersCommand(object param)
-        {
-            ChangeMenuOnFields();
+        //#region Employers Methods
+        //private async Task OnEmployersCommand(object param)
+        //{
+        //    ChangeMenuOnFields();
 
-            // Needed Fields
-            VisibleFirstCombo = Visibility.Visible;
-            VisibleSecondCombo = Visibility.Visible;
-            VisibleThirdCombo = Visibility.Visible;
+        //    // Needed Fields
+        //    VisibleFirstCombo = Visibility.Visible;
+        //    VisibleSecondCombo = Visibility.Visible;
+        //    VisibleThirdCombo = Visibility.Visible;
 
-            VisibleFirstTextBox = Visibility.Visible;
-            VisibleSecondTextBox = Visibility.Visible;
-            VisibleThirdTextBox = Visibility.Visible;
+        //    VisibleFirstTextBox = Visibility.Visible;
+        //    VisibleSecondTextBox = Visibility.Visible;
+        //    VisibleThirdTextBox = Visibility.Visible;
 
-            // Fill in List 
-            //TODO: GET ALL EMLOYERS
-            var users = await _mainViewModel.GetAllUsers();
-            ListItems = new ObservableCollection<object>(users.Cast<object>());
+        //    // Fill in List 
+        //    var users = await _mainViewModel.GetAllUsers();
+        //    ListItems = new ObservableCollection<object>(users.Cast<object>());
 
-            // Fill in Combo Boxes
-            var addreses = await _mainViewModel.GetAllAddresses();
-            ItemsFirstCombo = new ObservableCollection<object>(addreses.Cast<object>());
+        //    // Fill in Combo Boxes
+        //    var addreses = await _mainViewModel.GetAllAddresses();
+        //    ItemsFirstCombo = new ObservableCollection<object>(addreses.Cast<object>());
 
-            // Fill Text Discriptions
-            TextDiscrFirstCombo = "Office";
-            TextDiscrSecondCombo = "Supervisor";
-            TextDiscrThirdCombo = "Address";
+        //    // Fill Text Discriptions
+        //    TextDiscrFirstCombo = "Office";
+        //    TextDiscrSecondCombo = "Supervisor";
+        //    TextDiscrThirdCombo = "Address";
 
-            TextDiscrFirstTextBox = "Speciality";
-            TextDiscrSecondTextBox = "NameEmployee";
-            TextDiscrThirdTextBox = "Phone";
+        //    TextDiscrFirstTextBox = "Speciality";
+        //    TextDiscrSecondTextBox = "NameEmployee";
+        //    TextDiscrThirdTextBox = "Phone";
 
-            currentMenuItem = EnumAdminMenuItems.Employers;
-        }
+        //    currentMenuItem = EnumAdminMenuItems.Employers;
+        //}
 
 
-        #endregion
+        //#endregion
 
         #region Cars Methods
         private async Task OnCarsCommand(object param)
@@ -1152,12 +1180,12 @@ namespace Auto_Service_Application_university_project.ViewModels
         }
         #endregion
 
-        #region Servis Offers Methods
-        private async Task OnServisOffersCommand(object param)
-        {
+        //#region Servis Offers Methods
+        //private async Task OnServisOffersCommand(object param)
+        //{
 
-        }
-        #endregion
+        //}
+        //#endregion
 
         #region Offices Methods
         private async Task OnOfficesCommand(object param)
