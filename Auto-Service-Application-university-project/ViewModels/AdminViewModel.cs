@@ -395,10 +395,11 @@ namespace Auto_Service_Application_university_project.ViewModels
                 case EnumAdminMenuItems.Offices:
                     if (SelectedItems == null)
                     {
+                        await AddOffice(param);
                     }
                     else
                     {
-
+                        await UpdateOffice(param);
                     }
                     break;
 
@@ -466,10 +467,9 @@ namespace Auto_Service_Application_university_project.ViewModels
                         await DeleteReservation(param);
                         break;
                     case EnumAdminMenuItems.ServisOffers:
-
                         break;
                     case EnumAdminMenuItems.Offices:
-
+                        await DeleteOffice(param);
                         break;
                     case EnumAdminMenuItems.SpairParts:
 
@@ -1158,7 +1158,121 @@ namespace Auto_Service_Application_university_project.ViewModels
         #region Offices Methods
         private async Task OnOfficesCommand(object param)
         {
+            ChangeMenuOnFields();
 
+            // Needed Fields
+            VisibleFirstCombo = Visibility.Visible;
+
+            VisibleFirstTextBox = Visibility.Visible;
+
+            // Fill in List
+            var offices = _mainViewModel.Offices;
+            ListItems = new ObservableCollection<object>(offices.Cast<object>());
+
+            // Fill in Combo box addresses
+            var addreses = await _mainViewModel.GetAllAddresses();
+            ItemsFirstCombo = new ObservableCollection<object>(addreses.Cast<object>());
+            
+
+            // Fill Text Discriptions
+            TextDiscrFirstCombo = "Address";
+
+            TextDiscrFirstTextBox = "OfficeSize";
+
+            currentMenuItem = EnumAdminMenuItems.Offices;
+        }
+
+        private async Task UpdateOffice(object param)
+        {
+            if (SelectedFirstCombo != null && !string.IsNullOrEmpty(FirstTextBox) && FirstTextBox.All(char.IsDigit))
+            {
+                try
+                {
+                    // Update Office
+                    Office selectedOffice = (Office)SelectedItems;
+                    Office office = new Office
+                    {
+                        OfficeId = selectedOffice.OfficeId,
+                        Address = (Address)SelectedFirstCombo,
+                        OfficeSize = int.Parse(FirstTextBox)
+                    };
+
+                    await _mainViewModel.UpdateOfficeAsync(office);
+
+                    // Update List of Offices 
+                    await _mainViewModel.FillinOutOfficesList();
+                    var offices = _mainViewModel.Offices;
+                    ListItems = new ObservableCollection<object>(offices.Cast<object>());
+
+                    // Clear 
+                    ClearAllInputs();
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[Error] Update Office {ex.Message}");
+                }
+            }
+            else
+            {
+                ErrorMessage = "Fill all fields!";
+            }
+
+        }
+
+        private async Task AddOffice(object param)
+        {
+            if (SelectedFirstCombo != null && !string.IsNullOrEmpty(FirstTextBox) && FirstTextBox.All(char.IsDigit))
+            {
+                try
+                {
+                    // Add Office
+                    Office office = new Office
+                    {
+                        Address = (Address)SelectedFirstCombo,
+                        OfficeSize = int.Parse(FirstTextBox)
+                    };
+
+                    await _mainViewModel.InsertOfficeAsync(office);
+
+                    // Update List of Offices 
+                    await _mainViewModel.FillinOutOfficesList();
+                    var offices = _mainViewModel.Offices;
+                    ListItems = new ObservableCollection<object>(offices.Cast<object>());
+
+                    // Clear 
+                    ClearAllInputs();
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[Error] Add Office {ex.Message}");
+                }
+            }
+            else
+            {
+                ErrorMessage = "Fill all fields!";
+            }
+
+        }
+
+        private async Task DeleteOffice(object param)
+        {
+            try
+            {
+                Office office = (Office)SelectedItems;
+                await _mainViewModel.DeleteOfficeAsync(office.OfficeId);
+
+                // Update List of Offices 
+                await _mainViewModel.FillinOutOfficesList();
+                var offices = _mainViewModel.Offices;
+                ListItems = new ObservableCollection<object>(offices.Cast<object>());
+
+                // Clear 
+                ClearAllInputs();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"[Error] Delete Office {ex.Message}");
+            }
         }
         #endregion
 
