@@ -10,5 +10,10 @@ namespace Auto_Service_Application_university_project.Models
     {
         public string ObjectName { get; set; }
         public string ObjectType { get; set; }
+
+        public override string ToString()
+        {
+            return $"{ObjectName} - {ObjectType}";
+        }
     }
 }
