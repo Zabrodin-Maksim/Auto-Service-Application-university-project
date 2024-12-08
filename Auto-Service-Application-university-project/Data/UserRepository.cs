@@ -1,6 +1,7 @@
 ﻿using Auto_Service_Application_university_project.Models;
 using Auto_Service_Application_university_project.Services;
 using Oracle.ManagedDataAccess.Client;
+using Oracle.ManagedDataAccess.Types;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -311,36 +312,61 @@ namespace Auto_Service_Application_university_project.Data
                 {
                     command.CommandType = CommandType.StoredProcedure;
 
-                    var cursorParam = new OracleParameter("p_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
+                    var cursorParam = new OracleParameter("p_cursor", OracleDbType.RefCursor)
+                    {
+                        Direction = ParameterDirection.Output
+                    };
                     command.Parameters.Add(cursorParam);
 
                     try
                     {
-                        using (var reader = await command.ExecuteReaderAsync(CommandBehavior.CloseConnection))
+                        // Выполняем команду
+                        await command.ExecuteNonQueryAsync();
+
+                        // Извлекаем REF CURSOR из выходного параметра
+                        var refCursor = (OracleRefCursor)cursorParam.Value;
+                        using (var reader = refCursor.GetDataReader())
                         {
                             while (await reader.ReadAsync())
                             {
                                 var emp = new Employer
                                 {
                                     EmployerId = reader.GetInt32(reader.GetOrdinal("employer_id")),
-                                    //NameEmployee = reader.GetString(reader.GetOrdinal("name_employee")),
-                                    //Speciality = reader.GetString(reader.GetOrdinal("speciality")),
-                                    Phone = reader.GetInt32(reader.GetOrdinal("phone")),
-                                    Office = new Office { OfficeId = reader.GetInt32(reader.GetOrdinal("office_office_id")) },
+                                    Speciality = reader.IsDBNull(reader.GetOrdinal("speciality")) ? null : reader.GetString(reader.GetOrdinal("speciality")),
+                                    NameEmployee = reader.IsDBNull(reader.GetOrdinal("name_employee")) ? null : reader.GetString(reader.GetOrdinal("name_employee")),
+                                    
+                                    Phone = reader.IsDBNull(reader.GetOrdinal("phone")) ? 0 : reader.GetInt32(reader.GetOrdinal("phone")),
+                                    Office = new Office
+                                    {
+                                        OfficeId = reader.IsDBNull(reader.GetOrdinal("office_office_id")) ? 0 : reader.GetInt32(reader.GetOrdinal("office_office_id"))
+                                        // Дополнительно можно загрузить данные офиса при необходимости
+                                    },
                                     Address = new Address
                                     {
-                                        AddressId = reader.GetInt32(reader.GetOrdinal("address_id")),
-                                        Country = reader.GetString(reader.GetOrdinal("country")),
-                                        City = reader.GetString(reader.GetOrdinal("city")),
-                                        Street = reader.GetString(reader.GetOrdinal("street")),
-                                        HouseNumber = reader.GetInt32(reader.GetOrdinal("house_number")),
-                                        IndexAdd = reader.GetInt32(reader.GetOrdinal("index_add"))
+                                        AddressId = reader.IsDBNull(reader.GetOrdinal("address_id")) ? 0 : reader.GetInt32(reader.GetOrdinal("address_id")),
+                                        Country = reader.IsDBNull(reader.GetOrdinal("country")) ? null : reader.GetString(reader.GetOrdinal("country")),
+                                        City = reader.IsDBNull(reader.GetOrdinal("city")) ? null : reader.GetString(reader.GetOrdinal("city")),
+                                        Street = reader.IsDBNull(reader.GetOrdinal("street")) ? null : reader.GetString(reader.GetOrdinal("street")),
+                                        HouseNumber = reader.IsDBNull(reader.GetOrdinal("house_number")) ? 0 : reader.GetInt32(reader.GetOrdinal("house_number")),
+                                        IndexAdd = reader.IsDBNull(reader.GetOrdinal("index_add")) ? 0 : reader.GetInt32(reader.GetOrdinal("index_add"))
                                     }
                                 };
 
                                 if (!reader.IsDBNull(reader.GetOrdinal("employer_employer_id")))
                                 {
-                                    emp.Supervisor = new Employer { EmployerId = reader.GetInt32(reader.GetOrdinal("employer_employer_id")) };
+                                    var supervisorId = reader.GetInt32(reader.GetOrdinal("employer_employer_id"));
+                                    if (supervisorId != 0) // Если 0 не валидный ID
+                                    {
+                                        emp.Supervisor = new Employer { EmployerId = supervisorId };
+                                    }
+                                    else
+                                    {
+                                        emp.Supervisor = null;
+                                    }
+                                }
+                                else
+                                {
+                                    emp.Supervisor = null;
                                 }
 
                                 employers.Add(emp);
@@ -356,6 +382,7 @@ namespace Auto_Service_Application_university_project.Data
 
             return employers;
         }
+
 
         public async Task AddEmployerAsync(Employer employer)
         {
