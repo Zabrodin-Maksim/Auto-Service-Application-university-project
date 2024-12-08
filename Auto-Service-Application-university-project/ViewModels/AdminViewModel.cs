@@ -374,10 +374,11 @@ namespace Auto_Service_Application_university_project.ViewModels
                 case EnumAdminMenuItems.Reservations:
                     if (SelectedItems == null)
                     {
+                        await AddReservation(param);
                     }
                     else
                     {
-
+                        await UpdateReservation(param);
                     }
                     break;
 
@@ -462,7 +463,7 @@ namespace Auto_Service_Application_university_project.ViewModels
                         await DeleteCar(param);
                         break;
                     case EnumAdminMenuItems.Reservations:
-
+                        await DeleteReservation(param);
                         break;
                     case EnumAdminMenuItems.ServisOffers:
 
@@ -1025,7 +1026,125 @@ namespace Auto_Service_Application_university_project.ViewModels
         #region Reservations Methods
         private async Task OnReservationsCommand(object param)
         {
+            ChangeMenuOnFields();
 
+            // Needed Fields
+            VisibleFirstCombo = Visibility.Visible;
+            VisibleSecondCombo = Visibility.Visible;
+
+            VisibleDate = Visibility.Visible;
+
+            // Fill in List
+            var reservations = await _mainViewModel.GetAllReservations();
+            ListItems = new ObservableCollection<object>(reservations.Cast<object>());
+
+            // Fill in Combo box addresses
+            var offoces = _mainViewModel.Offices;
+            ItemsFirstCombo = new ObservableCollection<object>(offoces.Cast<object>());
+
+            var clients = _mainViewModel.Clients;
+            ItemsSecondCombo = new ObservableCollection<object>(clients.Cast<object>());
+
+
+            // Fill Text Discriptions
+            TextDiscrFirstCombo = "Office";
+            TextDiscrSecondCombo = "Client";
+
+            TextDiscrDate = "Date Reservace";
+
+            currentMenuItem = EnumAdminMenuItems.Reservations;
+        }
+
+        private async Task UpdateReservation(object param)
+        {
+            if (SelectedDate != null && SelectedFirstCombo != null && SelectedSecondCombo != null )
+            {
+                try
+                {
+                    // Update Car
+                    Reservation selectedReservation = (Reservation)SelectedItems;
+                    Reservation reservation = new Reservation
+                    {
+                        ReservationId = selectedReservation.ReservationId,
+                        DateReservace = SelectedDate,
+                        Office = (Office)SelectedFirstCombo,
+                        Client = (Client)SelectedSecondCombo
+                    };
+
+                    await _mainViewModel.UpdateReservation(reservation);
+
+                    // Update List of Reservations 
+                    var reservatons = await _mainViewModel.GetAllReservations();
+                    ListItems = new ObservableCollection<object>(reservatons.Cast<object>());
+
+                    // Clear 
+                    ClearAllInputs();
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[Error] Update Reservation {ex.Message}");
+                }
+            }
+            else
+            {
+                ErrorMessage = "Fill all fields!";
+            }
+
+        }
+
+        private async Task AddReservation(object param)
+        {
+            if (SelectedDate != null && SelectedFirstCombo != null && SelectedSecondCombo != null )
+            {
+                try
+                {
+                    // Add Reservation
+                    Reservation reservation = new Reservation
+                    {
+                        DateReservace = SelectedDate,
+                        Office = (Office)SelectedFirstCombo,
+                        Client = (Client)SelectedSecondCombo
+                    };
+
+                    await _mainViewModel.InsertReservation(reservation);
+
+                    // Update List of Reservations 
+                    var reservatons = await _mainViewModel.GetAllReservations();
+                    ListItems = new ObservableCollection<object>(reservatons.Cast<object>());
+
+                    // Clear 
+                    ClearAllInputs();
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[Error] Add Car {ex.Message}");
+                }
+            }
+            else
+            {
+                ErrorMessage = "Fill all fields!";
+            }
+
+        }
+
+        private async Task DeleteReservation(object param)
+        {
+            try
+            {
+                Reservation reservation = (Reservation)SelectedItems;
+                await _mainViewModel.DeleteReservation(reservation.ReservationId);
+
+                // Update List of Reservations 
+                var reservatons = await _mainViewModel.GetAllReservations();
+                ListItems = new ObservableCollection<object>(reservatons.Cast<object>());
+
+                // Clear 
+                ClearAllInputs();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"[Error] Delete Reservation {ex.Message}");
+            }
         }
         #endregion
 

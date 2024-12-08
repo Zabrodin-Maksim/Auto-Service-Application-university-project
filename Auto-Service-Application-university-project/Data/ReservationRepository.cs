@@ -15,6 +15,8 @@ namespace Auto_Service_Application_university_project.Data
     {
         private readonly string connectionString = "User Id=st67280;Password=abcde;Data Source=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=fei-sql3.upceucebny.cz)(PORT=1521))(CONNECT_DATA=(SID=BDAS)))";
 
+        private ClientRepository _clientRepository = new ClientRepository();
+
         public async Task InsertReservationAsync(Reservation reservation)
         {
             using (var connection = new OracleConnection(connectionString))
@@ -131,11 +133,11 @@ namespace Auto_Service_Application_university_project.Data
                                 {
                                     ReservationId = reader.GetInt32(reader.GetOrdinal("reservation_id")),
                                     DateReservace = reader.GetDateTime(reader.GetOrdinal("date_reservace")),
-                                    Client = new Client
-                                    {
-                                        ClientId = reader.GetInt32(reader.GetOrdinal("client_id")),
-                                        ClientName = reader.GetString(reader.GetOrdinal("name_customer"))
-                                    },
+                                    Client = await _clientRepository.GetClientPublicAsync(reader.GetInt32(reader.GetOrdinal("client_id"))),
+                                    //{
+                                    //    ClientId = reader.GetInt32(reader.GetOrdinal("client_id")),
+                                    //    ClientName = reader.GetString(reader.GetOrdinal("name_customer"))
+                                    //},
                                     Office = new Office
                                     {
                                         OfficeId = reader.GetInt32(reader.GetOrdinal("office_id")),
