@@ -12,6 +12,7 @@ using System.Diagnostics;
 using Auto_Service_Application_university_project.Enums;
 using System.Linq.Expressions;
 using System.Xml.Linq;
+using System.Windows.Controls;
 
 namespace Auto_Service_Application_university_project.ViewModels
 {
@@ -48,7 +49,10 @@ namespace Auto_Service_Application_university_project.ViewModels
         private Visibility _visibleThirdTextBox;
         private Visibility _visibleFourthTextBox;
         private Visibility _visibleFifthTextBox;
+        #endregion
 
+        #region Buttons role
+        private Visibility _visibilitiButtonsRole;
         #endregion
 
         #endregion
@@ -114,7 +118,7 @@ namespace Auto_Service_Application_university_project.ViewModels
         #endregion
 
         #region Properties
-        public EnumAdminMenuItems currentMenuItem {  get; set; }
+        public EnumAdminMenuItems currentMenuItem { get; set; }
 
         #region Visibility
         // Fields
@@ -144,6 +148,10 @@ namespace Auto_Service_Application_university_project.ViewModels
         public Visibility VisibleThirdTextBox { get => _visibleThirdTextBox; set => SetProperty(ref _visibleThirdTextBox, value, nameof(VisibleThirdTextBox)); }
         public Visibility VisibleFourthTextBox { get => _visibleFourthTextBox; set => SetProperty(ref _visibleFourthTextBox, value, nameof(VisibleFourthTextBox)); }
         public Visibility VisibleFifthTextBox { get => _visibleFifthTextBox; set => SetProperty(ref _visibleFifthTextBox, value, nameof(VisibleFifthTextBox)); }
+        #endregion
+
+        #region Visibility for Buttons role
+        public Visibility VisibilitiButtonsRole { get => _visibilitiButtonsRole; set => SetProperty(ref _visibilitiButtonsRole, value, nameof(VisibilitiButtonsRole)); }
         #endregion
         #endregion
 
@@ -229,6 +237,9 @@ namespace Auto_Service_Application_university_project.ViewModels
         public ICommand BackCommand { get; }
         public ICommand AddUpdateCommand { get; }
         public ICommand DeleteCommand { get; }
+        // Role Commands
+        public ICommand DownRoleCommand { get; }
+        public ICommand UpRoleCommand { get; }
 
         // For Menu
         public ICommand ClientsCommand { get; }
@@ -256,7 +267,7 @@ namespace Auto_Service_Application_university_project.ViewModels
             ItemsFirstCombo = new ObservableCollection<object>();
             ItemsSecondCombo = new ObservableCollection<object>();
             ItemsThirdCombo = new ObservableCollection<object>();
-            ItemsFourthCombo = new ObservableCollection<object>();  
+            ItemsFourthCombo = new ObservableCollection<object>();
             #endregion
 
             #region Init Commands
@@ -264,6 +275,10 @@ namespace Auto_Service_Application_university_project.ViewModels
             BackCommand = new MyICommand<object>(async parametr => await OnBackCommand(parametr));
             AddUpdateCommand = new MyICommand<object>(async parametr => await OnAddUpdateCommand(parametr));
             DeleteCommand = new MyICommand<object>(async parametr => await OnDeleteCommand(parametr));
+
+            //Role
+            DownRoleCommand = new MyICommand<object>(async parametr => await OnDownRole(parametr));
+            UpRoleCommand = new MyICommand<object>(async parametr => await OnUpRole(parametr));
 
             // Menu
             ClientsCommand = new MyICommand<object>(async parametr => await OnClientsCommand(parametr));
@@ -348,10 +363,11 @@ namespace Auto_Service_Application_university_project.ViewModels
                 case EnumAdminMenuItems.Cars:
                     if (SelectedItems == null)
                     {
+                        await AddCar(param);
                     }
                     else
                     {
-
+                        await UpdateCar(param);
                     }
                     break;
 
@@ -429,7 +445,7 @@ namespace Auto_Service_Application_university_project.ViewModels
 
         private async Task OnDeleteCommand(object param)
         {
-            if(SelectedItems != null)
+            if (SelectedItems != null)
             {
                 switch (currentMenuItem)
                 {
@@ -442,29 +458,29 @@ namespace Auto_Service_Application_university_project.ViewModels
                     case EnumAdminMenuItems.Employers:
 
                         break;
-                    case EnumAdminMenuItems.Cars: 
-
+                    case EnumAdminMenuItems.Cars:
+                        await DeleteCar(param);
                         break;
-                    case EnumAdminMenuItems.Reservations: 
+                    case EnumAdminMenuItems.Reservations:
 
                         break;
                     case EnumAdminMenuItems.ServisOffers:
 
                         break;
-                    case EnumAdminMenuItems.Offices: 
-                        
+                    case EnumAdminMenuItems.Offices:
+
                         break;
-                    case EnumAdminMenuItems.SpairParts: 
-                        
+                    case EnumAdminMenuItems.SpairParts:
+
                         break;
-                    case EnumAdminMenuItems.ServisSpair: 
-                        
+                    case EnumAdminMenuItems.ServisSpair:
+
                         break;
-                    case EnumAdminMenuItems.Bills: 
-                        
+                    case EnumAdminMenuItems.Bills:
+
                         break;
-                    case EnumAdminMenuItems.Payments: 
-                        
+                    case EnumAdminMenuItems.Payments:
+
                         break;
                 }
             }
@@ -472,7 +488,7 @@ namespace Auto_Service_Application_university_project.ViewModels
             {
                 ErrorMessage = "Select List Item!";
             }
-            
+
         }
 
         private void ChangeMenuOnFields()
@@ -498,6 +514,9 @@ namespace Auto_Service_Application_university_project.ViewModels
             VisibleThirdTextBox = Visibility.Collapsed;
             VisibleFourthTextBox = Visibility.Collapsed;
             VisibleFifthTextBox = Visibility.Collapsed;
+
+            // Role Buttons
+            VisibilitiButtonsRole = Visibility.Collapsed;
         }
 
 
@@ -558,7 +577,7 @@ namespace Auto_Service_Application_university_project.ViewModels
 
         private async Task AddClient(object param)
         {
-            if (SelectedFirstCombo != null && !string.IsNullOrEmpty(FirstTextBox) && !string.IsNullOrEmpty(SecondTextBox) && SecondTextBox.All(char.IsDigit)) 
+            if (SelectedFirstCombo != null && !string.IsNullOrEmpty(FirstTextBox) && !string.IsNullOrEmpty(SecondTextBox) && SecondTextBox.All(char.IsDigit))
             {
                 try
                 {
@@ -581,7 +600,7 @@ namespace Auto_Service_Application_university_project.ViewModels
             {
                 ErrorMessage = "Fill all fields!";
             }
-            
+
         }
 
         private async Task DeleteClient(object param)
@@ -616,6 +635,7 @@ namespace Auto_Service_Application_university_project.ViewModels
             VisibleSecondTextBox = Visibility.Visible;
             VisibleThirdTextBox = Visibility.Visible;
             VisibleFifthTextBox = Visibility.Visible;
+            VisibilitiButtonsRole = Visibility.Visible;
 
             // Fill in List
             var users = await _mainViewModel.GetAllUsers();
@@ -730,19 +750,275 @@ namespace Auto_Service_Application_university_project.ViewModels
                 Debug.WriteLine($"[Error] Delete User {ex.Message}");
             }
         }
+
+        // Role
+        private async Task OnUpRole(object param)
+        {
+            try
+            {
+                if (SelectedItems != null)
+                {
+                    User user = (User)SelectedItems;
+
+                    if (user.RoleId > 1)
+                    {
+                        await _mainViewModel.AssignRole(user.UserId, user.RoleId-1);
+
+                        // For admin dont need add new Employer
+                        if (user.RoleId - 1 != 1)
+                        {
+                            await _mainViewModel.AddEmployer(user.UserId, 1, "");
+                        }
+
+                        // Update List of Users 
+                        var users = await _mainViewModel.GetAllUsers();
+                        ListItems = new ObservableCollection<object>(users.Cast<object>());
+
+                        // Clear
+                        ClearAllInputs();
+                    }
+                    else
+                    {
+                        ErrorMessage = "Select User has maximum role (Admin or God)";
+                    }
+
+                }
+                else
+                {
+                    ErrorMessage = "Select User from list!";
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"[Error] Up role User {ex.Message}");
+            }
+        }
+
+        private async Task OnDownRole(object param)
+        {
+            try
+            {
+                if (SelectedItems != null)
+                {
+                    User user = (User)SelectedItems;
+                    if (user.RoleId < 3)
+                    {
+                        await _mainViewModel.AssignRole(user.UserId, user.RoleId+1);
+                        // TODO:Delete employer
+                        // Delete employer
+                        if (user.RoleId + 1 == 3)
+                        {
+
+                        }
+
+                        // Update List of Users 
+                        var users = await _mainViewModel.GetAllUsers();
+                        ListItems = new ObservableCollection<object>(users.Cast<object>());
+
+                        // Clear
+                        ClearAllInputs();
+                    }
+                    else
+                    {
+                        ErrorMessage = "Select User has minimum role (User or Homeless)";
+                    }
+
+                }
+                else
+                {
+                    ErrorMessage = "Select User from list!";
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"[Error] Down role User {ex.Message}");
+            }
+        }
         #endregion
 
         #region Employers Methods
         private async Task OnEmployersCommand(object param)
         {
+            ChangeMenuOnFields();
 
+            // Needed Fields
+            VisibleFirstCombo = Visibility.Visible;
+            VisibleSecondCombo = Visibility.Visible;
+            VisibleThirdCombo = Visibility.Visible;
+
+            VisibleFirstTextBox = Visibility.Visible;
+            VisibleSecondTextBox = Visibility.Visible;
+            VisibleThirdTextBox = Visibility.Visible;
+
+            // Fill in List 
+            //TODO: GET ALL EMLOYERS
+            var users = await _mainViewModel.GetAllUsers();
+            ListItems = new ObservableCollection<object>(users.Cast<object>());
+
+            // Fill in Combo Boxes
+            var addreses = await _mainViewModel.GetAllAddresses();
+            ItemsFirstCombo = new ObservableCollection<object>(addreses.Cast<object>());
+
+            // Fill Text Discriptions
+            TextDiscrFirstCombo = "Office";
+            TextDiscrSecondCombo = "Supervisor";
+            TextDiscrThirdCombo = "Address";
+
+            TextDiscrFirstTextBox = "Speciality";
+            TextDiscrSecondTextBox = "NameEmployee";
+            TextDiscrThirdTextBox = "Phone";
+
+            currentMenuItem = EnumAdminMenuItems.Employers;
         }
+
+
         #endregion
 
         #region Cars Methods
         private async Task OnCarsCommand(object param)
         {
+            ChangeMenuOnFields();
 
+            // Needed Fields
+            VisibleFirstCombo = Visibility.Visible;
+            VisibleSecondCombo = Visibility.Visible;
+
+            VisibleDate = Visibility.Visible;
+
+            VisibleFirstTextBox = Visibility.Visible;
+            VisibleSecondTextBox = Visibility.Visible;
+            VisibleThirdTextBox = Visibility.Visible;
+
+            // Fill in List
+            var cars =  _mainViewModel.Cars;
+            ListItems = new ObservableCollection<object>(cars.Cast<object>());
+
+            // Fill in Combo box addresses
+            var offoces =  _mainViewModel.Offices;
+            ItemsFirstCombo = new ObservableCollection<object>(offoces.Cast<object>());
+
+            var clients = _mainViewModel.Clients;
+            ItemsSecondCombo = new ObservableCollection<object>(clients.Cast<object>());
+
+
+            // Fill Text Discriptions
+            TextDiscrFirstCombo = "Office";
+            TextDiscrSecondCombo = "Client";
+
+            TextDiscrDate = "Date Reservace";
+
+            TextDiscrFirstTextBox = "SPZ";
+            TextDiscrSecondTextBox = "Car brand";
+            TextDiscrThirdTextBox = "Symptoms";
+
+            currentMenuItem = EnumAdminMenuItems.Cars;
+        }
+
+        private async Task UpdateCar(object param)
+        {
+            if (SelectedDate != null && SelectedFirstCombo != null && SelectedSecondCombo != null && !string.IsNullOrEmpty(FirstTextBox) && !string.IsNullOrEmpty(SecondTextBox) && !string.IsNullOrEmpty(ThirdTextBox))
+            {
+                try
+                {
+                    // Update Car
+                    Car selectedCar = (Car)SelectedItems;
+                    Car car = new Car()
+                    {
+                        CarId = selectedCar.CarId,
+                        SPZ = FirstTextBox,
+                        CarBrand = SecondTextBox,
+                        Symptoms = ThirdTextBox,
+                        Reservation = new Reservation
+                        {
+                            DateReservace = SelectedDate,
+                            Office = (Office)SelectedFirstCombo,
+                            Client = (Client)SelectedSecondCombo
+                        }
+                    };
+                    await _mainViewModel.UpdateCar(car);
+
+                    // Update List of Cars 
+                    await _mainViewModel.GetAllCars();
+                    var cars = _mainViewModel.Cars;
+                    ListItems = new ObservableCollection<object>(cars.Cast<object>());
+
+                    // Clear 
+                    ClearAllInputs();
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[Error] Update Client {ex.Message}");
+                }
+            }
+            else
+            {
+                ErrorMessage = "Fill all fields!";
+            }
+
+        }
+
+        private async Task AddCar(object param)
+        {
+            if (SelectedDate != null && SelectedFirstCombo != null && SelectedSecondCombo != null && !string.IsNullOrEmpty(FirstTextBox) && !string.IsNullOrEmpty(SecondTextBox) && !string.IsNullOrEmpty(ThirdTextBox))
+            {
+                try
+                {
+                    // Add Car
+                    Car car = new Car
+                    {
+                        SPZ = FirstTextBox,
+                        CarBrand = SecondTextBox,
+                        Symptoms = ThirdTextBox,
+                        Reservation = new Reservation 
+                        {
+                            DateReservace = SelectedDate,
+                            Office = (Office)SelectedFirstCombo,
+                            Client = (Client)SelectedSecondCombo
+                        }
+                    };
+
+                    await _mainViewModel.AddCar(car);
+
+                    // Update List of Car 
+                    await _mainViewModel.GetAllCars();
+                    var cars = _mainViewModel.Cars;
+                    ListItems = new ObservableCollection<object>(cars.Cast<object>());
+
+                    // Clear 
+                    ClearAllInputs();
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[Error] Add Car {ex.Message}");
+                }
+            }
+            else
+            {
+                ErrorMessage = "Fill all fields!";
+            }
+
+        }
+
+        private async Task DeleteCar(object param)
+        {
+            try
+            {
+                Car car = (Car)SelectedItems;
+                await _mainViewModel.DeleteCar(car.CarId);
+
+                // Update List of Car 
+                await _mainViewModel.GetAllCars();
+                var cars = _mainViewModel.Cars;
+                ListItems = new ObservableCollection<object>(cars.Cast<object>());
+
+                // Clear 
+                ClearAllInputs();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"[Error] Delete Car {ex.Message}");
+            }
         }
         #endregion
 

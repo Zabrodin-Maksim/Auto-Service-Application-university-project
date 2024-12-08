@@ -17,6 +17,7 @@ namespace Auto_Service_Application_university_project.Data
         private readonly string connectionString = "User Id=st67280;Password=abcde;Data Source=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=fei-sql3.upceucebny.cz)(PORT=1521))(CONNECT_DATA=(SID=BDAS)))";
 
         private ClientRepository clientRepository = new ClientRepository();
+        private OfficeRepository officeRepository = new OfficeRepository();
 
         public async Task InsertCarAsync(Car car)
         {
@@ -150,17 +151,20 @@ namespace Auto_Service_Application_university_project.Data
                                     Reservation = new Reservation
                                     {
                                         DateReservace = reader.GetDateTime(reader.GetOrdinal("date_reservace")),
-                                        Office = new Office
-                                        {
-                                            OfficeId = reader.GetInt32(reader.GetOrdinal("office_office_id"))
-                                            // Дополнительно можно загрузить данные офиса при необходимости
-                                        },
-                                        //Client = await clientRepository.GetClientPublicAsync(reader.GetInt32(reader.GetOrdinal("client_client_id")))
-                                        Client = new Client
-                                        {
-                                            ClientId = reader.GetInt32(reader.GetOrdinal("client_client_id"))
-                                            // Дополнительно можно загрузить данные клиента при необходимости
-                                        }
+
+                                        Office = await officeRepository.GetOfficeAsync(reader.GetInt32(reader.GetOrdinal("office_office_id"))),
+
+                                        //Office = new Office
+                                        //{
+                                        //    OfficeId = reader.GetInt32(reader.GetOrdinal("office_office_id"))
+                                        //    // Дополнительно можно загрузить данные офиса при необходимости
+                                        //},
+                                        Client = await clientRepository.GetClientPublicAsync(reader.GetInt32(reader.GetOrdinal("client_client_id")))
+                                        //Client = new Client
+                                        //{
+                                        //    ClientId = reader.GetInt32(reader.GetOrdinal("client_client_id"))
+                                        //    // Дополнительно можно загрузить данные клиента при необходимости
+                                        //}
                                     }
                                 };
 
@@ -213,16 +217,19 @@ namespace Auto_Service_Application_university_project.Data
                                     Reservation = new Reservation
                                     {
                                         DateReservace = reader.GetDateTime(reader.GetOrdinal("date_reservace")),
-                                        Office = new Office
-                                        {
-                                            OfficeId = reader.GetInt32(reader.GetOrdinal("office_office_id"))
-                                            // Дополнительно можно загрузить данные офиса при необходимости
-                                        },
-                                        Client = new Client
-                                        {
-                                            ClientId = reader.GetInt32(reader.GetOrdinal("client_client_id"))
-                                            // Дополнительно можно загрузить данные клиента при необходимости
-                                        }
+
+                                        Office = await officeRepository.GetOfficeAsync(reader.GetInt32(reader.GetOrdinal("office_office_id"))),
+                                        //Office = new Office
+                                        //{
+                                        //    OfficeId = reader.GetInt32(reader.GetOrdinal("office_office_id"))
+                                        //    // Дополнительно можно загрузить данные офиса при необходимости
+                                        //},
+                                        Client = await clientRepository.GetClientPublicAsync(reader.GetInt32(reader.GetOrdinal("client_client_id")))
+                                        //Client = new Client
+                                        //{
+                                        //    ClientId = reader.GetInt32(reader.GetOrdinal("client_client_id"))
+                                        //    // Дополнительно можно загрузить данные клиента при необходимости
+                                        //}
                                     }
                                 };
                                 cars.Add(car);

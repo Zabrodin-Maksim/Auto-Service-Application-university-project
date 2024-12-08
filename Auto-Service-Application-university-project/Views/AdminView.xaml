@@ -183,6 +183,14 @@
 
                         <!--#endregion-->
 
+                        <!-- #region Buttons role -->
+                        <TextBlock Style="{StaticResource textDiscription}" Text="Roles 1 - Admin, 2 - Employer, 3 - User" Margin="5" Visibility="{Binding VisibilitiButtonsRole}"/>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Visibility="{Binding VisibilitiButtonsRole}" Margin="0,0,0,10">
+                            <Button Content="Down role" Command="{Binding DownRoleCommand}"/>
+                            <Button Content="Up role" Command="{Binding UpRoleCommand}"/>
+                        </StackPanel>
+                        <!--#endregion-->
+
                         <!--#region Error -->
                         <TextBlock Text="{Binding ErrorMessage}" Style="{StaticResource errorText}"/>
                         <!--#endregion-->

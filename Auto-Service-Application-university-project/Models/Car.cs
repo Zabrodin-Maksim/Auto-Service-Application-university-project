@@ -15,5 +15,9 @@ namespace Auto_Service_Application_university_project.Models
         public string Symptoms { get; set; }
         public Reservation Reservation { get; set; }
 
+        public override string ToString()
+        {
+            return $"{SPZ}, {CarBrand}, reservation: {Reservation}";
+        }
     }
 }
