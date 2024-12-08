@@ -406,10 +406,11 @@ namespace Auto_Service_Application_university_project.ViewModels
                 case EnumAdminMenuItems.SpairParts:
                     if (SelectedItems == null)
                     {
+                        await AddSpairParts(param);
                     }
                     else
                     {
-
+                        await UpdateSpairParts(param);
                     }
                     break;
 
@@ -472,7 +473,7 @@ namespace Auto_Service_Application_university_project.ViewModels
                         await DeleteOffice(param);
                         break;
                     case EnumAdminMenuItems.SpairParts:
-
+                        await DeleteSpairParts(param);
                         break;
                     case EnumAdminMenuItems.ServisSpair:
 
@@ -1279,7 +1280,129 @@ namespace Auto_Service_Application_university_project.ViewModels
         #region Spair Parts Methods
         private async Task OnSpairPartsCommand(object param)
         {
+            ChangeMenuOnFields();
 
+            // Needed Fields
+            VisibleFirstCombo = Visibility.Visible;
+
+            VisibleFirstTextBox = Visibility.Visible;
+            VisibleSecondTextBox = Visibility.Visible;
+            VisibleThirdTextBox = Visibility.Visible;
+
+            // Fill in List
+            var spareParts = _mainViewModel.SpareParts;
+            ListItems = new ObservableCollection<object>(spareParts.Cast<object>());
+
+            // Fill in Combo box Offices
+            var offices =  _mainViewModel.Offices;
+            ItemsFirstCombo = new ObservableCollection<object>(offices.Cast<object>());
+
+
+            // Fill Text Discriptions
+            TextDiscrFirstCombo = "Office";
+
+            TextDiscrFirstTextBox = "Speciality";
+            TextDiscrSecondTextBox = "Price";
+            TextDiscrThirdTextBox = "Stock Availability 'Y' or 'N'"; 
+
+            currentMenuItem = EnumAdminMenuItems.SpairParts;
+        }
+
+        private async Task UpdateSpairParts(object param)
+        {
+            if (SelectedFirstCombo != null && !string.IsNullOrEmpty(FirstTextBox) && !string.IsNullOrEmpty(ThirdTextBox) && ThirdTextBox.Length == 1 && !string.IsNullOrEmpty(SecondTextBox) && SecondTextBox.All(char.IsDigit))
+            {
+                try
+                {
+                    // Update SpairParts
+                    SparePart selectedSparePart = (SparePart)SelectedItems;
+                    SparePart spairPart = new SparePart
+                    {
+                        SparePartId = selectedSparePart.SparePartId,
+                        Speciality = FirstTextBox,
+                        Price = int.Parse(SecondTextBox),
+                        StockAvailability = char.Parse(ThirdTextBox),
+                        Office = (Office)SelectedFirstCombo
+                    };
+
+                    await _mainViewModel.UpdateSparePart(spairPart);
+
+                    // Update List of SpairParts 
+                    await _mainViewModel.GetAllSpareParts();
+                    var spareParts = _mainViewModel.SpareParts;
+                    ListItems = new ObservableCollection<object>(spareParts.Cast<object>());
+
+                    // Clear 
+                    ClearAllInputs();
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[Error] Update SpairParts {ex.Message}");
+                }
+            }
+            else
+            {
+                ErrorMessage = "Fill all fields!";
+            }
+
+        }
+
+        private async Task AddSpairParts(object param)
+        {
+            if (SelectedFirstCombo != null && !string.IsNullOrEmpty(FirstTextBox) && !string.IsNullOrEmpty(ThirdTextBox) && ThirdTextBox.Length == 1 && !string.IsNullOrEmpty(SecondTextBox) && SecondTextBox.All(char.IsDigit))
+            {
+                try
+                {
+                    // Add SparePart
+                    SparePart spairPart = new SparePart
+                    {
+                        Speciality = FirstTextBox,
+                        Price = int.Parse(SecondTextBox),
+                        StockAvailability = char.Parse(ThirdTextBox),
+                        Office = (Office)SelectedFirstCombo
+                    };
+
+                    await _mainViewModel.InsertSparePart(spairPart);
+
+                    // Update List of SpairParts 
+                    await _mainViewModel.GetAllSpareParts();
+                    var spareParts = _mainViewModel.SpareParts;
+                    ListItems = new ObservableCollection<object>(spareParts.Cast<object>());
+
+                    // Clear 
+                    ClearAllInputs();
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[Error] Add SpairParts {ex.Message}");
+                }
+            }
+            else
+            {
+                ErrorMessage = "Fill all fields!";
+            }
+
+        }
+
+        private async Task DeleteSpairParts(object param)
+        {
+            try
+            {
+                SparePart sparePart = (SparePart)SelectedItems;
+                await _mainViewModel.DeleteSparePart(sparePart.SparePartId);
+
+                // Update List of SpairParts 
+                await _mainViewModel.GetAllSpareParts();
+                var spareParts = _mainViewModel.SpareParts;
+                ListItems = new ObservableCollection<object>(spareParts.Cast<object>());
+
+                // Clear 
+                ClearAllInputs();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"[Error] Delete SpairParts {ex.Message}");
+            }
         }
         #endregion
 

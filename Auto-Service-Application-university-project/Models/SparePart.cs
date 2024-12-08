@@ -13,5 +13,10 @@ namespace Auto_Service_Application_university_project.Models
         public decimal Price { get; set; }
         public char StockAvailability { get; set; } // 'Y' or 'N'
         public Office Office { get; set; }
+
+        public override string ToString()
+        {
+            return $"{Speciality}, Price {Price}, Stock Availability {StockAvailability}, Office {Office}";
+        }
     }
 }
