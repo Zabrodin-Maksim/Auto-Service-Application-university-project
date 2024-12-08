@@ -152,6 +152,10 @@
             <DataTemplate DataType="{x:Type vm:PaymentViewModel}">
                 <local1:PaymentView/>
             </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vm:AdminViewModel}">
+                <local1:AdminView/>
+            </DataTemplate>
             <!--#endregion -->
 
         </ResourceDictionary>
@@ -251,12 +255,12 @@
                     </StackPanel>
                 </Button>
 
-                <!-- Employee -->
+                <!-- Admin -->
 
-                <Button Grid.Row="8" Style="{StaticResource MenuButtons}" Visibility="{Binding IsVisibleEmployee}">
+                <Button Grid.Row="8" Style="{StaticResource MenuButtons}" Command="{Binding NavigateToAdmin}" Visibility="{Binding IsVisibleAdmin}">
                     <StackPanel Style="{StaticResource StackPanelMenu}" Grid.Row="7" Orientation="Horizontal">
                         <fa:FontAwesome Style="{StaticResource IconsStyle}" Icon="UserSecret"/>
-                        <TextBlock Style="{StaticResource TextBlock}" Text="Employee"/>
+                        <TextBlock Style="{StaticResource TextBlock}" Text="Admin"/>
                     </StackPanel>
                 </Button>
 

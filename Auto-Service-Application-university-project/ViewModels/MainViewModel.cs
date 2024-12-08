@@ -27,7 +27,7 @@ namespace Auto_Service_Application_university_project.ViewModels
         private Visibility _isVisibleClients;
         private Visibility _isVisibleOrder;
         private Visibility _isVisibleVisit;
-        private Visibility _isVisibleEmployee;
+        private Visibility _isVisibleAdmin;
         private Visibility _isVisiblePayment;
 
         #region Data
@@ -79,7 +79,7 @@ namespace Auto_Service_Application_university_project.ViewModels
         public Visibility IsVisibleClients { get => _isVisibleClients; set => SetProperty(ref _isVisibleClients, value, nameof(IsVisibleClients)); }
         public Visibility IsVisibleOrder { get => _isVisibleOrder; set => SetProperty(ref _isVisibleOrder, value, nameof(IsVisibleOrder)); }
         public Visibility IsVisibleVisit { get => _isVisibleVisit; set => SetProperty(ref _isVisibleVisit, value, nameof(IsVisibleVisit)); }
-        public Visibility IsVisibleEmployee { get => _isVisibleEmployee; set => SetProperty(ref _isVisibleEmployee, value, nameof(IsVisibleEmployee)); }
+        public Visibility IsVisibleAdmin { get => _isVisibleAdmin; set => SetProperty(ref _isVisibleAdmin, value, nameof(IsVisibleAdmin)); }
         public Visibility IsVisiblePayment { get => _isVisiblePayment; set => SetProperty(ref _isVisiblePayment, value, nameof(IsVisiblePayment)); }
 
 
@@ -127,6 +127,7 @@ namespace Auto_Service_Application_university_project.ViewModels
         public ICommand NavigateToOrder { get; }
         public ICommand NavigateToVisit { get; }
         public ICommand NavigateToPayment { get; }
+        public ICommand NavigateToAdmin { get; }
 
         // User Logout
         public ICommand UserLogout { get; }
@@ -146,6 +147,7 @@ namespace Auto_Service_Application_university_project.ViewModels
             NavigateToOrder = new MyICommand(() => _navigationService.Navigate(ViewTupes.Order));
             NavigateToVisit = new MyICommand(() => _navigationService.Navigate(ViewTupes.Visit));
             NavigateToPayment = new MyICommand(() => _navigationService.Navigate(ViewTupes.Payment));
+            NavigateToAdmin = new MyICommand(() => _navigationService.Navigate(ViewTupes.Admin));
 
             // First Page
             NavigateToLoginCommand.Execute(null);
@@ -216,7 +218,6 @@ namespace Auto_Service_Application_university_project.ViewModels
         private void ShowForEmployee()
         {
             IsVisibleVisit = Visibility.Visible;
-            IsVisibleEmployee = Visibility.Visible;
         }
 
         // What will allowed see authenticated Admin
@@ -225,7 +226,7 @@ namespace Auto_Service_Application_university_project.ViewModels
             IsVisibleClients = Visibility.Visible;
             IsVisibleOrder = Visibility.Visible;
             IsVisibleVisit = Visibility.Visible;
-            IsVisibleEmployee = Visibility.Visible;
+            IsVisibleAdmin = Visibility.Visible;
             IsVisiblePayment = Visibility.Visible;
         }
 
@@ -235,7 +236,7 @@ namespace Auto_Service_Application_university_project.ViewModels
             IsVisibleClients = Visibility.Collapsed;
             IsVisibleOrder = Visibility.Collapsed;
             IsVisibleVisit = Visibility.Collapsed;
-            IsVisibleEmployee = Visibility.Collapsed;
+            IsVisibleAdmin = Visibility.Collapsed;
             IsVisiblePayment = Visibility.Collapsed;
         }
         #endregion
@@ -436,6 +437,26 @@ namespace Auto_Service_Application_university_project.ViewModels
         #endregion
 
         #region Client Data Mehtods
+
+        public async Task<ObservableCollection<Client>> GetAllClientsAsync()
+        {
+            if (flagUserLogin)
+            {
+                try
+                {
+                    return await _clientVM.GetAllClients();
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[INFO]Error get Client: {ex.Message}");
+                }
+            }
+            else
+            {
+                Debug.WriteLine("[INFO] Non Authoricated");
+            }
+            return null;
+        }
 
         public async Task UpdateClient(int clientId, string clientName, Address clientAdress, int Phone)
         {

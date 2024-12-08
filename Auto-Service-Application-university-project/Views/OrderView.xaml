@@ -171,7 +171,7 @@
                         <DatePicker Width="200" SelectedDate="{Binding SelectedDate, Mode=TwoWay}" />
                         <!--#endregion-->
 
-                        <!--#region Client House Number -->
+                        <!--#region Error -->
                         <TextBlock Text="{Binding ErrorMessage}" Style="{StaticResource errorText}"/>
                         <!--#endregion-->
 

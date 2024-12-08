@@ -1,0 +1,225 @@
+﻿<UserControl x:Class="Auto_Service_Application_university_project.Views.AdminView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Auto_Service_Application_university_project.Views"
+             mc:Ignorable="d" 
+             xmlns:fa="http://schemas.fontawesome.io/icons/" 
+             d:DesignHeight="740" d:DesignWidth="870">
+    <UserControl.Resources>
+
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Resources/Styles/TextFieldsPagesStyle.xaml"/>
+                <ResourceDictionary Source="/Resources/Styles/ColorsStyle.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+
+            <!-- Style Button-->
+            <Style TargetType="Button">
+                <Setter Property="BorderBrush" Value="Transparent"/>
+                <Setter Property="IsDefault" Value="True"/>
+                <Setter Property="Foreground" Value="White"/>
+                <Setter Property="FontSize" Value="22"/>
+                <Setter Property="Cursor" Value="Hand"/>
+
+                <Setter Property="Margin" Value="10,20,10,0"/>
+                <Setter Property="Background" Value="{StaticResource backgroundButton}"/>
+
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Border Background="{TemplateBinding Background}" CornerRadius="20" Padding="25,0,25,0">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+
+                <Style.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="Background" Value="#84cc16"/>
+                        <Setter Property="BorderBrush" Value="Transparent"/>
+                        <Setter Property="Effect">
+                            <Setter.Value>
+                                <DropShadowEffect Color="LightBlue" 
+                                            BlurRadius="25" 
+                                            ShadowDepth="0" 
+                                            Opacity="1"/>
+                            </Setter.Value>
+                        </Setter>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+
+            <!-- Style List Box-->
+            <Style TargetType="ListView" x:Key="ListOfClients">
+                <Setter Property="MaxWidth" Value="440"/>
+                <Setter Property="Background" Value="LightGray"/>
+                <Setter Property="Foreground" Value="red"/>
+                <Setter Property="FontSize" Value="15"/>
+            </Style>
+
+
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+
+    <Grid>
+        <Grid.Background>
+            <ImageBrush ImageSource="/Resources/Images/login-background.jpg" Stretch="UniformToFill"/>
+        </Grid.Background>
+
+        <Grid Background="{StaticResource backgroundMain}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="0.05*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock Style="{StaticResource pageTextDiscription}" Text="Admin"/>
+
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Part of Tools -->
+                <Grid >
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="0.13*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- #region Buttons -->
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Visibility="{Binding VisibilitiButtonsTools}" Margin="0,0,0,10">
+                        <Button Content="Back" Command="{Binding BackCommand}"/>
+                        <Button Content="Add/Update" Command="{Binding AddUpdateCommand}"/>
+                        <Button Content="Delete" Command="{Binding DeleteCommand}"/>
+                    </StackPanel>
+                    <!--#endregion-->
+                    
+                    
+                    <Separator Grid.Row="1" VerticalAlignment="Top" Height="5"/>
+
+                    <StackPanel Grid.Row="1" Margin="10" Visibility="{Binding VisibilityFilds}" >
+
+                        <!--#region ComboBoxes -->
+                        
+                        <!--#region First Combo -->
+                        <TextBlock Style="{StaticResource textDiscription}" Text="{Binding TextDiscrFirstCombo}" Margin="5" Visibility="{Binding VisibleFirstCombo}"/>
+                        <ComboBox SelectedItem="{Binding SelectedFirstCombo, Mode=TwoWay}" ItemsSource="{Binding ItemsFirstCombo}" Visibility="{Binding VisibleFirstCombo}" Width="300" HorizontalAlignment="Left"/>
+                        <!--#endregion-->
+
+                        <!--#region Second Combo -->
+                        <TextBlock Style="{StaticResource textDiscription}" Text="{Binding TextDiscrSecondCombo}" Margin="5" Visibility="{Binding VisibleSecondCombo}"/>
+                        <ComboBox SelectedItem="{Binding SelectedSecondCombo, Mode=TwoWay}" ItemsSource="{Binding ItemsSecondCombo}" Visibility="{Binding VisibleSecondCombo}" Width="300" HorizontalAlignment="Left"/>
+                        <!--#endregion-->
+
+                        <!--#region Third Combo -->
+                        <TextBlock Style="{StaticResource textDiscription}" Text="{Binding TextDiscrThirdCombo}" Margin="5" Visibility="{Binding VisibleThirdCombo}"/>
+                        <ComboBox SelectedItem="{Binding SelectedThirdCombo, Mode=TwoWay}" ItemsSource="{Binding ItemsThirdCombo}" Visibility="{Binding VisibleThirdCombo}" Width="300" HorizontalAlignment="Left"/>
+                        <!--#endregion-->
+
+                        <!--#region fourth Combo -->
+                        <TextBlock Style="{StaticResource textDiscription}" Text="{Binding TextDiscrSixthCombo}" Margin="5" Visibility="{Binding VisibleFourthCombo}"/>
+                        <ComboBox SelectedItem="{Binding SelectedFourthCombo, Mode=TwoWay}" ItemsSource="{Binding ItemsFourthCombo}" Visibility="{Binding VisibleFourthCombo}" Width="300" HorizontalAlignment="Left"/>
+                        <!--#endregion-->
+
+                        <!--#endregion-->
+
+                        <!--#region Date -->
+                        <TextBlock Style="{StaticResource textDiscription}" Text="{Binding TextDiscrDate}" Margin="5" Visibility="{Binding VisibleDate}"/>
+                        <DatePicker Width="200" SelectedDate="{Binding SelectedDate, Mode=TwoWay}" Visibility="{Binding VisibleDate}" />
+                        <!--#endregion-->
+
+                        <!--#region Text Fields-->
+                        
+                        <!--#region First Text field -->
+                        <TextBlock Style="{StaticResource textDiscription}" Text="{Binding TextDiscrFirstTextBox}" Margin="5" Visibility="{Binding VisibleFirstTextBox}"/>
+                        <TextBox Text="{Binding Path= FirstTextBox, UpdateSourceTrigger=PropertyChanged}" Visibility="{Binding VisibleFirstTextBox}">
+                            <TextBox.Background>
+                                <ImageBrush ImageSource="/Resources/Images/user-icon.png" Stretch="None" AlignmentX="Left"/>
+                            </TextBox.Background>
+                        </TextBox>
+                        <!--#endregion-->
+
+                        <!--#region Second Text field -->
+                        <TextBlock Style="{StaticResource textDiscription}" Text="{Binding TextDiscrSecondTextBox}" Margin="5" Visibility="{Binding VisibleSecondTextBox}"/>
+                        <TextBox Text="{Binding Path= SecondTextBox, UpdateSourceTrigger=PropertyChanged}" Visibility="{Binding VisibleSecondTextBox}">
+                            <TextBox.Background>
+                                <ImageBrush ImageSource="/Resources/Images/user-icon.png" Stretch="None" AlignmentX="Left"/>
+                            </TextBox.Background>
+                        </TextBox>
+                        <!--#endregion-->
+
+                        <!--#region Third Text field -->
+                        <TextBlock Style="{StaticResource textDiscription}" Text="{Binding TextDiscrThirdTextBox}" Margin="5" Visibility="{Binding VisibleThirdTextBox}"/>
+                        <TextBox Text="{Binding Path= ThirdTextBox, UpdateSourceTrigger=PropertyChanged}" Visibility="{Binding VisibleThirdTextBox}">
+                            <TextBox.Background>
+                                <ImageBrush ImageSource="/Resources/Images/user-icon.png" Stretch="None" AlignmentX="Left"/>
+                            </TextBox.Background>
+                        </TextBox>
+                        <!--#endregion-->
+
+                        <!--#region Fourth Text field -->
+                        <TextBlock Style="{StaticResource textDiscription}" Text="{Binding TextDiscrFourthTextBox}" Margin="5" Visibility="{Binding VisibleFourthTextBox}"/>
+                        <TextBox Text="{Binding Path= FourthTextBox, UpdateSourceTrigger=PropertyChanged}" Visibility="{Binding VisibleFourthTextBox}">
+                            <TextBox.Background>
+                                <ImageBrush ImageSource="/Resources/Images/user-icon.png" Stretch="None" AlignmentX="Left"/>
+                            </TextBox.Background>
+                        </TextBox>
+                        <!--#endregion-->
+
+                        <!--#region fifth Text field -->
+                        <TextBlock Style="{StaticResource textDiscription}" Text="{Binding TextDiscrFifthTextBox}" Margin="5" Visibility="{Binding VisibleFifthTextBox}"/>
+                        <TextBox Text="{Binding Path= FifthTextBox, UpdateSourceTrigger=PropertyChanged}" Visibility="{Binding VisibleFifthTextBox}">
+                            <TextBox.Background>
+                                <ImageBrush ImageSource="/Resources/Images/user-icon.png" Stretch="None" AlignmentX="Left"/>
+                            </TextBox.Background>
+                        </TextBox>
+                        <!--#endregion-->
+
+                        <!--#endregion-->
+
+                        <!--#region Error -->
+                        <TextBlock Text="{Binding ErrorMessage}" Style="{StaticResource errorText}"/>
+                        <!--#endregion-->
+
+                    </StackPanel>
+                    
+                    <!--#region Menu buttons -->
+                    <StackPanel Grid.Row="1" Margin="0,0,0,10" Visibility="{Binding VisibilityMenu}">
+                        <Button Content="Clients" Command="{Binding ClientsCommand}" MinHeight="35" />
+                        <Button Content="Users" Command="{Binding UsersCommand}" MinHeight="35" />
+                        <Button Content="Employers" Command="{Binding EmployersCommand}" MinHeight="35" />
+                        <Button Content="Cars" Command="{Binding CarsCommand}" MinHeight="35" />
+                        <Button Content="Reservations" Command="{Binding ReservationsCommand}" MinHeight="35" />
+                        <Button Content="Servis Offers" Command="{Binding ServisOffersCommand}" MinHeight="35" />
+                        <Button Content="Offices" Command="{Binding OfficesCommand}" MinHeight="35" />
+                        <Button Content="Spair Parts" Command="{Binding SpairPartsCommand}" MinHeight="35" />
+                        <Button Content="Servis Spair" Command="{Binding ServisSpairCommand}" MinHeight="35" />
+                        <Button Content="Bills" Command="{Binding BillsCommand}" MinHeight="35" />
+                        <Button Content="Payments" Command="{Binding PaymentsCommand}" MinHeight="35" />
+                    </StackPanel>
+                    <!--#endregion-->
+                </Grid>
+
+                <!-- Part of List-->
+                <Grid Grid.Column="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="0.03*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Text="List of Entits" Style="{StaticResource textDiscription}" Margin="0" Grid.Row="0"/>
+                    <ListView Style="{StaticResource ListOfClients}"  Grid.Row="1"
+                             ItemsSource="{Binding ListItems}"
+                             SelectedItem="{Binding SelectedItems}" />
+                </Grid>
+
+            </Grid>
+        </Grid>
+    </Grid>
+</UserControl>

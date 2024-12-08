@@ -15,7 +15,7 @@ namespace Auto_Service_Application_university_project.Models
         public Car Car { get; set; } 
         public ServiceType ServiceType { get; set; } 
         public int? WorkingHours { get; set; }
-
+         
         // Специфичные сервисные данные
         public string Speciality { get; set; } // for 'service_checks', 'fixing', 'others'
         public int? RadiusWheel { get; set; } // for 'pneuservise'

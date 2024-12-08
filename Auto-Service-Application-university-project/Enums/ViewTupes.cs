@@ -14,6 +14,7 @@ namespace Auto_Service_Application_university_project.Enums
         Clients,
         Order,
         Visit,
-        Payment
+        Payment,
+        Admin
     }
 }

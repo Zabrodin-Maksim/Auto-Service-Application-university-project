@@ -14,5 +14,10 @@ namespace Auto_Service_Application_university_project.Models
         public int Phone { get; set; }
 
         public string ShortAdress { get => Address.City + " " + Address.Street + Address.HouseNumber; }
+
+        public override string ToString()
+        {
+            return $"{ClientName}, +420 {Phone}, {ShortAdress}";
+        }
     }
 }

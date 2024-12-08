@@ -40,7 +40,9 @@ namespace Auto_Service_Application_university_project.Services
                 case ViewTupes.Payment:
                     _mainViewModel.CurrentViewModel = new PaymentViewModel(_mainViewModel); // To Payment
                     break;
-
+                case ViewTupes.Admin:
+                    _mainViewModel.CurrentViewModel = new AdminViewModel(_mainViewModel); // To Admin
+                    break;
 
             }
         }
