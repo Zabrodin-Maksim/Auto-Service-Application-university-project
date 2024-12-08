@@ -13,6 +13,8 @@ namespace Auto_Service_Application_university_project.ViewModels.HelperViewModel
     {
         private PaymentRepository _paymentRepository;
 
+        private FileStorageRepository _fileStorageRepository;
+
         public PaymentDataViewModel()
         {
             _paymentRepository = new PaymentRepository();
@@ -41,6 +43,11 @@ namespace Auto_Service_Application_university_project.ViewModels.HelperViewModel
         public async Task<Payment> GetPaymentByIdAsync(int paymentId)
         {
             return await _paymentRepository.GetPaymentByIdAsync(paymentId);
+        }
+
+        public async Task AddFile(FileStorage file)
+        {
+            await _fileStorageRepository.InsertFileAsync(file);
         }
     }
 }

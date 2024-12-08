@@ -1,4 +1,5 @@
-﻿using Auto_Service_Application_university_project.Models;
+﻿using Auto_Service_Application_university_project.Data;
+using Auto_Service_Application_university_project.Models;
 using Auto_Service_Application_university_project.Services;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
@@ -219,7 +220,7 @@ namespace Auto_Service_Application_university_project.ViewModels
                     }
 
 
-                    CreateBillDocument(payment.ToString() + "\n Total Price: " + SelectedBills.Price + "\n");
+                    await CreateBillDocumentAsync(payment.ToString() + "\n Total Price: " + SelectedBills.Price + "\n");
 
                     OnClear();
                 }
@@ -261,7 +262,7 @@ namespace Auto_Service_Application_university_project.ViewModels
             return false;
         }
 
-        public void CreateBillDocument(string content)
+        public async Task CreateBillDocumentAsync(string content)
         {
             string filePath = "Bill.docx";
 
@@ -269,7 +270,7 @@ namespace Auto_Service_Application_university_project.ViewModels
             {
                 if (File.Exists(filePath))
                 {
-                    // If the file exists, open and append content
+                    // Если файл существует, открыть и добавить содержимое
                     using (WordprocessingDocument wordDoc = WordprocessingDocument.Open(filePath, true))
                     {
                         var body = wordDoc.MainDocumentPart.Document.Body;
@@ -277,11 +278,11 @@ namespace Auto_Service_Application_university_project.ViewModels
                         wordDoc.MainDocumentPart.Document.Save();
                     }
 
-                    Console.WriteLine($"Text has been appended to the existing file: {filePath}");
+                    Console.WriteLine($"Текст добавлен в существующий файл: {filePath}");
                 }
                 else
                 {
-                    // If the file does not exist, create a new one
+                    // Если файла не существует, создать новый
                     using (WordprocessingDocument wordDoc = WordprocessingDocument.Create(filePath, DocumentFormat.OpenXml.WordprocessingDocumentType.Document))
                     {
                         var mainPart = wordDoc.AddMainDocumentPart();
@@ -292,12 +293,26 @@ namespace Auto_Service_Application_university_project.ViewModels
                         mainPart.Document.Save();
                     }
 
-                    Console.WriteLine($"A new document has been created: {filePath}");
+                    Console.WriteLine($"Новый документ создан: {filePath}");
                 }
+
+                // Чтение файла и сохранение в базу данных
+                byte[] fileBytes = await File.ReadAllBytesAsync(filePath);
+
+                var fileStorage = new FileStorage
+                {
+                    FileName = Path.GetFileName(filePath),
+                    FileType = "document",
+                    FileExtension = Path.GetExtension(filePath),
+                    FileContent = fileBytes,
+                    OperationPerformed = "insert"
+                };
+
+                await _mainViewModel.FileStorageAsync(fileStorage);
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred while working with the document: {ex.Message}");
+                Console.WriteLine($"Произошла ошибка при работе с документом: {ex.Message}");
             }
         }
     }
