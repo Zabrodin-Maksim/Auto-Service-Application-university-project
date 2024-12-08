@@ -271,6 +271,121 @@ namespace Auto_Service_Application_university_project.Data
             }
         }
 
+        public async Task DeleteEmployerAsync(int employerId)
+        {
+            using (var connection = new OracleConnection(connectionString))
+            {
+                await connection.OpenAsync();
+                using (var command = new OracleCommand("employer_pkg.delete_employer", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("p_employer_id", OracleDbType.Int32).Value = employerId;
+
+                    try
+                    {
+                        await command.ExecuteNonQueryAsync();
+                    }
+                    catch (OracleException ex)
+                    {
+                        if (ex.Number == 2292) // ORA-02292
+                        {
+                            MessageBox.Show("Unable to delete the record because it is linked to other data. Please delete the related records first.");
+                        }
+                        else
+                        {
+                            throw new ApplicationException($"Ошибка при удалении Employer: {ex.Message}", ex);
+                        }
+                    }
+                }
+            }
+        }
+
+        public async Task<ObservableCollection<Employer>> GetAllEmployersAsync()
+        {
+            var employers = new ObservableCollection<Employer>();
+
+            using (var connection = new OracleConnection(connectionString))
+            {
+                await connection.OpenAsync();
+                using (var command = new OracleCommand("employer_pkg.get_all_employers", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    var cursorParam = new OracleParameter("p_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
+                    command.Parameters.Add(cursorParam);
+
+                    try
+                    {
+                        using (var reader = await command.ExecuteReaderAsync(CommandBehavior.CloseConnection))
+                        {
+                            while (await reader.ReadAsync())
+                            {
+                                var emp = new Employer
+                                {
+                                    EmployerId = reader.GetInt32(reader.GetOrdinal("employer_id")),
+                                    //NameEmployee = reader.GetString(reader.GetOrdinal("name_employee")),
+                                    //Speciality = reader.GetString(reader.GetOrdinal("speciality")),
+                                    Phone = reader.GetInt32(reader.GetOrdinal("phone")),
+                                    Office = new Office { OfficeId = reader.GetInt32(reader.GetOrdinal("office_office_id")) },
+                                    Address = new Address
+                                    {
+                                        AddressId = reader.GetInt32(reader.GetOrdinal("address_id")),
+                                        Country = reader.GetString(reader.GetOrdinal("country")),
+                                        City = reader.GetString(reader.GetOrdinal("city")),
+                                        Street = reader.GetString(reader.GetOrdinal("street")),
+                                        HouseNumber = reader.GetInt32(reader.GetOrdinal("house_number")),
+                                        IndexAdd = reader.GetInt32(reader.GetOrdinal("index_add"))
+                                    }
+                                };
+
+                                if (!reader.IsDBNull(reader.GetOrdinal("employer_employer_id")))
+                                {
+                                    emp.Supervisor = new Employer { EmployerId = reader.GetInt32(reader.GetOrdinal("employer_employer_id")) };
+                                }
+
+                                employers.Add(emp);
+                            }
+                        }
+                    }
+                    catch (OracleException ex)
+                    {
+                        throw new ApplicationException($"Ошибка при получении списка Employer: {ex.Message}", ex);
+                    }
+                }
+            }
+
+            return employers;
+        }
+
+        public async Task AddEmployerAsync(Employer employer)
+        {
+            using (var connection = new OracleConnection(connectionString))
+            {
+                await connection.OpenAsync();
+                using (var command = new OracleCommand("employer_pkg.insert_employer", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    command.Parameters.Add("p_name_employee", OracleDbType.Varchar2).Value = employer.NameEmployee;
+                    command.Parameters.Add("p_speciality", OracleDbType.Varchar2).Value = employer.Speciality;
+                    command.Parameters.Add("p_phone", OracleDbType.Int32).Value = employer.Phone;
+                    command.Parameters.Add("p_office_id", OracleDbType.Int32).Value = employer.Office.OfficeId;
+                    command.Parameters.Add("p_employer_employer_id", OracleDbType.Int32).Value =
+                        (employer.Supervisor != null) ? (object)employer.Supervisor.EmployerId : DBNull.Value;
+                    command.Parameters.Add("p_address_id", OracleDbType.Int32).Value = employer.Address.AddressId;
+
+                    try
+                    {
+                        await command.ExecuteNonQueryAsync();
+                    }
+                    catch (OracleException ex)
+                    {
+                        throw new ApplicationException($"Ошибка при вставке Employer: {ex.Message}", ex);
+                    }
+                }
+            }
+        }
+
         public async Task AssignRoleAsync(int userId, int roleId)
         {
             using (var connection = new OracleConnection(connectionString))

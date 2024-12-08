@@ -230,7 +230,6 @@ namespace Auto_Service_Application_university_project.ViewModels
             }
         }
 
-
         private void OnClear() 
         {
             SelectedBills = null;

@@ -17,7 +17,7 @@ namespace Auto_Service_Application_university_project.Models
 
         public override string ToString()
         {
-            return $"{SPZ}, {CarBrand}, reservation: {Reservation}";
+            return $"SPZ: {SPZ}, Car Brand: {CarBrand}, reservation: {Reservation}";
         }
     }
 }

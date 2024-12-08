@@ -19,7 +19,7 @@ namespace Auto_Service_Application_university_project.Models
 
         public override string ToString()
         {
-            return $"Service Offer {ServiceOffer}, Date Bill {DateBill.ToString("dd.MM.yyyy")}, Price {Price}";
+            return $"Service Offer: {ServiceOffer}, Date Bill: {DateBill.ToString("dd.MM.yyyy")}, Price: {Price}";
         }
     }
 }

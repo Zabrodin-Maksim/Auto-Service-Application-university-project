@@ -17,7 +17,7 @@ namespace Auto_Service_Application_university_project.Models
 
         public override string ToString()
         {
-            return $"{Country}, {City}, {IndexAdd}, {Street} , {HouseNumber}";
+            return $"{Country}, {City}, {IndexAdd}, {Street}, {HouseNumber}";
         }
     }
 }

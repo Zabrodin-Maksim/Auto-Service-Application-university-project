@@ -20,7 +20,7 @@ namespace Auto_Service_Application_university_project.Models
 
         public override string ToString()
         {
-            return $"Bill {Bill}, Payment Type {PaymentType}, Client {Client.ClientName}";
+            return $"Bill: {Bill}, Payment Type: {PaymentType}, Client: {Client.ClientName}";
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Auto_Service_Application_university_project.Data;
 using Auto_Service_Application_university_project.Models;
+using DocumentFormat.OpenXml.Spreadsheet;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -41,6 +42,21 @@ namespace Auto_Service_Application_university_project.ViewModels.HelperViewModel
         public async Task DeleteUser(int userId)
         {
             await _userRepository.DeleteUserAsync(userId);
+        }
+
+        public async Task DeleteEmployerAsync(int employerId)
+        {
+            await _userRepository.DeleteEmployerAsync(employerId);
+        }
+
+        public async Task<ObservableCollection<Employer>> GetAllEmployersAsync()
+        {
+            return await _userRepository.GetAllEmployersAsync();
+        }
+
+        public async Task AddEmployerAsync(Employer employer)
+        {
+            await _userRepository.AddEmployerAsync(employer);
         }
 
         public async Task AssignRole(int userId, int roleId)

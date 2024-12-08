@@ -839,12 +839,6 @@ namespace Auto_Service_Application_university_project.ViewModels
                     if (user.RoleId < 3)
                     {
                         await _mainViewModel.AssignRole(user.UserId, user.RoleId+1);
-                        // TODO:Delete employer
-                        // Delete employer
-                        if (user.RoleId + 1 == 3)
-                        {
-
-                        }
 
                         // Update List of Users 
                         var users = await _mainViewModel.GetAllUsers();
@@ -886,12 +880,18 @@ namespace Auto_Service_Application_university_project.ViewModels
             VisibleThirdTextBox = Visibility.Visible;
 
             // Fill in List 
-            var users = await _mainViewModel.GetAllUsers();
-            ListItems = new ObservableCollection<object>(users.Cast<object>());
+            var eployers = await _mainViewModel.GetAllEmployersAsync();
+            ListItems = new ObservableCollection<object>(eployers.Cast<object>());
 
             // Fill in Combo Boxes
-            var addreses = await _mainViewModel.GetAllAddresses();
-            ItemsFirstCombo = new ObservableCollection<object>(addreses.Cast<object>());
+            var office =  _mainViewModel.Offices;
+            ItemsFirstCombo = new ObservableCollection<object>(office.Cast<object>());
+
+            var supervisor = await _mainViewModel.GetAllEmployersAsync();
+            ItemsSecondCombo = new ObservableCollection<object>(supervisor.Cast<object>());
+
+            var address = await _mainViewModel.GetAllAddresses();
+            ItemsThirdCombo = new ObservableCollection<object>(address.Cast<object>());
 
             // Fill Text Discriptions
             TextDiscrFirstCombo = "Office";

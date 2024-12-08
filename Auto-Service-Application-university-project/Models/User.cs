@@ -21,7 +21,7 @@ namespace Auto_Service_Application_university_project.Models
 
         public override string ToString()
         {
-            return $"{Username}, {Name}, {Phone}, {ShortAdress}, Role: {RoleId}";
+            return $"{Username}, Name: {Name}, Phone: +420 {Phone}, {ShortAdress}, Role: {RoleId}";
         }
     }
 }

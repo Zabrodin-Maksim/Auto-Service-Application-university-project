@@ -201,7 +201,7 @@
                     <StackPanel Grid.Row="1" Margin="0,0,0,10" Visibility="{Binding VisibilityMenu}">
                         <Button Content="Clients" Command="{Binding ClientsCommand}" MinHeight="35" />
                         <Button Content="Users" Command="{Binding UsersCommand}" MinHeight="35" />
-                        <!--<Button Content="Employers" Command="{Binding EmployersCommand}" MinHeight="35" />-->
+                        <Button Content="Employers" Command="{Binding EmployersCommand}" MinHeight="35" />
                         <Button Content="Cars" Command="{Binding CarsCommand}" MinHeight="35" />
                         <Button Content="Reservations" Command="{Binding ReservationsCommand}" MinHeight="35" />
                         <!--<Button Content="Servis Offers" Command="{Binding ServisOffersCommand}" MinHeight="35" />-->

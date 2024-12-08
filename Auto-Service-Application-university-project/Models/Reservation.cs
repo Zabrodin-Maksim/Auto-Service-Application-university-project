@@ -15,7 +15,7 @@ namespace Auto_Service_Application_university_project.Models
 
         public override string ToString()
         {
-            return $"{DateReservace.ToString("dd.MM.yyyy")}, {Client}, {Office}";
+            return $"{DateReservace.ToString("dd.MM.yyyy")}, Client: {Client}, Office: {Office}";
         }
     }
 }

@@ -14,6 +14,7 @@ using System.Windows;
 using System.Runtime.ConstrainedExecution;
 using System.Windows.Controls;
 using System.Net;
+using DocumentFormat.OpenXml.Spreadsheet;
 
 namespace Auto_Service_Application_university_project.ViewModels
 {
@@ -372,6 +373,64 @@ namespace Auto_Service_Application_university_project.ViewModels
                 catch (Exception ex)
                 {
                     Debug.WriteLine($"[INFO]Error Delete User: {ex.Message}");
+                }
+            }
+            else
+            {
+                Debug.WriteLine("[INFO] Non Authoricated");
+            }
+        }
+
+        public async Task DeleteEmployerAsync(int employerId)
+        {
+            if (flagUserLogin)
+            {
+                try
+                {
+                    await _userVM.DeleteEmployerAsync(employerId);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[INFO]Error Delete Employer: {ex.Message}");
+                }
+            }
+            else
+            {
+                Debug.WriteLine("[INFO] Non Authoricated");
+            }
+        }
+
+        public async Task<ObservableCollection<Employer>> GetAllEmployersAsync()
+        {
+            if (flagUserLogin)
+            {
+                try
+                {
+                    return await _userVM.GetAllEmployersAsync();
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[INFO]Error get all Employers: {ex.Message}");
+                }
+            }
+            else
+            {
+                Debug.WriteLine("[INFO] Non Authoricated");
+            }
+            return null;
+        }
+
+        public async Task AddEmployerAsync(Employer employer)
+        {
+            if (flagUserLogin)
+            {
+                try
+                {
+                    await _userVM.AddEmployerAsync(employer);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[INFO]Error add Employer: {ex.Message}");
                 }
             }
             else
