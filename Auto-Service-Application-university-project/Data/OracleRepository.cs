@@ -25,7 +25,7 @@ namespace Auto_Service_Application_university_project.Data
                 using (var command = new OracleCommand(query, connection))
                 {
                     command.CommandType = System.Data.CommandType.Text;
-                    command.Parameters.Add("owner", OracleDbType.Varchar2).Value = owner;
+                    //command.Parameters.Add("owner", OracleDbType.Varchar2).Value = owner;
 
                     try
                     {
