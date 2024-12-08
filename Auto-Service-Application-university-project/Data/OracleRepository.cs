@@ -9,46 +9,50 @@ using System.Threading.Tasks;
 
 namespace Auto_Service_Application_university_project.Data
 {
-    public class OracleRepository
-    {
-        private readonly string connectionString = "User Id=st67280;Password=abcde;Data Source=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=fei-sql3.upceucebny.cz)(PORT=1521))(CONNECT_DATA=(SID=BDAS)))";
-        public async Task<ObservableCollection<OracleObject>> GetSystemObjectsAsync()
+
+        public class OracleRepository
         {
-            var objects = new ObservableCollection<OracleObject>();
+            private readonly string connectionString = "User Id=st67280;Password=abcde;Data Source=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=fei-sql3.upceucebny.cz)(PORT=1521))(CONNECT_DATA=(SID=BDAS)))";
 
-            using (var connection = new OracleConnection(connectionString))
+
+
+            public async Task<ObservableCollection<OracleObject>> GetSystemObjectsAsync()
             {
-                await connection.OpenAsync();
+                var objects = new ObservableCollection<OracleObject>();
 
-                var query = "SELECT object_name, object_type FROM all_objects WHERE OWNER = 'ST67280'";
-
-                using (var command = new OracleCommand(query, connection))
+                using (var connection = new OracleConnection(connectionString))
                 {
-                    command.CommandType = System.Data.CommandType.Text;
-                    command.Parameters.Add("owner", OracleDbType.Varchar2).Value = owner;
+                    await connection.OpenAsync();
 
-                    try
+                    var query = "SELECT object_name, object_type FROM all_objects WHERE OWNER = 'ST67280'";
+
+                    using (var command = new OracleCommand(query, connection))
                     {
-                        using (var reader = await command.ExecuteReaderAsync())
+                        command.CommandType = System.Data.CommandType.Text;
+
+                        try
                         {
-                            while (await reader.ReadAsync())
+                            using (var reader = await command.ExecuteReaderAsync())
                             {
-                                objects.Add(new OracleObject
+                                while (await reader.ReadAsync())
                                 {
-                                    ObjectName = reader.GetString(reader.GetOrdinal("object_name")),
-                                    ObjectType = reader.GetString(reader.GetOrdinal("object_type"))
-                                });
+                                    objects.Add(new OracleObject
+                                    {
+                                        ObjectName = reader.GetString(reader.GetOrdinal("object_name")),
+                                        ObjectType = reader.GetString(reader.GetOrdinal("object_type"))
+                                    });
+                                }
                             }
                         }
-                    }
-                    catch (OracleException ex)
-                    {
-                        throw new ApplicationException($"Ошибка при получении системных объектов: {ex.Message}", ex);
+                        catch (OracleException ex)
+                        {
+                            throw new ApplicationException($"Ошибка при получении системных объектов: {ex.Message}", ex);
+                        }
                     }
                 }
+
+                return objects;
             }
 
-            return objects;
         }
-    }
 }

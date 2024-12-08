@@ -12,5 +12,10 @@ namespace Auto_Service_Application_university_project.Models
         public string TableName { get; set; }
         public string Operation { get; set; }
         public DateTime ChangeDate { get; set; }
+
+        public override string ToString()
+        {
+            return $"TableName: {TableName}, Operation: {Operation}, ChangeDate: {ChangeDate}";
+        }
     }
 }
