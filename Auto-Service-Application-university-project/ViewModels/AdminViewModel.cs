@@ -376,6 +376,7 @@ namespace Auto_Service_Application_university_project.ViewModels
                 case EnumAdminMenuItems.Employers:
                     if (SelectedItems == null)
                     {
+                        await AddEmployer(param);
                     }
                     else
                     {
@@ -903,6 +904,82 @@ namespace Auto_Service_Application_university_project.ViewModels
             TextDiscrThirdTextBox = "Phone";
 
             currentMenuItem = EnumAdminMenuItems.Employers;
+        }
+
+        private async Task AddEmployer(object param)
+        {
+            if (SelectedFirstCombo != null && !string.IsNullOrEmpty(FirstTextBox) && !string.IsNullOrEmpty(SecondTextBox) && !string.IsNullOrEmpty(ThirdTextBox))
+            {
+                try
+                {
+                    // Add Employer
+                    Employer employer = new Employer
+                    {
+                        Speciality = FirstTextBox,
+                        NameEmployee = SecondTextBox,
+                        Phone = int.Parse(ThirdTextBox),
+                        Office = (Office)SelectedFirstCombo,
+                        Supervisor = (Employer)SelectedSecondCombo,
+                        Address = (Address)SelectedThirdCombo
+                    };
+                    await _mainViewModel.AddEmployerAsync(employer);
+
+                    // Update List of Employers 
+                    var employers = await _mainViewModel.GetAllEmployersAsync();
+                    ListItems = new ObservableCollection<object>(employers.Cast<object>());
+
+                    // Clear
+                    ClearAllInputs();
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[Error] Add Employer {ex.Message}");
+                }
+            }
+            else
+            {
+                ErrorMessage = "Fill all fields!";
+            }
+
+        }
+
+        private async Task UpdateEmployer(object param)
+        {
+            if (SelectedFirstCombo != null && !string.IsNullOrEmpty(FirstTextBox) && !string.IsNullOrEmpty(SecondTextBox) && !string.IsNullOrEmpty(ThirdTextBox))
+            {
+                try
+                {
+                    Employer selectedemployer = (Employer)SelectedItems;
+                    // Update Employer
+                    Employer employer = new Employer
+                    {
+                        EmployerId = selectedemployer.EmployerId,
+                        Speciality = FirstTextBox,
+                        NameEmployee = SecondTextBox,
+                        Phone = int.Parse(ThirdTextBox),
+                        Office = (Office)SelectedFirstCombo,
+                        Supervisor = (Employer)SelectedSecondCombo,
+                        Address = (Address)SelectedThirdCombo
+                    };
+                    await _mainViewModel.AddEmployerAsync(employer);
+
+                    // Update List of Employers 
+                    var employers = await _mainViewModel.GetAllEmployersAsync();
+                    ListItems = new ObservableCollection<object>(employers.Cast<object>());
+
+                    // Clear
+                    ClearAllInputs();
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[Error] Update Employer {ex.Message}");
+                }
+            }
+            else
+            {
+                ErrorMessage = "Fill all fields!";
+            }
+
         }
 
 
