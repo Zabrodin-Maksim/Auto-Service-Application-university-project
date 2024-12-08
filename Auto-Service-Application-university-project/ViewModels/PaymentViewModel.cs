@@ -1,14 +1,18 @@
 ﻿using Auto_Service_Application_university_project.Models;
 using Auto_Service_Application_university_project.Services;
+using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Wordprocessing;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+
 
 namespace Auto_Service_Application_university_project.ViewModels
 {
@@ -205,7 +209,7 @@ namespace Auto_Service_Application_university_project.ViewModels
                     if (payment.Cash != null)
                         Debug.WriteLine($"[INFO]CashTaken: {payment.Cash.Taken}");
 
-                    // Вызов метода для сохранения платежа
+                    
                     await _mainViewModel.AddPayment(payment);
 
                     if (PaymentTypeSelected.TypeName.Equals("cash", StringComparison.OrdinalIgnoreCase))
@@ -213,6 +217,9 @@ namespace Auto_Service_Application_university_project.ViewModels
                         MessageBox.Show($"Must give change = {decimal.Parse(CashTaken) - SelectedBills.Price}.",
                                         "Change", MessageBoxButton.OK, MessageBoxImage.Information);
                     }
+
+
+                    CreateBillDocument(payment.ToString() + "\n Total Price: " + SelectedBills.Price + "\n");
 
                     OnClear();
                 }
@@ -253,6 +260,46 @@ namespace Auto_Service_Application_university_project.ViewModels
             }
 
             return false;
+        }
+
+        public void CreateBillDocument(string content)
+        {
+            string filePath = "Bill.docx";
+
+            try
+            {
+                if (File.Exists(filePath))
+                {
+                    // If the file exists, open and append content
+                    using (WordprocessingDocument wordDoc = WordprocessingDocument.Open(filePath, true))
+                    {
+                        var body = wordDoc.MainDocumentPart.Document.Body;
+                        body.AppendChild(new Paragraph(new Run(new Text(content))));
+                        wordDoc.MainDocumentPart.Document.Save();
+                    }
+
+                    Console.WriteLine($"Text has been appended to the existing file: {filePath}");
+                }
+                else
+                {
+                    // If the file does not exist, create a new one
+                    using (WordprocessingDocument wordDoc = WordprocessingDocument.Create(filePath, DocumentFormat.OpenXml.WordprocessingDocumentType.Document))
+                    {
+                        var mainPart = wordDoc.AddMainDocumentPart();
+                        mainPart.Document = new Document();
+                        var body = new Body();
+                        body.AppendChild(new Paragraph(new Run(new Text(content))));
+                        mainPart.Document.AppendChild(body);
+                        mainPart.Document.Save();
+                    }
+
+                    Console.WriteLine($"A new document has been created: {filePath}");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred while working with the document: {ex.Message}");
+            }
         }
     }
 }
