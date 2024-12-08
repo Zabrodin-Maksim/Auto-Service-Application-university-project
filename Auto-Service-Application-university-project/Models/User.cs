@@ -16,5 +16,12 @@ namespace Auto_Service_Application_university_project.Models
         public Address Address { get; set; }
 
         public int RoleId {  get; set; }
+
+        public string ShortAdress { get => Address.City + " " + Address.Street + Address.HouseNumber; }
+
+        public override string ToString()
+        {
+            return $"{Username}, {Name}, {Phone}, {ShortAdress}, Role: {RoleId}";
+        }
     }
 }

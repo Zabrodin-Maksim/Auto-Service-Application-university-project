@@ -284,6 +284,21 @@ namespace Auto_Service_Application_university_project.ViewModels
         }
 
 
+        private void ClearAllInputs()
+        {
+            SelectedItems = null;
+            SelectedFirstCombo = null;
+            SelectedSecondCombo = null;
+            SelectedThirdCombo = null;
+            SelectedFourthCombo = null;
+            FirstTextBox = "";
+            SecondTextBox = "";
+            ThirdTextBox = "";
+            FourthTextBox = "";
+            FifthTextBox = "";
+            ErrorMessage = "";
+        }
+
         private async Task OnBackCommand(object param)
         {
             HideAllFields();
@@ -291,12 +306,7 @@ namespace Auto_Service_Application_university_project.ViewModels
             VisibilityFilds = Visibility.Collapsed;
 
             // Clear all selected items
-            SelectedItems = null;
-            SelectedFirstCombo = null;
-            SelectedSecondCombo = null;
-            SelectedThirdCombo = null;
-            SelectedFourthCombo = null;
-
+            ClearAllInputs();
         }
 
         private async Task OnAddUpdateCommand(object param)
@@ -310,7 +320,7 @@ namespace Auto_Service_Application_university_project.ViewModels
                     }
                     else
                     {
-
+                        await UpdateClient(param);
                     }
                     break;
 
@@ -321,7 +331,7 @@ namespace Auto_Service_Application_university_project.ViewModels
                     }
                     else
                     {
-
+                        await UpdateUser(param);
                     }
                     break;
 
@@ -506,9 +516,8 @@ namespace Auto_Service_Application_university_project.ViewModels
             var clients = await _mainViewModel.GetAllClientsAsync();
             ListItems = new ObservableCollection<object>(clients.Cast<object>());
 
-            //TODO:  ДОБАВИТЬ РЕПОЗИТОРИЙ АДРЕССА
-            //var addreses 
-            //ItemsFirstCombo = new ObservableCollection<object>();
+            var addreses = await _mainViewModel.GetAllAddresses();
+            ItemsFirstCombo = new ObservableCollection<object>(addreses.Cast<object>());
 
             // Fill Text Discriptions
             TextDiscrFirstCombo = "Address";
@@ -518,6 +527,35 @@ namespace Auto_Service_Application_university_project.ViewModels
             currentMenuItem = EnumAdminMenuItems.Clients;
         }
 
+        private async Task UpdateClient(object param)
+        {
+            if (SelectedFirstCombo != null && !string.IsNullOrEmpty(FirstTextBox) && !string.IsNullOrEmpty(SecondTextBox) && SecondTextBox.All(char.IsDigit))
+            {
+                try
+                {
+                    // Update Client
+                    Client client = (Client)SelectedItems;
+                    await _mainViewModel.UpdateClient(client.ClientId, FirstTextBox, (Address)SelectedFirstCombo, int.Parse(SecondTextBox));
+
+                    // Update List of Clients 
+                    var clients = await _mainViewModel.GetAllClientsAsync();
+                    ListItems = new ObservableCollection<object>(clients.Cast<object>());
+
+                    // Clear 
+                    ClearAllInputs();
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[Error] Update Client {ex.Message}");
+                }
+            }
+            else
+            {
+                ErrorMessage = "Fill all fields!";
+            }
+
+        }
+
         private async Task AddClient(object param)
         {
             if (SelectedFirstCombo != null && !string.IsNullOrEmpty(FirstTextBox) && !string.IsNullOrEmpty(SecondTextBox) && SecondTextBox.All(char.IsDigit)) 
@@ -525,17 +563,14 @@ namespace Auto_Service_Application_university_project.ViewModels
                 try
                 {
                     // Add Client
-                    Client client = new Client
-                    {
-                        ClientName = FirstTextBox,
-                        Address = (Address)SelectedFirstCombo,
-                        Phone = int.Parse(SecondTextBox)
-                    };
-                    await _mainViewModel.DeleteClient(client.ClientId);
+                    await _mainViewModel.AddClient(FirstTextBox, (Address)SelectedFirstCombo, int.Parse(SecondTextBox));
 
                     // Update List of Clients 
                     var clients = await _mainViewModel.GetAllClientsAsync();
                     ListItems = new ObservableCollection<object>(clients.Cast<object>());
+
+                    // Clear 
+                    ClearAllInputs();
                 }
                 catch (Exception ex)
                 {
@@ -559,6 +594,9 @@ namespace Auto_Service_Application_university_project.ViewModels
                 // Update List of Clients 
                 var clients = await _mainViewModel.GetAllClientsAsync();
                 ListItems = new ObservableCollection<object>(clients.Cast<object>());
+
+                // Clear 
+                ClearAllInputs();
             }
             catch (Exception ex)
             {
@@ -579,9 +617,13 @@ namespace Auto_Service_Application_university_project.ViewModels
             VisibleThirdTextBox = Visibility.Visible;
             VisibleFifthTextBox = Visibility.Visible;
 
-            //TODO:  ДОБАВИТЬ РЕПОЗИТОРИЙ АДРЕССА
-            //var addreses 
-            //ItemsFirstCombo = new ObservableCollection<object>();
+            // Fill in List
+            var users = await _mainViewModel.GetAllUsers();
+            ListItems = new ObservableCollection<object>(users.Cast<object>());
+
+            // Fill in Combo box addresses
+            var addreses = await _mainViewModel.GetAllAddresses();
+            ItemsFirstCombo = new ObservableCollection<object>(addreses.Cast<object>());
 
             // Fill Text Discriptions
             TextDiscrFirstCombo = "Address";
@@ -593,13 +635,53 @@ namespace Auto_Service_Application_university_project.ViewModels
             currentMenuItem = EnumAdminMenuItems.Users;
         }
 
+        private async Task UpdateUser(object param)
+        {
+            if (SelectedFirstCombo != null && !string.IsNullOrEmpty(FirstTextBox) && !string.IsNullOrEmpty(SecondTextBox) && !string.IsNullOrEmpty(ThirdTextBox) && FifthTextBox.All(char.IsDigit))
+            {
+                try
+                {
+                    // Update User
+                    User selectedUser = (User)SelectedItems;
+
+                    User user = new User
+                    {
+                        UserId = selectedUser.UserId,
+                        Username = FirstTextBox,
+                        Password = SecondTextBox,
+                        Name = ThirdTextBox,
+                        Phone = int.Parse(FifthTextBox),
+                        Address = (Address)SelectedFirstCombo
+                    };
+
+                    await _mainViewModel.UpdateUser(user);
+
+                    // Update List of Users 
+                    var users = await _mainViewModel.GetAllUsers();
+                    ListItems = new ObservableCollection<object>(users.Cast<object>());
+
+                    // Clear
+                    ClearAllInputs();
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[Error] Update User {ex.Message}");
+                }
+            }
+            else
+            {
+                ErrorMessage = "Fill all fields!";
+            }
+
+        }
+
         private async Task AddUser(object param)
         {
             if (SelectedFirstCombo != null && !string.IsNullOrEmpty(FirstTextBox) && !string.IsNullOrEmpty(SecondTextBox) && !string.IsNullOrEmpty(ThirdTextBox) && FifthTextBox.All(char.IsDigit))
             {
                 try
                 {
-                    // Add Client
+                    // Add User
                     User user = new User
                     {
                         Username = FirstTextBox,
@@ -610,9 +692,12 @@ namespace Auto_Service_Application_university_project.ViewModels
                     };
                     await _mainViewModel.AddNewUser(user);
 
-                    // Update List of Clients 
+                    // Update List of Users 
                     var users = await _mainViewModel.GetAllUsers();
                     ListItems = new ObservableCollection<object>(users.Cast<object>());
+
+                    // Clear
+                    ClearAllInputs();
                 }
                 catch (Exception ex)
                 {
@@ -633,9 +718,12 @@ namespace Auto_Service_Application_university_project.ViewModels
                 User user = (User)SelectedItems;
                 await _mainViewModel.DeleteUserAsync(user.UserId);
 
-                // Update List of Clients 
+                // Update List of Users 
                 var users = await _mainViewModel.GetAllUsers();
                 ListItems = new ObservableCollection<object>(users.Cast<object>());
+
+                // Clear
+                ClearAllInputs();
             }
             catch (Exception ex)
             {

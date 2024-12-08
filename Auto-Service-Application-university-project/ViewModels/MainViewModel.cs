@@ -13,6 +13,7 @@ using System.Collections.ObjectModel;
 using System.Windows;
 using System.Runtime.ConstrainedExecution;
 using System.Windows.Controls;
+using System.Net;
 
 namespace Auto_Service_Application_university_project.ViewModels
 {
@@ -64,6 +65,8 @@ namespace Auto_Service_Application_university_project.ViewModels
         // Payment
         private PaymentDataViewModel _paymentVM;
 
+        // Address 
+        private AddressViewModel _addressVM;
         #endregion
 
         #endregion
@@ -165,6 +168,7 @@ namespace Auto_Service_Application_university_project.ViewModels
             _billVM = new BillViewModel();
             _paymentTypeVM = new PaymentTypeViewModel();
             _paymentVM = new PaymentDataViewModel();
+            _addressVM = new AddressViewModel();
             #endregion
 
             UserLogout = new MyICommand(UserLogOut);
@@ -183,13 +187,13 @@ namespace Auto_Service_Application_university_project.ViewModels
                 authenticatedAdmin = null;
                 authenticatedEmployer = null;
 
-                //Hide all buttons
+                // Hide all buttons
                 HideAllVisibilites();
 
                 // Navigate to login page
                 NavigateToLoginCommand.Execute(null);
 
-                //TODO: ОТЧИЩЕНИЕ ВСЕХ ЛИСТОВ
+                // Clear all Lists
                 Clients.Clear();
                 Offices.Clear();
                 ServiceOffers.Clear();
@@ -264,7 +268,7 @@ namespace Auto_Service_Application_university_project.ViewModels
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"[INFO]Error adding new User: {ex.Message}");
+                Debug.WriteLine($"[INFO]Error Get all User: {ex.Message}");
             }
             return null;
         }
@@ -288,7 +292,6 @@ namespace Auto_Service_Application_university_project.ViewModels
                     Debug.WriteLine($"[INFO] User Authorization successfully: {authenticatedUser.Name}");
                     flagUserLogin = true;
 
-                    //TODO: ВСЕ СПИСКИ ЗАПОЛНЯЮТСЯ ТУТ
                     //Fields all necessary Lists
                     await FillinOutClientsLists();
                     await FillinOutOfficesList();
@@ -1336,7 +1339,104 @@ namespace Auto_Service_Application_university_project.ViewModels
         }
         #endregion
 
-        // TODO: Реализовать после авторитизации заполнение всех листов
+        #region Address Data Methods
+        public async Task AddAddress(Address address)
+        {
+            if (flagUserLogin)
+            {
+                try
+                {
+                    await _addressVM.AddAddress(address);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[INFO]Error Add new Address: {ex.Message}");
+                }
+            }
+            else
+            {
+                Debug.WriteLine("[INFO] Non Authoricated");
+            }
+        }
+
+        public async Task UpdateAddress(Address address)
+        {
+            if (flagUserLogin)
+            {
+                try
+                {
+                    await _addressVM.UpdateAddress(address);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[INFO]Error Update Address: {ex.Message}");
+                }
+            }
+            else
+            {
+                Debug.WriteLine("[INFO] Non Authoricated");
+            }
+        }
+
+        public async Task DeleteAddress(int addressId)
+        {
+            if (flagUserLogin)
+            {
+                try
+                {
+                    await _addressVM.DeleteAddress(addressId);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[INFO]Error Delete Address: {ex.Message}");
+                }
+            }
+            else
+            {
+                Debug.WriteLine("[INFO] Non Authoricated");
+            }
+        }
+
+        public async Task<Address> GetAddressById(int addressId)
+        {
+            if (flagUserLogin)
+            {
+                try
+                {
+                    return await _addressVM.GetAddressById(addressId);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[INFO]Error get Address by id: {ex.Message}");
+                }
+            }
+            else
+            {
+                Debug.WriteLine("[INFO] Non Authoricated");
+            }
+            return null;
+        }
+
+        public async Task<ObservableCollection<Address>> GetAllAddresses()
+        {
+            if (flagUserLogin)
+            {
+                try
+                {
+                    return await _addressVM.GetAllAddresses();
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[INFO]Error get all Address: {ex.Message}");
+                }
+            }
+            else
+            {
+                Debug.WriteLine("[INFO] Non Authoricated");
+            }
+            return null;
+        }
+        #endregion
 
     }
 }
