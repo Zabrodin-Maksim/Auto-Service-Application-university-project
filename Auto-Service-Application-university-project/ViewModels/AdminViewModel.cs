@@ -871,42 +871,42 @@ namespace Auto_Service_Application_university_project.ViewModels
         }
         #endregion
 
-        //#region Employers Methods
-        //private async Task OnEmployersCommand(object param)
-        //{
-        //    ChangeMenuOnFields();
+        #region Employers Methods
+        private async Task OnEmployersCommand(object param)
+        {
+            ChangeMenuOnFields();
 
-        //    // Needed Fields
-        //    VisibleFirstCombo = Visibility.Visible;
-        //    VisibleSecondCombo = Visibility.Visible;
-        //    VisibleThirdCombo = Visibility.Visible;
+            // Needed Fields
+            VisibleFirstCombo = Visibility.Visible;
+            VisibleSecondCombo = Visibility.Visible;
+            VisibleThirdCombo = Visibility.Visible;
 
-        //    VisibleFirstTextBox = Visibility.Visible;
-        //    VisibleSecondTextBox = Visibility.Visible;
-        //    VisibleThirdTextBox = Visibility.Visible;
+            VisibleFirstTextBox = Visibility.Visible;
+            VisibleSecondTextBox = Visibility.Visible;
+            VisibleThirdTextBox = Visibility.Visible;
 
-        //    // Fill in List 
-        //    var users = await _mainViewModel.GetAllUsers();
-        //    ListItems = new ObservableCollection<object>(users.Cast<object>());
+            // Fill in List 
+            var users = await _mainViewModel.GetAllUsers();
+            ListItems = new ObservableCollection<object>(users.Cast<object>());
 
-        //    // Fill in Combo Boxes
-        //    var addreses = await _mainViewModel.GetAllAddresses();
-        //    ItemsFirstCombo = new ObservableCollection<object>(addreses.Cast<object>());
+            // Fill in Combo Boxes
+            var addreses = await _mainViewModel.GetAllAddresses();
+            ItemsFirstCombo = new ObservableCollection<object>(addreses.Cast<object>());
 
-        //    // Fill Text Discriptions
-        //    TextDiscrFirstCombo = "Office";
-        //    TextDiscrSecondCombo = "Supervisor";
-        //    TextDiscrThirdCombo = "Address";
+            // Fill Text Discriptions
+            TextDiscrFirstCombo = "Office";
+            TextDiscrSecondCombo = "Supervisor";
+            TextDiscrThirdCombo = "Address";
 
-        //    TextDiscrFirstTextBox = "Speciality";
-        //    TextDiscrSecondTextBox = "NameEmployee";
-        //    TextDiscrThirdTextBox = "Phone";
+            TextDiscrFirstTextBox = "Speciality";
+            TextDiscrSecondTextBox = "NameEmployee";
+            TextDiscrThirdTextBox = "Phone";
 
-        //    currentMenuItem = EnumAdminMenuItems.Employers;
-        //}
+            currentMenuItem = EnumAdminMenuItems.Employers;
+        }
 
 
-        //#endregion
+        #endregion
 
         #region Cars Methods
         private async Task OnCarsCommand(object param)
@@ -1180,12 +1180,12 @@ namespace Auto_Service_Application_university_project.ViewModels
         }
         #endregion
 
-        //#region Servis Offers Methods
-        //private async Task OnServisOffersCommand(object param)
-        //{
+        #region Servis Offers Methods
+        private async Task OnServisOffersCommand(object param)
+        {
 
-        //}
-        //#endregion
+        }
+        #endregion
 
         #region Offices Methods
         private async Task OnOfficesCommand(object param)
