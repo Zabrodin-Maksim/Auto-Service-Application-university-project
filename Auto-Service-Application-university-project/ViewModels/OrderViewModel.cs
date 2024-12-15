@@ -1,14 +1,17 @@
 ﻿using Auto_Service_Application_university_project.Models;
 using Auto_Service_Application_university_project.Services;
+using DocumentFormat.OpenXml.Spreadsheet;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Reflection.Metadata;
 using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 
@@ -19,7 +22,9 @@ namespace Auto_Service_Application_university_project.ViewModels
         #region Private Fields
         private MainViewModel _mainViewModel;
 
-        private ObservableCollection<Client> _clients;
+        private string _searchText;
+
+        private ICollectionView _clients;
         private Client _selectedClient;
 
         private string _errorMasage;
@@ -44,7 +49,19 @@ namespace Auto_Service_Application_university_project.ViewModels
         #endregion
 
         #region Properties
-        public ObservableCollection<Client> Clients { get => _clients; set => SetProperty(ref _clients, value, nameof(Clients)); }
+        public ObservableCollection<Client> Clients { get; set; }
+        public ICollectionView FilteredItems { get => _clients; set => SetProperty(ref _clients, value, nameof(Clients)); }
+
+        public string SearchText
+        {
+            get => _searchText;
+            set
+            {
+                SetProperty(ref _searchText, value, nameof(SearchText));
+                FilteredItems.Refresh(); 
+            }
+        }
+
         public Client SelectedClient
         {
             get => _selectedClient; set
@@ -112,8 +129,6 @@ namespace Auto_Service_Application_university_project.ViewModels
             }
         }
 
-
-
         public DateTime SelectedDate { get => _selectedDate; set => SetProperty(ref _selectedDate, value, nameof(SelectedDate)); }
 
         public string ErrorMessage
@@ -134,11 +149,17 @@ namespace Auto_Service_Application_university_project.ViewModels
         {
             _mainViewModel = mainViewModel;
 
+            #region Init Lists
             Clients = _mainViewModel.Clients;
             Offices = _mainViewModel.Offices;
             ServiceTypes = _mainViewModel.ServiceTypes;
 
+            // For Filter
+            FilteredItems = CollectionViewSource.GetDefaultView(Clients);
+            FilteredItems.Filter = FilterItems;
+            #endregion
 
+            // Select in choise box
             if (Offices != null && Offices.Count != 0)
             {
                 SelectedOffice = Offices[0];
@@ -153,6 +174,14 @@ namespace Auto_Service_Application_university_project.ViewModels
 
             clearCommand = new MyICommand(OnClear);
             addNewOrderCommand = new MyICommand<object>(async parameter => await OnAddNewOrder(parameter));
+        }
+
+        private bool FilterItems(object obj)
+        {
+            if (string.IsNullOrEmpty(SearchText))
+                return true; 
+
+            return obj != null && obj.ToString().Contains(SearchText, StringComparison.OrdinalIgnoreCase);
         }
 
         private void OnClear()

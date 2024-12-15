@@ -181,13 +181,22 @@
                 <!-- Part of Clients -->
                 <Grid Grid.Column="1">
                     <Grid.RowDefinitions>
+                        <RowDefinition Height="0.106*"/>
                         <RowDefinition Height="0.03*"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
 
-                    <TextBlock Text="List of Clients" Style="{StaticResource textDiscription}" Margin="0" Grid.Row="0"/>
-                    <ListView Style="{StaticResource ListOfClients}"  Grid.Row="1"
-                             ItemsSource="{Binding Clients}"
+                    <!--#region SearchText field -->
+                    <TextBox Text="{Binding Path= SearchText, UpdateSourceTrigger=PropertyChanged}" Margin="10,25,20,0" >
+                        <TextBox.Background>
+                            <ImageBrush ImageSource="/Resources/Images/search-icon.png" Stretch="None" AlignmentX="Left"/>
+                        </TextBox.Background>
+                    </TextBox>
+                    <!--#endregion-->
+
+                    <TextBlock Text="List of Clients" Style="{StaticResource textDiscription}" Margin="0" Grid.Row="1"/>
+                    <ListView Style="{StaticResource ListOfClients}"  Grid.Row="2"
+                             ItemsSource="{Binding FilteredItems}"
                              SelectedItem="{Binding SelectedClient}" 
                              >
                         <ListView.View >

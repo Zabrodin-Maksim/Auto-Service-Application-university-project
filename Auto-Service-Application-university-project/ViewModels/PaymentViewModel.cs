@@ -6,12 +6,14 @@ using DocumentFormat.OpenXml.Wordprocessing;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Data;
 using System.Windows.Input;
 
 
@@ -28,7 +30,7 @@ namespace Auto_Service_Application_university_project.ViewModels
         private Visibility _visibilityCashTaken;
 
         // List
-        private ObservableCollection<Bill> _bills;
+        private ICollectionView _bills;
         private Bill _selectedBill;
 
         //Combo Box
@@ -38,16 +40,19 @@ namespace Auto_Service_Application_university_project.ViewModels
         // Fields
         private string _numberCard;
         private string _cashTaken;
+        private string _searchText;
 
         // Error message
         private string _errorMessage;
         #endregion
 
+
         #region Properties
         public Visibility VisibleNumberCard { get => _visibleNumberCard; set => SetProperty(ref _visibleNumberCard, value, nameof(VisibleNumberCard)); }
         public Visibility VisibilityCashTaken { get => _visibilityCashTaken; set => SetProperty(ref _visibilityCashTaken, value, nameof(VisibilityCashTaken)); }
 
-        public ObservableCollection<Bill> Bills { get => _bills; set => SetProperty(ref _bills, value, nameof(Bills)); }
+        public ObservableCollection<Bill> Bills { get; set; }
+        public ICollectionView FilteredItems { get => _bills; set => SetProperty(ref _bills, value, nameof(FilteredItems)); }
         public Bill SelectedBills { get => _selectedBill; set => SetProperty(ref _selectedBill, value, nameof(SelectedBills)); }
 
         public ObservableCollection<PaymentType> PaymentTypes { get => _paymentTypes; set => SetProperty(ref _paymentTypes, value, nameof(PaymentTypes)); }
@@ -116,6 +121,16 @@ namespace Auto_Service_Application_university_project.ViewModels
             }
         }
 
+        public string SearchText
+        {
+            get => _searchText;
+            set
+            {
+                SetProperty(ref _searchText, value, nameof(SearchText));
+                FilteredItems.Refresh(); 
+            }
+        }
+
         public string ErrorMessage { get => _errorMessage; set => SetProperty(ref _errorMessage, value, nameof(ErrorMessage)); }
         #endregion
 
@@ -141,10 +156,21 @@ namespace Auto_Service_Application_university_project.ViewModels
             Bills = await _mainViewModel.GetAllBills();
             PaymentTypes = await _mainViewModel.GetAllPaymentTypes();
 
+            FilteredItems = CollectionViewSource.GetDefaultView(Bills);
+            FilteredItems.Filter = FilterItems;
+
             if (PaymentTypes != null && PaymentTypes.Count != 0)
             {
                 PaymentTypeSelected = PaymentTypes[0];
             }
+        }
+
+        private bool FilterItems(object obj)
+        {
+            if (string.IsNullOrEmpty(SearchText))
+                return true; 
+
+            return obj != null && obj.ToString().Contains(SearchText, StringComparison.OrdinalIgnoreCase);
         }
 
         private async Task OnPaid(object parameter)
@@ -154,14 +180,12 @@ namespace Auto_Service_Application_university_project.ViewModels
                 if (PaymentTypeSelected.TypeName.Equals("card", StringComparison.OrdinalIgnoreCase) ||
                     (PaymentTypeSelected.TypeName.Equals("cash", StringComparison.OrdinalIgnoreCase) && decimal.TryParse(CashTaken, out decimal cashAmount) && cashAmount >= SelectedBills.Price))
                 {
-                    // Проверка на null для всех связанных объектов
                     if (SelectedBills?.ServiceOffer?.Car?.Reservation?.Client == null)
                     {
                         ErrorMessage = "Не удалось загрузить связанные данные клиента.";
                         return;
                     }
 
-                    // Загрузка клиента
                     var client = await _mainViewModel.GetClientById(SelectedBills.ServiceOffer.Car.Reservation.Client.ClientId);
                     if (client == null)
                     {
