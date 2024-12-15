@@ -1428,6 +1428,28 @@ namespace Auto_Service_Application_university_project.ViewModels
             }
             return null;
         }
+
+        public async Task<FileStorage> FileStorageAsync(FileStorage file)
+        {
+            if (flagUserLogin)
+            {
+                try
+                {
+                    await _paymentVM.AddFile(file);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[INFO]Error get all Payments by id: {ex.Message}");
+                }
+            }
+            else
+            {
+                Debug.WriteLine("[INFO] Non Authoricated");
+            }
+            return null;
+        }
+
+
         #endregion
 
         #region Address Data Methods
