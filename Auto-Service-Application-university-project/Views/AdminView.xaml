@@ -57,7 +57,7 @@
             <Style TargetType="ListView" x:Key="ListOfClients">
                 <Setter Property="MaxWidth" Value="440"/>
                 <Setter Property="Background" Value="LightGray"/>
-                <Setter Property="Foreground" Value="red"/>
+                <Setter Property="Foreground" Value="{Binding MenuBackgrounColor}"/>
                 <Setter Property="FontSize" Value="15"/>
             </Style>
 
@@ -103,6 +103,7 @@
                     
                     <Separator Grid.Row="1" VerticalAlignment="Top" Height="5"/>
 
+                    <!-- Fields -->
                     <StackPanel Grid.Row="1" Margin="10" Visibility="{Binding VisibilityFilds}" >
 
                         <!--#region ComboBoxes -->
@@ -227,7 +228,7 @@
                              SelectedItem="{Binding SelectedItems}" />
                 </Grid>
 
-                <!-- Part of Lsit Menu -->
+                <!-- Part of Lsit Menu {Binding VisibilityMenu} -->
                 <Grid Grid.Column="1" Visibility="{Binding VisibilityMenu}">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="0.06*"/>

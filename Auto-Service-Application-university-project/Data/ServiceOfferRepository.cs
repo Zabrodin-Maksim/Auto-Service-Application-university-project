@@ -207,7 +207,7 @@ namespace Auto_Service_Application_university_project.Data
                                     OfferId = reader.GetInt32(reader.GetOrdinal("offer_id")),
                                     PricePerHour = reader.IsDBNull(reader.GetOrdinal("price_per_hour")) ? (int?)null : reader.GetInt32(reader.GetOrdinal("price_per_hour")),
                                     DateOffer = reader.IsDBNull(reader.GetOrdinal("date_offer")) ? (DateTime?)null : reader.GetDateTime(reader.GetOrdinal("date_offer")),
-                                    Employer = reader.IsDBNull(reader.GetOrdinal("employer_employer_id")) ? null : await userRepository.GetEmployerAsync( reader.GetInt32(reader.GetOrdinal("employer_employer_id")) ),
+                                    Employer = reader.IsDBNull(reader.GetOrdinal("employer_employer_id")) ? null : await userRepository.GetEmployerAsync(reader.GetInt32(reader.GetOrdinal("employer_employer_id"))),
                                     Car = await carRepository.GetCarAsync(reader.GetInt32(reader.GetOrdinal("car_car_id"))), 
                                     ServiceType = new ServiceType { ServiceTypeId = reader.GetInt32(reader.GetOrdinal("service_type_id")), TypeName = reader.GetString(reader.GetOrdinal("type_name")) },
                                     WorkingHours = reader.IsDBNull(reader.GetOrdinal("working_hours")) ? (int?)null : reader.GetInt32(reader.GetOrdinal("working_hours"))
