@@ -1,14 +1,17 @@
 ﻿using Auto_Service_Application_university_project.Models;
 using Auto_Service_Application_university_project.Services;
+using DocumentFormat.OpenXml.Spreadsheet;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics.Metrics;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Data;
 using System.Windows.Input;
 
 namespace Auto_Service_Application_university_project.ViewModels
@@ -19,7 +22,7 @@ namespace Auto_Service_Application_university_project.ViewModels
         #region Private Fields
         private readonly MainViewModel _mainViewModel;
 
-        private ObservableCollection<Client> _clients;
+        private ICollectionView _clients;
 
         private Client _selectedClient;
 
@@ -30,6 +33,7 @@ namespace Auto_Service_Application_university_project.ViewModels
         private string _clientIndex;
         private string _clientStreet;
         private string _clintHouseNumber;
+        private string _searchText;
 
         private string _errorMasage;
         #endregion
@@ -43,7 +47,8 @@ namespace Auto_Service_Application_university_project.ViewModels
                 FillAllParameters(value);
             }
         }
-        public ObservableCollection<Client> Clients { get => _clients; set => SetProperty(ref _clients, value, nameof(Clients)); }
+        public ObservableCollection<Client> Clients { get; set; }
+        public ICollectionView FilteredItems { get => _clients; set => SetProperty(ref _clients, value, nameof(Clients)); }
 
         public string ClientName
         {
@@ -209,6 +214,16 @@ namespace Auto_Service_Application_university_project.ViewModels
             }
         }
 
+        public string SearchText
+        {
+            get => _searchText;
+            set
+            {
+                SetProperty(ref _searchText, value, nameof(SearchText));
+                FilteredItems.Refresh();
+            }
+        }
+
         public string ErrorMessage
         {
             get => _errorMasage; set
@@ -225,15 +240,28 @@ namespace Auto_Service_Application_university_project.ViewModels
 
         #endregion
 
+
         public ClientsViewModel(MainViewModel mainViewModel)
         {
             _mainViewModel = mainViewModel;
 
+            // Init Lists and filter
             Clients = _mainViewModel.Clients;
+            FilteredItems = CollectionViewSource.GetDefaultView(Clients);
+            FilteredItems.Filter = FilterItems;
 
+            // Init Command
             clearCommand = new MyICommand(OnClear);
             deleteCommand = new MyICommand<object>(async parametr => await OnDelete(parametr));
             addUpdateCommand = new MyICommand<object>(async parametr => await OnAddUpdate(parametr));
+        }
+
+        private bool FilterItems(object obj)
+        {
+            if (string.IsNullOrEmpty(SearchText))
+                return true;
+
+            return obj != null && obj.ToString().Contains(SearchText, StringComparison.OrdinalIgnoreCase);
         }
 
         private void FillAllParameters(Client client)
