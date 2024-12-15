@@ -380,7 +380,7 @@ namespace Auto_Service_Application_university_project.ViewModels
                     }
                     else
                     {
-
+                        await UpdateEmployer(param);
                     }
                     break;
 
@@ -486,7 +486,7 @@ namespace Auto_Service_Application_university_project.ViewModels
                         await DeleteUser(param);
                         break;
                     case EnumAdminMenuItems.Employers:
-
+                        await DeleteEmployer(param);
                         break;
                     case EnumAdminMenuItems.Cars:
                         await DeleteCar(param);
@@ -908,7 +908,7 @@ namespace Auto_Service_Application_university_project.ViewModels
 
         private async Task AddEmployer(object param)
         {
-            if (SelectedFirstCombo != null && !string.IsNullOrEmpty(FirstTextBox) && !string.IsNullOrEmpty(SecondTextBox) && !string.IsNullOrEmpty(ThirdTextBox))
+            if (SelectedFirstCombo != null && SelectedSecondCombo != null && SelectedThirdCombo != null && !string.IsNullOrEmpty(FirstTextBox) && !string.IsNullOrEmpty(SecondTextBox) && !string.IsNullOrEmpty(ThirdTextBox) && ThirdTextBox.All(char.IsDigit))
             {
                 try
                 {
@@ -924,7 +924,7 @@ namespace Auto_Service_Application_university_project.ViewModels
                     };
                     await _mainViewModel.AddEmployerAsync(employer);
 
-                    // Update List of Employers 
+                    // Update List of employers 
                     var employers = await _mainViewModel.GetAllEmployersAsync();
                     ListItems = new ObservableCollection<object>(employers.Cast<object>());
 
@@ -945,7 +945,7 @@ namespace Auto_Service_Application_university_project.ViewModels
 
         private async Task UpdateEmployer(object param)
         {
-            if (SelectedFirstCombo != null && !string.IsNullOrEmpty(FirstTextBox) && !string.IsNullOrEmpty(SecondTextBox) && !string.IsNullOrEmpty(ThirdTextBox))
+            if (SelectedFirstCombo != null && SelectedSecondCombo != null && SelectedThirdCombo != null && !string.IsNullOrEmpty(FirstTextBox) && !string.IsNullOrEmpty(SecondTextBox) && !string.IsNullOrEmpty(ThirdTextBox) && ThirdTextBox.All(char.IsDigit))
             {
                 try
                 {
@@ -961,9 +961,9 @@ namespace Auto_Service_Application_university_project.ViewModels
                         Supervisor = (Employer)SelectedSecondCombo,
                         Address = (Address)SelectedThirdCombo
                     };
-                    await _mainViewModel.AddEmployerAsync(employer);
+                    await _mainViewModel.UpdateEmployerAsync(employer);
 
-                    // Update List of Employers 
+                    // Update List of employers 
                     var employers = await _mainViewModel.GetAllEmployersAsync();
                     ListItems = new ObservableCollection<object>(employers.Cast<object>());
 
@@ -982,7 +982,25 @@ namespace Auto_Service_Application_university_project.ViewModels
 
         }
 
+        private async Task DeleteEmployer(object param)
+        {
+            try
+            {
+                Employer employer = (Employer)SelectedItems;
+                await _mainViewModel.DeleteEmployerAsync(employer.EmployerId);
 
+                // Update List of employers 
+                var employers = await _mainViewModel.GetAllEmployersAsync();
+                ListItems = new ObservableCollection<object>(employers.Cast<object>());
+
+                // Clear
+                ClearAllInputs();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"[Error] Delete User {ex.Message}");
+            }
+        }
         #endregion
 
         #region Cars Methods

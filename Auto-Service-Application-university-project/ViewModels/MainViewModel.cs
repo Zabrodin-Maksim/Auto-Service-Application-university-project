@@ -420,6 +420,25 @@ namespace Auto_Service_Application_university_project.ViewModels
             return null;
         }
 
+        public async Task UpdateEmployerAsync(Employer employer)
+        {
+            if (flagUserLogin)
+            {
+                try
+                {
+                    await _userVM.UpdateEmployerAsync(employer);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[INFO]Error Update Employer: {ex.Message}");
+                }
+            }
+            else
+            {
+                Debug.WriteLine("[INFO] Non Authoricated");
+            }
+        }
+
         public async Task AddEmployerAsync(Employer employer)
         {
             if (flagUserLogin)

@@ -383,6 +383,35 @@ namespace Auto_Service_Application_university_project.Data
             return employers;
         }
 
+        public async Task UpdateEmployerAsync(Employer employer)
+        {
+            using (var connection = new OracleConnection(connectionString))
+            {
+                await connection.OpenAsync();
+                using (var command = new OracleCommand("employer_pkg.update_employer", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    command.Parameters.Add("p_employer_id", OracleDbType.Int32).Value = employer.EmployerId;
+                    command.Parameters.Add("p_name_employee", OracleDbType.Varchar2).Value = employer.NameEmployee;
+                    command.Parameters.Add("p_speciality", OracleDbType.Varchar2).Value = employer.Speciality;
+                    command.Parameters.Add("p_phone", OracleDbType.Int32).Value = employer.Phone;
+                    command.Parameters.Add("p_office_id", OracleDbType.Int32).Value = employer.Office.OfficeId;
+                    command.Parameters.Add("p_employer_employer_id", OracleDbType.Int32).Value =
+                        (employer.Supervisor != null) ? (object)employer.Supervisor.EmployerId : DBNull.Value;
+                    command.Parameters.Add("p_address_id", OracleDbType.Int32).Value = employer.Address.AddressId;
+
+                    try
+                    {
+                        await command.ExecuteNonQueryAsync();
+                    }
+                    catch (OracleException ex)
+                    {
+                        throw new ApplicationException($"Ошибка при обновлении Employer: {ex.Message}", ex);
+                    }
+                }
+            }
+        }
 
         public async Task AddEmployerAsync(Employer employer)
         {

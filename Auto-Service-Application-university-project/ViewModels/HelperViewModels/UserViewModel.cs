@@ -54,6 +54,11 @@ namespace Auto_Service_Application_university_project.ViewModels.HelperViewModel
             return await _userRepository.GetAllEmployersAsync();
         }
 
+        public async Task UpdateEmployerAsync(Employer employer)
+        {
+            await _userRepository.UpdateEmployerAsync(employer);
+        }
+
         public async Task AddEmployerAsync(Employer employer)
         {
             await _userRepository.AddEmployerAsync(employer);
