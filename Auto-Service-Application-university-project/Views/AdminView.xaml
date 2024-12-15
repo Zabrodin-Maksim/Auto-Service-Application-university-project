@@ -57,7 +57,7 @@
             <Style TargetType="ListView" x:Key="ListOfClients">
                 <Setter Property="MaxWidth" Value="440"/>
                 <Setter Property="Background" Value="LightGray"/>
-                <Setter Property="Foreground" Value="{Binding MenuBackgrounColor}"/>
+                <Setter Property="Foreground" Value="#14532d"/>
                 <Setter Property="FontSize" Value="15"/>
             </Style>
 
@@ -218,17 +218,27 @@
                 <!-- Part of List-->
                 <Grid Grid.Column="1" Visibility="{Binding VisibleListItem}">
                     <Grid.RowDefinitions>
+                        <RowDefinition Height="0.106*"/>
                         <RowDefinition Height="0.03*"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
 
-                    <TextBlock Text="List of Entits" Style="{StaticResource textDiscription}" Margin="0" Grid.Row="0"/>
-                    <ListView Style="{StaticResource ListOfClients}"  Grid.Row="1"
-                             ItemsSource="{Binding ListItems}"
+                    <!--#region SearchText field -->
+                    <TextBox Text="{Binding Path= SearchText, UpdateSourceTrigger=PropertyChanged}" Margin="10,25,20,0" >
+                        <TextBox.Background>
+                            <ImageBrush ImageSource="/Resources/Images/search-icon.png" Stretch="None" AlignmentX="Left"/>
+                        </TextBox.Background>
+                    </TextBox>
+                    <!--#endregion-->
+                    
+                    <TextBlock Text="List of Entits" Style="{StaticResource textDiscription}" Margin="0" Grid.Row="1"/>
+                    <ListView Style="{StaticResource ListOfClients}"  Grid.Row="2"
+                             ItemsSource="{Binding FilteredItems}"
                              SelectedItem="{Binding SelectedItems}" />
+                    
                 </Grid>
 
-                <!-- Part of Lsit Menu {Binding VisibilityMenu} -->
+                <!-- Part of Lsit Menu -->
                 <Grid Grid.Column="1" Visibility="{Binding VisibilityMenu}">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="0.06*"/>

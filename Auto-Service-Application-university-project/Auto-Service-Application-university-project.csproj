@@ -20,6 +20,8 @@
     <None Remove="Resources\Images\login-background.jpg" />
     <None Remove="Resources\Images\Login-logo.png" />
     <None Remove="Resources\Images\registration.png" />
+    <None Remove="Resources\Images\search-icon.png" />
+    <None Remove="Resources\Images\search-icon2.png" />
     <None Remove="Resources\Images\tel-icon.png" />
     <None Remove="Resources\Images\user-icon.png" />
   </ItemGroup>
@@ -44,6 +46,7 @@
     <Resource Include="Resources\Images\login-background.jpg" />
     <Resource Include="Resources\Images\Login-logo.png" />
     <Resource Include="Resources\Images\registration.png" />
+    <Resource Include="Resources\Images\search-icon.png" />
     <Resource Include="Resources\Images\tel-icon.png" />
     <Resource Include="Resources\Images\user-icon.png" />
   </ItemGroup>

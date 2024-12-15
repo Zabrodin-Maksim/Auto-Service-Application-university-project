@@ -13,6 +13,9 @@ using Auto_Service_Application_university_project.Enums;
 using System.Linq.Expressions;
 using System.Xml.Linq;
 using System.Windows.Controls;
+using System.ComponentModel;
+using DocumentFormat.OpenXml.Spreadsheet;
+using System.Windows.Data;
 
 namespace Auto_Service_Application_university_project.ViewModels
 {
@@ -62,7 +65,7 @@ namespace Auto_Service_Application_university_project.ViewModels
 
 
         // List Items
-        private ObservableCollection<Object> _listItems;
+        private ICollectionView _listItems;
         private Object _selectedItems;
 
         // List menu
@@ -121,6 +124,9 @@ namespace Auto_Service_Application_university_project.ViewModels
 
         // Error
         private string _errorMessage;
+
+        // Search
+        private string _searchText;
         #endregion
 
         #endregion
@@ -165,11 +171,12 @@ namespace Auto_Service_Application_university_project.ViewModels
         public Visibility VisibilitiButtonsRole { get => _visibilitiButtonsRole; set => SetProperty(ref _visibilitiButtonsRole, value, nameof(VisibilitiButtonsRole)); }
         #endregion
         #endregion
-
+        
 
         // List Items
-        public ObservableCollection<object> ListItems { get => _listItems; set => SetProperty(ref _listItems, value, nameof(ListItems)); }
+        public ObservableCollection<object> ListItems {get; set;}
         public object SelectedItems { get => _selectedItems; set => SetProperty(ref _selectedItems, value, nameof(SelectedItems)); }
+        public ICollectionView FilteredItems { get => _listItems; set => SetProperty(ref _listItems, value, nameof(FilteredItems)); }
 
         // List menu
         public ObservableCollection<Logs> Logs { get => _Listlogs; set => SetProperty(ref _Listlogs, value, nameof(Logs)); }
@@ -218,7 +225,7 @@ namespace Auto_Service_Application_university_project.ViewModels
         public string TextDiscrDate { get => _TextDiscrDate; set => SetProperty(ref _TextDiscrDate, value, nameof(TextDiscrDate)); }
         #endregion
 
-        #region TextBlock
+        #region TextBlox
 
         // First
         public string FirstTextBox { get => _FirstTextBox; set => SetProperty(ref _FirstTextBox, value, nameof(FirstTextBox)); }
@@ -242,6 +249,17 @@ namespace Auto_Service_Application_university_project.ViewModels
 
         // Error
         public string ErrorMessage { get => _errorMessage; set => SetProperty(ref _errorMessage, value, nameof(ErrorMessage)); }
+
+        // Search
+        public string SearchText
+        {
+            get => _searchText;
+            set
+            {
+                SetProperty(ref _searchText, value, nameof(SearchText));
+                FilteredItems.Refresh(); // Update filter
+            }
+        }
         #endregion
 
         #endregion
@@ -554,6 +572,14 @@ namespace Auto_Service_Application_university_project.ViewModels
 
         }
 
+        private bool FilterItems(object obj)
+        {
+            if (string.IsNullOrEmpty(SearchText))
+                return true; // if search field is empty
+
+            return obj != null && obj.ToString().Contains(SearchText, StringComparison.OrdinalIgnoreCase);
+        }
+
 
         #region Clients Methods
         private async Task OnClientsCommand(object param)
@@ -569,9 +595,14 @@ namespace Auto_Service_Application_university_project.ViewModels
             // Fill in List
             var clients = await _mainViewModel.GetAllClientsAsync();
             ListItems = new ObservableCollection<object>(clients.Cast<object>());
+            // Filter
+            FilteredItems = CollectionViewSource.GetDefaultView(ListItems);
+            FilteredItems.Filter = FilterItems;
 
             var addreses = await _mainViewModel.GetAllAddresses();
             ItemsFirstCombo = new ObservableCollection<object>(addreses.Cast<object>());
+
+            
 
             // Fill Text Discriptions
             TextDiscrFirstCombo = "Address";
