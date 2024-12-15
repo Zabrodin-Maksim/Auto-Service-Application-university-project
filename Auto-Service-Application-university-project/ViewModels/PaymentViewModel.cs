@@ -46,7 +46,6 @@ namespace Auto_Service_Application_university_project.ViewModels
         private string _errorMessage;
         #endregion
 
-
         #region Properties
         public Visibility VisibleNumberCard { get => _visibleNumberCard; set => SetProperty(ref _visibleNumberCard, value, nameof(VisibleNumberCard)); }
         public Visibility VisibilityCashTaken { get => _visibilityCashTaken; set => SetProperty(ref _visibilityCashTaken, value, nameof(VisibilityCashTaken)); }

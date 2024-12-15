@@ -21,6 +21,9 @@ namespace Auto_Service_Application_university_project.ViewModels
     public class MainViewModel : ViewModelBase
     {
         #region Private Fields
+        // Emulation
+        private bool _emulationFlag;
+
         // Navigation
         private readonly MyNavigationService _navigationService;
         private ViewModelBase _currentViewModel;
@@ -189,6 +192,15 @@ namespace Auto_Service_Application_university_project.ViewModels
 
             // For start when user not login
             HideAllVisibilites();
+            _emulationFlag = false;
+        }
+
+        private async Task OnEndEmulation(object param)
+        {
+            if (_emulationFlag)
+            {
+
+            }
         }
 
         private void UserLogOut()
@@ -278,7 +290,7 @@ namespace Auto_Service_Application_university_project.ViewModels
             try
             {
                 return await _userVM.GetAllUsers();
-                
+
             }
             catch (Exception ex)
             {

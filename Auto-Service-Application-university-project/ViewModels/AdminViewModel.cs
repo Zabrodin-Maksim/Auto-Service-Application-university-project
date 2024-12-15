@@ -351,6 +351,7 @@ namespace Auto_Service_Application_university_project.ViewModels
             FourthTextBox = "";
             FifthTextBox = "";
             ErrorMessage = "";
+            SearchText = "";
         }
 
         private async Task OnBackCommand(object param)
@@ -568,8 +569,6 @@ namespace Auto_Service_Application_university_project.ViewModels
 
             // Role Buttons
             VisibilitiButtonsRole = Visibility.Collapsed;
-
-
         }
 
         private bool FilterItems(object obj)
@@ -626,6 +625,10 @@ namespace Auto_Service_Application_university_project.ViewModels
                     var clients = await _mainViewModel.GetAllClientsAsync();
                     ListItems = new ObservableCollection<object>(clients.Cast<object>());
 
+                    // Filter
+                    FilteredItems = CollectionViewSource.GetDefaultView(ListItems);
+                    FilteredItems.Filter = FilterItems;
+
                     // Clear 
                     ClearAllInputs();
                 }
@@ -654,6 +657,10 @@ namespace Auto_Service_Application_university_project.ViewModels
                     var clients = await _mainViewModel.GetAllClientsAsync();
                     ListItems = new ObservableCollection<object>(clients.Cast<object>());
 
+                    // Filter
+                    FilteredItems = CollectionViewSource.GetDefaultView(ListItems);
+                    FilteredItems.Filter = FilterItems;
+
                     // Clear 
                     ClearAllInputs();
                 }
@@ -679,6 +686,10 @@ namespace Auto_Service_Application_university_project.ViewModels
                 // Update List of Clients 
                 var clients = await _mainViewModel.GetAllClientsAsync();
                 ListItems = new ObservableCollection<object>(clients.Cast<object>());
+
+                // Filter
+                FilteredItems = CollectionViewSource.GetDefaultView(ListItems);
+                FilteredItems.Filter = FilterItems;
 
                 // Clear 
                 ClearAllInputs();
@@ -706,6 +717,10 @@ namespace Auto_Service_Application_university_project.ViewModels
             // Fill in List
             var users = await _mainViewModel.GetAllUsers();
             ListItems = new ObservableCollection<object>(users.Cast<object>());
+
+            // Filter
+            FilteredItems = CollectionViewSource.GetDefaultView(ListItems);
+            FilteredItems.Filter = FilterItems;
 
             // Fill in Combo box addresses
             var addreses = await _mainViewModel.GetAllAddresses();
@@ -746,6 +761,10 @@ namespace Auto_Service_Application_university_project.ViewModels
                     var users = await _mainViewModel.GetAllUsers();
                     ListItems = new ObservableCollection<object>(users.Cast<object>());
 
+                    // Filter
+                    FilteredItems = CollectionViewSource.GetDefaultView(ListItems);
+                    FilteredItems.Filter = FilterItems;
+
                     // Clear
                     ClearAllInputs();
                 }
@@ -782,6 +801,10 @@ namespace Auto_Service_Application_university_project.ViewModels
                     var users = await _mainViewModel.GetAllUsers();
                     ListItems = new ObservableCollection<object>(users.Cast<object>());
 
+                    // Filter
+                    FilteredItems = CollectionViewSource.GetDefaultView(ListItems);
+                    FilteredItems.Filter = FilterItems;
+
                     // Clear
                     ClearAllInputs();
                 }
@@ -807,6 +830,10 @@ namespace Auto_Service_Application_university_project.ViewModels
                 // Update List of Users 
                 var users = await _mainViewModel.GetAllUsers();
                 ListItems = new ObservableCollection<object>(users.Cast<object>());
+
+                // Filter
+                FilteredItems = CollectionViewSource.GetDefaultView(ListItems);
+                FilteredItems.Filter = FilterItems;
 
                 // Clear
                 ClearAllInputs();
@@ -839,6 +866,10 @@ namespace Auto_Service_Application_university_project.ViewModels
                         // Update List of Users 
                         var users = await _mainViewModel.GetAllUsers();
                         ListItems = new ObservableCollection<object>(users.Cast<object>());
+
+                        // Filter
+                        FilteredItems = CollectionViewSource.GetDefaultView(ListItems);
+                        FilteredItems.Filter = FilterItems;
 
                         // Clear
                         ClearAllInputs();
@@ -875,6 +906,10 @@ namespace Auto_Service_Application_university_project.ViewModels
                         // Update List of Users 
                         var users = await _mainViewModel.GetAllUsers();
                         ListItems = new ObservableCollection<object>(users.Cast<object>());
+
+                        // Filter
+                        FilteredItems = CollectionViewSource.GetDefaultView(ListItems);
+                        FilteredItems.Filter = FilterItems;
 
                         // Clear
                         ClearAllInputs();
@@ -914,6 +949,10 @@ namespace Auto_Service_Application_university_project.ViewModels
             // Fill in List 
             var eployers = await _mainViewModel.GetAllEmployersAsync();
             ListItems = new ObservableCollection<object>(eployers.Cast<object>());
+
+            // Filter
+            FilteredItems = CollectionViewSource.GetDefaultView(ListItems);
+            FilteredItems.Filter = FilterItems;
 
             // Fill in Combo Boxes
             var office =  _mainViewModel.Offices;
@@ -959,6 +998,10 @@ namespace Auto_Service_Application_university_project.ViewModels
                     var employers = await _mainViewModel.GetAllEmployersAsync();
                     ListItems = new ObservableCollection<object>(employers.Cast<object>());
 
+                    // Filter
+                    FilteredItems = CollectionViewSource.GetDefaultView(ListItems);
+                    FilteredItems.Filter = FilterItems;
+
                     // Clear
                     ClearAllInputs();
                 }
@@ -998,6 +1041,10 @@ namespace Auto_Service_Application_university_project.ViewModels
                     var employers = await _mainViewModel.GetAllEmployersAsync();
                     ListItems = new ObservableCollection<object>(employers.Cast<object>());
 
+                    // Filter
+                    FilteredItems = CollectionViewSource.GetDefaultView(ListItems);
+                    FilteredItems.Filter = FilterItems;
+
                     // Clear
                     ClearAllInputs();
                 }
@@ -1023,6 +1070,10 @@ namespace Auto_Service_Application_university_project.ViewModels
                 // Update List of employers 
                 var employers = await _mainViewModel.GetAllEmployersAsync();
                 ListItems = new ObservableCollection<object>(employers.Cast<object>());
+
+                // Filter
+                FilteredItems = CollectionViewSource.GetDefaultView(ListItems);
+                FilteredItems.Filter = FilterItems;
 
                 // Clear
                 ClearAllInputs();
@@ -1052,6 +1103,10 @@ namespace Auto_Service_Application_university_project.ViewModels
             // Fill in List
             var cars =  _mainViewModel.Cars;
             ListItems = new ObservableCollection<object>(cars.Cast<object>());
+
+            // Filter
+            FilteredItems = CollectionViewSource.GetDefaultView(ListItems);
+            FilteredItems.Filter = FilterItems;
 
             // Fill in Combo box addresses
             var offoces =  _mainViewModel.Offices;
@@ -1102,6 +1157,10 @@ namespace Auto_Service_Application_university_project.ViewModels
                     var cars = _mainViewModel.Cars;
                     ListItems = new ObservableCollection<object>(cars.Cast<object>());
 
+                    // Filter
+                    FilteredItems = CollectionViewSource.GetDefaultView(ListItems);
+                    FilteredItems.Filter = FilterItems;
+
                     // Clear 
                     ClearAllInputs();
                 }
@@ -1144,6 +1203,10 @@ namespace Auto_Service_Application_university_project.ViewModels
                     var cars = _mainViewModel.Cars;
                     ListItems = new ObservableCollection<object>(cars.Cast<object>());
 
+                    // Filter
+                    FilteredItems = CollectionViewSource.GetDefaultView(ListItems);
+                    FilteredItems.Filter = FilterItems;
+
                     // Clear 
                     ClearAllInputs();
                 }
@@ -1171,6 +1234,10 @@ namespace Auto_Service_Application_university_project.ViewModels
                 var cars = _mainViewModel.Cars;
                 ListItems = new ObservableCollection<object>(cars.Cast<object>());
 
+                // Filter
+                FilteredItems = CollectionViewSource.GetDefaultView(ListItems);
+                FilteredItems.Filter = FilterItems;
+
                 // Clear 
                 ClearAllInputs();
             }
@@ -1195,6 +1262,10 @@ namespace Auto_Service_Application_university_project.ViewModels
             // Fill in List
             var reservations = await _mainViewModel.GetAllReservations();
             ListItems = new ObservableCollection<object>(reservations.Cast<object>());
+
+            // Filter
+            FilteredItems = CollectionViewSource.GetDefaultView(ListItems);
+            FilteredItems.Filter = FilterItems;
 
             // Fill in Combo box addresses
             var offoces = _mainViewModel.Offices;
@@ -1235,6 +1306,10 @@ namespace Auto_Service_Application_university_project.ViewModels
                     var reservatons = await _mainViewModel.GetAllReservations();
                     ListItems = new ObservableCollection<object>(reservatons.Cast<object>());
 
+                    // Filter
+                    FilteredItems = CollectionViewSource.GetDefaultView(ListItems);
+                    FilteredItems.Filter = FilterItems;
+
                     // Clear 
                     ClearAllInputs();
                 }
@@ -1270,6 +1345,10 @@ namespace Auto_Service_Application_university_project.ViewModels
                     var reservatons = await _mainViewModel.GetAllReservations();
                     ListItems = new ObservableCollection<object>(reservatons.Cast<object>());
 
+                    // Filter
+                    FilteredItems = CollectionViewSource.GetDefaultView(ListItems);
+                    FilteredItems.Filter = FilterItems;
+
                     // Clear 
                     ClearAllInputs();
                 }
@@ -1295,6 +1374,10 @@ namespace Auto_Service_Application_university_project.ViewModels
                 // Update List of Reservations 
                 var reservatons = await _mainViewModel.GetAllReservations();
                 ListItems = new ObservableCollection<object>(reservatons.Cast<object>());
+
+                // Filter
+                FilteredItems = CollectionViewSource.GetDefaultView(ListItems);
+                FilteredItems.Filter = FilterItems;
 
                 // Clear 
                 ClearAllInputs();
@@ -1326,6 +1409,10 @@ namespace Auto_Service_Application_university_project.ViewModels
             // Fill in List
             var offices = _mainViewModel.Offices;
             ListItems = new ObservableCollection<object>(offices.Cast<object>());
+
+            // Filter
+            FilteredItems = CollectionViewSource.GetDefaultView(ListItems);
+            FilteredItems.Filter = FilterItems;
 
             // Fill in Combo box addresses
             var addreses = await _mainViewModel.GetAllAddresses();
@@ -1362,6 +1449,10 @@ namespace Auto_Service_Application_university_project.ViewModels
                     var offices = _mainViewModel.Offices;
                     ListItems = new ObservableCollection<object>(offices.Cast<object>());
 
+                    // Filter
+                    FilteredItems = CollectionViewSource.GetDefaultView(ListItems);
+                    FilteredItems.Filter = FilterItems;
+
                     // Clear 
                     ClearAllInputs();
                 }
@@ -1397,6 +1488,10 @@ namespace Auto_Service_Application_university_project.ViewModels
                     var offices = _mainViewModel.Offices;
                     ListItems = new ObservableCollection<object>(offices.Cast<object>());
 
+                    // Filter
+                    FilteredItems = CollectionViewSource.GetDefaultView(ListItems);
+                    FilteredItems.Filter = FilterItems;
+
                     // Clear 
                     ClearAllInputs();
                 }
@@ -1424,6 +1519,10 @@ namespace Auto_Service_Application_university_project.ViewModels
                 var offices = _mainViewModel.Offices;
                 ListItems = new ObservableCollection<object>(offices.Cast<object>());
 
+                // Filter
+                FilteredItems = CollectionViewSource.GetDefaultView(ListItems);
+                FilteredItems.Filter = FilterItems;
+
                 // Clear 
                 ClearAllInputs();
             }
@@ -1449,6 +1548,10 @@ namespace Auto_Service_Application_university_project.ViewModels
             // Fill in List
             var spareParts = _mainViewModel.SpareParts;
             ListItems = new ObservableCollection<object>(spareParts.Cast<object>());
+
+            // Filter
+            FilteredItems = CollectionViewSource.GetDefaultView(ListItems);
+            FilteredItems.Filter = FilterItems;
 
             // Fill in Combo box SpairParts
             var offices =  _mainViewModel.Offices;
@@ -1489,6 +1592,10 @@ namespace Auto_Service_Application_university_project.ViewModels
                     var spareParts = _mainViewModel.SpareParts;
                     ListItems = new ObservableCollection<object>(spareParts.Cast<object>());
 
+                    // Filter
+                    FilteredItems = CollectionViewSource.GetDefaultView(ListItems);
+                    FilteredItems.Filter = FilterItems;
+
                     // Clear 
                     ClearAllInputs();
                 }
@@ -1526,6 +1633,10 @@ namespace Auto_Service_Application_university_project.ViewModels
                     var spareParts = _mainViewModel.SpareParts;
                     ListItems = new ObservableCollection<object>(spareParts.Cast<object>());
 
+                    // Filter
+                    FilteredItems = CollectionViewSource.GetDefaultView(ListItems);
+                    FilteredItems.Filter = FilterItems;
+
                     // Clear 
                     ClearAllInputs();
                 }
@@ -1553,6 +1664,10 @@ namespace Auto_Service_Application_university_project.ViewModels
                 var spareParts = _mainViewModel.SpareParts;
                 ListItems = new ObservableCollection<object>(spareParts.Cast<object>());
 
+                // Filter
+                FilteredItems = CollectionViewSource.GetDefaultView(ListItems);
+                FilteredItems.Filter = FilterItems;
+
                 // Clear 
                 ClearAllInputs();
             }
@@ -1575,6 +1690,10 @@ namespace Auto_Service_Application_university_project.ViewModels
             // Fill in List
             var serviceSpares = await _mainViewModel.GetAllServiceSparesAsync();
             ListItems = new ObservableCollection<object>(serviceSpares.Cast<object>());
+
+            // Filter
+            FilteredItems = CollectionViewSource.GetDefaultView(ListItems);
+            FilteredItems.Filter = FilterItems;
 
             // Fill in Combo box ServisSpair
             var spareParts = _mainViewModel.SpareParts;
@@ -1605,6 +1724,10 @@ namespace Auto_Service_Application_university_project.ViewModels
                     var serviceSpars = await _mainViewModel.GetAllServiceSparesAsync();
                     ListItems = new ObservableCollection<object>(serviceSpars.Cast<object>());
 
+                    // Filter
+                    FilteredItems = CollectionViewSource.GetDefaultView(ListItems);
+                    FilteredItems.Filter = FilterItems;
+
                     // Clear 
                     ClearAllInputs();
                 }
@@ -1632,6 +1755,10 @@ namespace Auto_Service_Application_university_project.ViewModels
                 var serviceSpars = await _mainViewModel.GetAllServiceSparesAsync();
                 ListItems = new ObservableCollection<object>(serviceSpars.Cast<object>());
 
+                // Filter
+                FilteredItems = CollectionViewSource.GetDefaultView(ListItems);
+                FilteredItems.Filter = FilterItems;
+
                 // Clear 
                 ClearAllInputs();
             }
@@ -1658,6 +1785,10 @@ namespace Auto_Service_Application_university_project.ViewModels
             // Fill in List
             var bills = await _mainViewModel.GetAllBills();
             ListItems = new ObservableCollection<object>(bills.Cast<object>());
+
+            // Filter
+            FilteredItems = CollectionViewSource.GetDefaultView(ListItems);
+            FilteredItems.Filter = FilterItems;
 
             // Fill in Combo box 
             var serviceOffers = _mainViewModel.ServiceOffers;
@@ -1696,6 +1827,10 @@ namespace Auto_Service_Application_university_project.ViewModels
                     var bills = await _mainViewModel.GetAllBills();
                     ListItems = new ObservableCollection<object>(bills.Cast<object>());
 
+                    // Filter
+                    FilteredItems = CollectionViewSource.GetDefaultView(ListItems);
+                    FilteredItems.Filter = FilterItems;
+
                     // Clear 
                     ClearAllInputs();
                 }
@@ -1731,6 +1866,10 @@ namespace Auto_Service_Application_university_project.ViewModels
                     var bills = await _mainViewModel.GetAllBills();
                     ListItems = new ObservableCollection<object>(bills.Cast<object>());
 
+                    // Filter
+                    FilteredItems = CollectionViewSource.GetDefaultView(ListItems);
+                    FilteredItems.Filter = FilterItems;
+
                     // Clear 
                     ClearAllInputs();
                 }
@@ -1756,6 +1895,10 @@ namespace Auto_Service_Application_university_project.ViewModels
                 // Update List of Bill 
                 var bills = await _mainViewModel.GetAllBills();
                 ListItems = new ObservableCollection<object>(bills.Cast<object>());
+
+                // Filter
+                FilteredItems = CollectionViewSource.GetDefaultView(ListItems);
+                FilteredItems.Filter = FilterItems;
 
                 // Clear 
                 ClearAllInputs();
@@ -1783,6 +1926,10 @@ namespace Auto_Service_Application_university_project.ViewModels
             // Fill in List
             var payments = await _mainViewModel.GetAllPayments();
             ListItems = new ObservableCollection<object>(payments.Cast<object>());
+
+            // Filter
+            FilteredItems = CollectionViewSource.GetDefaultView(ListItems);
+            FilteredItems.Filter = FilterItems;
 
             // Fill in Combo box 
             var bills = await _mainViewModel.GetAllBills();
@@ -1852,6 +1999,10 @@ namespace Auto_Service_Application_university_project.ViewModels
                     var payments = await _mainViewModel.GetAllPayments();
                     ListItems = new ObservableCollection<object>(payments.Cast<object>());
 
+                    // Filter
+                    FilteredItems = CollectionViewSource.GetDefaultView(ListItems);
+                    FilteredItems.Filter = FilterItems;
+
                     // Clear 
                     ClearAllInputs();
                 }
@@ -1911,6 +2062,10 @@ namespace Auto_Service_Application_university_project.ViewModels
                     var payments = await _mainViewModel.GetAllPayments();
                     ListItems = new ObservableCollection<object>(payments.Cast<object>());
 
+                    // Filter
+                    FilteredItems = CollectionViewSource.GetDefaultView(ListItems);
+                    FilteredItems.Filter = FilterItems;
+
                     // Clear 
                     ClearAllInputs();
                 }
@@ -1936,6 +2091,10 @@ namespace Auto_Service_Application_university_project.ViewModels
                 // Update List of Payment 
                 var payments = await _mainViewModel.GetAllPayments();
                 ListItems = new ObservableCollection<object>(payments.Cast<object>());
+
+                // Filter
+                FilteredItems = CollectionViewSource.GetDefaultView(ListItems);
+                FilteredItems.Filter = FilterItems;
 
                 // Clear 
                 ClearAllInputs();
