@@ -85,8 +85,7 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
-                <!-- Part of Tools -->
-                <Grid >
+                <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="0.13*"/>
                         <RowDefinition Height="*"/>
@@ -99,15 +98,14 @@
                         <Button Content="Delete" Command="{Binding DeleteCommand}"/>
                     </StackPanel>
                     <!--#endregion-->
-                    
-                    
+
                     <Separator Grid.Row="1" VerticalAlignment="Top" Height="5"/>
 
                     <!-- Fields -->
                     <StackPanel Grid.Row="1" Margin="10" Visibility="{Binding VisibilityFilds}" >
 
                         <!--#region ComboBoxes -->
-                        
+
                         <!--#region First Combo -->
                         <TextBlock Style="{StaticResource textDiscription}" Text="{Binding TextDiscrFirstCombo}" Margin="5" Visibility="{Binding VisibleFirstCombo}"/>
                         <ComboBox SelectedItem="{Binding SelectedFirstCombo, Mode=TwoWay}" ItemsSource="{Binding ItemsFirstCombo}" Visibility="{Binding VisibleFirstCombo}" Width="300" HorizontalAlignment="Left"/>
@@ -136,7 +134,7 @@
                         <!--#endregion-->
 
                         <!--#region Text Fields-->
-                        
+
                         <!--#region First Text field -->
                         <TextBlock Style="{StaticResource textDiscription}" Text="{Binding TextDiscrFirstTextBox}" Margin="5" Visibility="{Binding VisibleFirstTextBox}"/>
                         <TextBox Text="{Binding Path= FirstTextBox, UpdateSourceTrigger=PropertyChanged}" Visibility="{Binding VisibleFirstTextBox}">
@@ -197,7 +195,7 @@
                         <!--#endregion-->
 
                     </StackPanel>
-                    
+
                     <!--#region Menu buttons -->
                     <StackPanel Grid.Row="1" Margin="0,0,0,10" Visibility="{Binding VisibilityMenu}">
                         <Button Content="Clients" Command="{Binding ClientsCommand}" MinHeight="35" />
@@ -211,6 +209,27 @@
                         <!--<Button Content="Servis Spair" Command="{Binding ServisSpairCommand}" MinHeight="35" />-->
                         <Button Content="Bills" Command="{Binding BillsCommand}" MinHeight="35" />
                         <Button Content="Payments" Command="{Binding PaymentsCommand}" MinHeight="35" />
+
+                        <!-- Emulation -->
+                        <StackPanel Orientation="Horizontal">
+                            <!--#region User Emulation -->
+                            <StackPanel Orientation="Vertical" Margin="10">
+                                <TextBlock Style="{StaticResource textDiscription}" Text="User" Margin="5" />
+                                <ComboBox SelectedItem="{Binding SelectedUser, Mode=TwoWay}" ItemsSource="{Binding ListUsers}"  Width="195" HorizontalAlignment="Left"/>
+
+                                <Button Content="Emulation User" FontSize="15" Command="{Binding EmulationUser}" MinHeight="35" />
+                            </StackPanel>
+                            <!--#endregion-->
+
+                            <!--#region Employer Emulation --><!--
+                            <StackPanel Orientation="Vertical" Margin="10">
+                                <TextBlock Style="{StaticResource textDiscription}" Text="Employer" Margin="5" />
+                                <ComboBox SelectedItem="{Binding SelectedEmployer, Mode=TwoWay}" ItemsSource="{Binding ListEmployers}"  Width="195" HorizontalAlignment="Left"/>
+
+                                <Button Content="Emulation Employer" FontSize="15" Command="{Binding EmulationEmployer}" MinHeight="35" />
+                            </StackPanel>
+                            --><!--#endregion-->
+                        </StackPanel>
                     </StackPanel>
                     <!--#endregion-->
                 </Grid>
@@ -230,12 +249,12 @@
                         </TextBox.Background>
                     </TextBox>
                     <!--#endregion-->
-                    
+
                     <TextBlock Text="List of Entits" Style="{StaticResource textDiscription}" Margin="0" Grid.Row="1"/>
                     <ListView Style="{StaticResource ListOfClients}"  Grid.Row="2"
                              ItemsSource="{Binding FilteredItems}"
                              SelectedItem="{Binding SelectedItems}" />
-                    
+
                 </Grid>
 
                 <!-- Part of Lsit Menu -->

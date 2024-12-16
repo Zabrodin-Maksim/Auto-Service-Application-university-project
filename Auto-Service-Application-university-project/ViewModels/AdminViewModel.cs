@@ -72,6 +72,12 @@ namespace Auto_Service_Application_university_project.ViewModels
         private ObservableCollection<Logs> _Listlogs;
         private ObservableCollection<OracleObject> _ListOracleObjects;
 
+        // Emulation
+        private ObservableCollection<User> _ListUsers;
+        private User _selectedUser;
+        //private ObservableCollection<Employer> _ListEmployers;
+        //private Employer _selectedEmployer;
+
 
         #region Combo Boxes
         // First
@@ -171,7 +177,6 @@ namespace Auto_Service_Application_university_project.ViewModels
         public Visibility VisibilitiButtonsRole { get => _visibilitiButtonsRole; set => SetProperty(ref _visibilitiButtonsRole, value, nameof(VisibilitiButtonsRole)); }
         #endregion
         #endregion
-        
 
         // List Items
         public ObservableCollection<object> ListItems {get; set;}
@@ -181,6 +186,13 @@ namespace Auto_Service_Application_university_project.ViewModels
         // List menu
         public ObservableCollection<Logs> Logs { get => _Listlogs; set => SetProperty(ref _Listlogs, value, nameof(Logs)); }
         public ObservableCollection<OracleObject> SystemCatalog { get => _ListOracleObjects; set => SetProperty(ref _ListOracleObjects, value, nameof(SystemCatalog)); }
+
+        // Emulation
+        public ObservableCollection<User> ListUsers { get => _ListUsers; set => SetProperty(ref _ListUsers, value, nameof(ListUsers)); }
+        public User SelectedUser { get => _selectedUser; set => SetProperty(ref _selectedUser, value, nameof(SelectedUser)); }
+        //public ObservableCollection<Employer> ListEmployers { get => _ListEmployers; set => SetProperty(ref _ListEmployers, value, nameof(ListEmployers)); }
+        //public Employer SelectedEmployer { get => _selectedEmployer; set => SetProperty(ref _selectedEmployer, value, nameof(SelectedEmployer)); }
+
 
         #region Observable Collections and Selected for ComboBox
         // First
@@ -285,13 +297,15 @@ namespace Auto_Service_Application_university_project.ViewModels
         public ICommand ServisSpairCommand { get; }
         public ICommand BillsCommand { get; }
         public ICommand PaymentsCommand { get; }
+
+        // Emulation
+        public ICommand EmulationUser { get; }
+        //public ICommand EmulationEmployer { get; }
         #endregion
 
         public AdminViewModel(MainViewModel mainViewModel)
         {
             _mainViewModel = mainViewModel;
-
-            
 
             #region Init List
             ListItems = new ObservableCollection<object>();
@@ -326,10 +340,16 @@ namespace Auto_Service_Application_university_project.ViewModels
             ServisSpairCommand = new MyICommand<object>(async parametr => await OnServisSpairCommand(parametr));
             BillsCommand = new MyICommand<object>(async parametr => await OnBillsCommand(parametr));
             PaymentsCommand = new MyICommand<object>(async parametr => await OnPaymentsCommand(parametr));
+
+            // Emulation
+            EmulationUser = new MyICommand<object>(async parametr => await OnEmulationUserCommand(parametr));
+            //EmulationEmployer = new MyICommand(OnEmulationEmployerCommand);
+
             #endregion
 
             HideAllFields();
             FillLogsAndCatalog();
+            FillListsUsers();
         }
 
         private async Task FillLogsAndCatalog()
@@ -353,6 +373,7 @@ namespace Auto_Service_Application_university_project.ViewModels
             ErrorMessage = "";
             SearchText = "";
         }
+
 
         private async Task OnBackCommand(object param)
         {
@@ -579,6 +600,89 @@ namespace Auto_Service_Application_university_project.ViewModels
             return obj != null && obj.ToString().Contains(SearchText, StringComparison.OrdinalIgnoreCase);
         }
 
+        #region Emulation
+
+        private async Task OnEmulationUserCommand(object param)
+        {
+            if (SelectedUser == null) { return; }
+            try
+            {
+                _mainViewModel.adminInEmulation = _mainViewModel.authenticatedUser;
+                _mainViewModel.authenticatedUser = SelectedUser;
+                _mainViewModel.emulationFlag = true;
+
+                // Visibilites and Navigation 
+                _mainViewModel.HideAllVisibilites();
+
+                switch (_mainViewModel.authenticatedUser.RoleId)
+                {
+                    case 1:
+                        _mainViewModel.ShowForaAdmin();
+
+                        _mainViewModel.authenticatedAdmin = await _mainViewModel.GetEmployerByPhone(_mainViewModel.authenticatedUser.Phone);
+                        _mainViewModel.NavigateToAdmin.Execute(null);
+
+                        Debug.WriteLine($"[INFO] Admin Authorization successfully: {_mainViewModel.authenticatedAdmin.Phone}");
+                        break;
+
+                    case 2:
+                        _mainViewModel.ShowForEmployee();
+
+                        _mainViewModel.authenticatedEmployer = await _mainViewModel.GetEmployerByPhone(_mainViewModel.authenticatedUser.Phone);
+                        _mainViewModel.NavigateToVisit.Execute(null);
+
+                        Debug.WriteLine($"[INFO] Employer Authorization successfully: {_mainViewModel.authenticatedEmployer.Phone}");
+                        break;
+
+                    case 3: _mainViewModel.ShowForUser(); _mainViewModel.NavigateToClients.Execute(null); break;
+                }
+
+                _mainViewModel.IsVisibleEndEmulation = Visibility.Visible;
+
+            }catch (Exception ex)
+            {
+                Debug.WriteLine($"[Error] OnEmulationUserCommand  {ex.Message}");
+            }
+          
+        }
+
+        //private void OnEmulationEmployerCommand()
+        //{
+        //    if (SelectedEmployer == null) { return; }
+        //    try
+        //    {
+        //        _mainViewModel.adminInEmulation = _mainViewModel.authenticatedUser;
+        //        _mainViewModel.emulationFlag = true;
+        //        // TODO: ДОДЕЛАТЬ ДЛЯ ЭПЛОЕРА
+        //        //_mainViewModel.authenticatedUser = SelectedEmployer;
+        //        _mainViewModel.HideAllVisibilites();
+        //        _mainViewModel.ShowForEmployee();
+
+        //        _mainViewModel.NavigateToVisit.Execute(null);
+
+        //        _mainViewModel.IsVisibleEndEmulation = Visibility.Visible;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Debug.WriteLine($"[Error] OnEmulationEmployerCommand  {ex.Message}");
+        //    }
+        //}
+
+        private async Task FillListsUsers()
+        {
+            try
+            {
+                ListUsers = await _mainViewModel.GetAllUsers();
+                //ListEmployers = await _mainViewModel.GetAllEmployersAsync();
+
+            }
+            catch(Exception ex)
+            {
+                Debug.WriteLine($"[Error] FillListsUsers {ex.Message}");
+            }
+        }
+
+        #endregion
 
         #region Clients Methods
         private async Task OnClientsCommand(object param)

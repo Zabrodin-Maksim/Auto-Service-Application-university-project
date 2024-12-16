@@ -269,6 +269,12 @@
                 <Button Command="{Binding UserLogout}" Grid.Row="9" Style="{StaticResource MenuButtons}" FontSize="45" Margin="20,0">
                     <fa:FontAwesome Icon="SignOut"/>
                 </Button>
+
+                <!-- End Emulation -->
+                <Button Command="{Binding EndEmulation}" Grid.Row="9" Style="{StaticResource MenuButtons}" Visibility="{Binding IsVisibleEndEmulation}" HorizontalAlignment="Right" FontSize="45" Margin="20,0">
+                    <TextBlock Text="End Emulation" FontSize="30"/>
+                </Button>
+
             </Grid>
             <!--#endregion Menu -->
 

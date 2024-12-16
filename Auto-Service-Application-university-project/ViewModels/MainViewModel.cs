@@ -32,6 +32,7 @@ namespace Auto_Service_Application_university_project.ViewModels
         private Visibility _isVisibleVisit;
         private Visibility _isVisibleAdmin;
         private Visibility _isVisiblePayment;
+        private Visibility _isVisibleEndEmulation;
 
         #region Data
         // User
@@ -96,6 +97,7 @@ namespace Auto_Service_Application_university_project.ViewModels
         public Visibility IsVisibleVisit { get => _isVisibleVisit; set => SetProperty(ref _isVisibleVisit, value, nameof(IsVisibleVisit)); }
         public Visibility IsVisibleAdmin { get => _isVisibleAdmin; set => SetProperty(ref _isVisibleAdmin, value, nameof(IsVisibleAdmin)); }
         public Visibility IsVisiblePayment { get => _isVisiblePayment; set => SetProperty(ref _isVisiblePayment, value, nameof(IsVisiblePayment)); }
+        public Visibility IsVisibleEndEmulation { get => _isVisibleEndEmulation; set => SetProperty(ref _isVisibleEndEmulation, value, nameof(IsVisibleEndEmulation)); }
 
 
         // User 
@@ -110,8 +112,8 @@ namespace Auto_Service_Application_university_project.ViewModels
         public Employer authenticatedAdmin;
 
         // Emulation
-        private User adminInEmulation;
-        private bool emulationFlag;
+        public User adminInEmulation;
+        public bool emulationFlag;
 
         #region Observable Collections
 
@@ -214,6 +216,7 @@ namespace Auto_Service_Application_university_project.ViewModels
                 adminInEmulation = null;
 
                 ShowForaAdmin();
+                NavigateToAdmin.Execute(null);
             }
         }
 
@@ -226,6 +229,8 @@ namespace Auto_Service_Application_university_project.ViewModels
                 flagUserLogin = false;
                 authenticatedAdmin = null;
                 authenticatedEmployer = null;
+                emulationFlag = false;
+                adminInEmulation = null;
 
                 // Hide all buttons
                 HideAllVisibilites();
@@ -251,7 +256,7 @@ namespace Auto_Service_Application_university_project.ViewModels
 
         #region Visibilities Methods
         // What will allowed see authenticated User
-        private void ShowForUser()
+        public void ShowForUser()
         {
             IsVisibleClients = Visibility.Visible;
             IsVisibleOrder = Visibility.Visible;
@@ -259,13 +264,13 @@ namespace Auto_Service_Application_university_project.ViewModels
         }
 
         // What will allowed see authenticated Employee
-        private void ShowForEmployee()
+        public void ShowForEmployee()
         {
             IsVisibleVisit = Visibility.Visible;
         }
 
         // What will allowed see authenticated Admin
-        private void ShowForaAdmin()
+        public void ShowForaAdmin()
         {
             IsVisibleClients = Visibility.Visible;
             IsVisibleOrder = Visibility.Visible;
@@ -275,13 +280,14 @@ namespace Auto_Service_Application_university_project.ViewModels
         }
 
         // Hide pages in menu for non login user or start condition
-        private void HideAllVisibilites()
+        public void HideAllVisibilites()
         {
             IsVisibleClients = Visibility.Collapsed;
             IsVisibleOrder = Visibility.Collapsed;
             IsVisibleVisit = Visibility.Collapsed;
             IsVisibleAdmin = Visibility.Collapsed;
             IsVisiblePayment = Visibility.Collapsed;
+            IsVisibleEndEmulation = Visibility.Collapsed;
         }
         #endregion
 
