@@ -21,8 +21,6 @@ namespace Auto_Service_Application_university_project.ViewModels
     public class MainViewModel : ViewModelBase
     {
         #region Private Fields
-        // Emulation
-        private bool _emulationFlag;
 
         // Navigation
         private readonly MyNavigationService _navigationService;
@@ -111,6 +109,10 @@ namespace Auto_Service_Application_university_project.ViewModels
         // Admin
         public Employer authenticatedAdmin;
 
+        // Emulation
+        private User adminInEmulation;
+        private bool emulationFlag;
+
         #region Observable Collections
 
         // Clients
@@ -148,6 +150,9 @@ namespace Auto_Service_Application_university_project.ViewModels
 
         // User Logout
         public ICommand UserLogout { get; }
+
+        // Admin end Emulation
+        public ICommand EndEmulation { get; }
 
         #endregion
 
@@ -189,17 +194,26 @@ namespace Auto_Service_Application_university_project.ViewModels
             #endregion
 
             UserLogout = new MyICommand(UserLogOut);
+            EndEmulation = new MyICommand<object>(async parameter => await OnEndEmulation(parameter));
 
             // For start when user not login
             HideAllVisibilites();
-            _emulationFlag = false;
+
+            emulationFlag = false;
         }
 
         private async Task OnEndEmulation(object param)
         {
-            if (_emulationFlag)
+            if (emulationFlag && adminInEmulation != null)
             {
+                emulationFlag = false;
 
+                HideAllVisibilites();
+
+                authenticatedUser = adminInEmulation;
+                adminInEmulation = null;
+
+                ShowForaAdmin();
             }
         }
 

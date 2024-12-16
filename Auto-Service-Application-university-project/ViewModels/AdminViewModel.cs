@@ -899,6 +899,13 @@ namespace Auto_Service_Application_university_project.ViewModels
                 if (SelectedItems != null)
                 {
                     User user = (User)SelectedItems;
+
+                    // If user want change himself
+                    if (user == _mainViewModel.authenticatedUser)
+                    {
+                        ErrorMessage = "OHH, IS THAT YOU, MY LITTLE SEXY ADMIN !!!";
+                        return;
+                    }
                     if (user.RoleId < 3)
                     {
                         await _mainViewModel.AssignRole(user.UserId, user.RoleId+1);
