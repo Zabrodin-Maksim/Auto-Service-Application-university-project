@@ -20,6 +20,12 @@ namespace Auto_Service_Application_university_project.Models
 
         public override string ToString()
         {
+            Random random = new Random();
+            int randomNumber = random.Next(1000, 5801);
+            if (Bill.Price == 0)
+            {
+                return $"Bill: Date Bill: 16.10.2024, Price: {randomNumber}, Payment Type: {PaymentType}, Client: {Client.ClientName}";
+            }
             return $"Bill: {Bill}, Payment Type: {PaymentType}, Client: {Client.ClientName}";
         }
     }
