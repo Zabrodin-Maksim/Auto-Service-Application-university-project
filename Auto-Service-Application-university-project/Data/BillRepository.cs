@@ -1,5 +1,6 @@
 ﻿using Auto_Service_Application_university_project.Models;
 using Oracle.ManagedDataAccess.Client;
+using Oracle.ManagedDataAccess.Types;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -164,7 +165,7 @@ namespace Auto_Service_Application_university_project.Data
                 {
                     command.CommandType = CommandType.StoredProcedure;
 
-                    // Выходные параметры
+                    // Добавляем выходной параметр для REF CURSOR
                     var cursorParam = new OracleParameter("p_cursor", OracleDbType.RefCursor)
                     {
                         Direction = ParameterDirection.Output
@@ -173,17 +174,35 @@ namespace Auto_Service_Application_university_project.Data
 
                     try
                     {
-                        using (var reader = await command.ExecuteReaderAsync(CommandBehavior.CloseConnection))
+                        // Выполняем процедуру
+                        await command.ExecuteNonQueryAsync();
+
+                        // Извлекаем REF CURSOR
+                        var refCursor = (OracleRefCursor)cursorParam.Value;
+                        using (var reader = refCursor.GetDataReader())
                         {
                             while (await reader.ReadAsync())
                             {
                                 var bill = new Bill
                                 {
                                     BillId = reader.GetInt32(reader.GetOrdinal("bill_id")),
-                                    ServiceOffer = await _offerRepository.GetServiceOfferAsync( reader.GetInt32(reader.GetOrdinal("servise_offer_offer_id"))),
                                     DateBill = reader.GetDateTime(reader.GetOrdinal("date_bill")),
                                     Price = reader.GetDecimal(reader.GetOrdinal("price"))
                                 };
+
+                                // Получаем servise_offer_offer_id
+                                int serviseOfferId = reader.GetInt32(reader.GetOrdinal("servise_offer_offer_id"));
+
+                                // Получаем связанный ServiceOffer
+                                if (serviseOfferId > 0)
+                                {
+                                    var serviceOffer = await _offerRepository.GetServiceOfferAsync(serviseOfferId);
+                                    bill.ServiceOffer = serviceOffer;
+                                }
+                                else
+                                {
+                                    bill.ServiceOffer = null;
+                                }
 
                                 bills.Add(bill);
                             }
@@ -191,7 +210,13 @@ namespace Auto_Service_Application_university_project.Data
                     }
                     catch (OracleException ex)
                     {
-                        throw new ApplicationException($"Ошибка при получении всех Bills: {ex.Message}", ex);
+                        Console.WriteLine($"OracleException при получении всех биллов: {ex.Message}");
+                        throw new ApplicationException($"Ошибка при получении всех биллов: {ex.Message}", ex);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Exception при получении всех биллов: {ex.Message}");
+                        throw;
                     }
                 }
             }

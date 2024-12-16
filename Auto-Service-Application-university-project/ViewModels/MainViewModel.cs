@@ -15,6 +15,7 @@ using System.Runtime.ConstrainedExecution;
 using System.Windows.Controls;
 using System.Net;
 using DocumentFormat.OpenXml.Spreadsheet;
+using System.IO;
 
 namespace Auto_Service_Application_university_project.ViewModels
 {
@@ -1710,6 +1711,7 @@ namespace Auto_Service_Application_university_project.ViewModels
                 try
                 {
                     return await _logsVM.GetAllLogsAsync();
+
                 }
                 catch (Exception ex)
                 {
@@ -1722,6 +1724,27 @@ namespace Auto_Service_Application_university_project.ViewModels
             }
             return null;
         }
+
+        public async Task SaveLogsToFileAsync(string filePath, ObservableCollection<Logs> logs)
+        {
+            // Убедитесь, что директория существует
+            Directory.CreateDirectory(Path.GetDirectoryName(filePath));
+
+            using (var writer = new StreamWriter(filePath, false, Encoding.UTF8))
+            {
+                // Запишем заголовки
+                await writer.WriteLineAsync("LogId;TableName;Operation;ChangeDate");
+
+                foreach (var log in logs)
+                {
+                    // Лог в строку CSV
+                    string line = $"{log.LogId};{log.TableName};{log.Operation};{log.ChangeDate:yyyy-MM-dd HH:mm:ss}";
+                    await writer.WriteLineAsync(line);
+                }
+            }
+            Console.WriteLine($"Логи успешно сохранены в файл: {filePath}");
+        }
+
         #endregion
 
         #region Catalog Oracle Methods
@@ -1744,6 +1767,25 @@ namespace Auto_Service_Application_university_project.ViewModels
             }
             return null;
         }
+
+        public async Task SaveSystemObjectsToFileAsync(string filePath, ObservableCollection<OracleObject> objects)
+        {
+            Directory.CreateDirectory(Path.GetDirectoryName(filePath));
+
+            using (var writer = new StreamWriter(filePath, false, Encoding.UTF8))
+            {
+                // Запишем заголовки
+                await writer.WriteLineAsync("ObjectName;ObjectType");
+
+                foreach (var obj in objects)
+                {
+                    string line = $"{obj.ObjectName};{obj.ObjectType}";
+                    await writer.WriteLineAsync(line);
+                }
+            }
+            Console.WriteLine($"Системный каталог успешно сохранён в файл: {filePath}");
+        }
+
         #endregion
     }
 }

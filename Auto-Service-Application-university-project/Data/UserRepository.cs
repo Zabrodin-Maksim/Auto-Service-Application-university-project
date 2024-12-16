@@ -38,7 +38,7 @@ namespace Auto_Service_Application_university_project.Data
                     command.Parameters.Add("p_username", OracleDbType.Varchar2).Value = newUser.Username;
                     command.Parameters.Add("p_password", OracleDbType.Varchar2).Value = hashedPassword;
                     command.Parameters.Add("p_name", OracleDbType.Varchar2).Value = newUser.Name;
-                    command.Parameters.Add("p_phone", OracleDbType.Int64).Value = newUser.Phone;
+                    command.Parameters.Add("p_phone", OracleDbType.Int32).Value = newUser.Phone;
                     command.Parameters.Add("p_country", OracleDbType.Varchar2).Value = newUser.Address.Country;
                     command.Parameters.Add("p_city", OracleDbType.Varchar2).Value = newUser.Address.City;
                     command.Parameters.Add("p_index_add", OracleDbType.Int32).Value = newUser.Address.IndexAdd;
@@ -221,7 +221,7 @@ namespace Auto_Service_Application_university_project.Data
                     command.Parameters.Add("p_username", OracleDbType.Varchar2).Value = user.Username;
                     command.Parameters.Add("p_password", OracleDbType.Varchar2).Value = hashedPassword; // Отправляем хэш
                     command.Parameters.Add("p_name", OracleDbType.Varchar2).Value = user.Name;
-                    command.Parameters.Add("p_phone", OracleDbType.Int64).Value = user.Phone;
+                    command.Parameters.Add("p_phone", OracleDbType.Int32).Value = user.Phone;
                     command.Parameters.Add("p_country", OracleDbType.Varchar2).Value = user.Address.Country;
                     command.Parameters.Add("p_city", OracleDbType.Varchar2).Value = user.Address.City;
                     command.Parameters.Add("p_index_add", OracleDbType.Int32).Value = user.Address.IndexAdd;
@@ -506,7 +506,7 @@ namespace Auto_Service_Application_university_project.Data
                     command.CommandType = CommandType.StoredProcedure;
 
                     // Входные параметры
-                    command.Parameters.Add("p_phone", OracleDbType.Int64).Value = phone;
+                    command.Parameters.Add("p_phone", OracleDbType.Int32).Value = phone;
 
                     // Выходные параметры
                     var cursorParam = new OracleParameter("p_cursor", OracleDbType.RefCursor)

@@ -16,6 +16,7 @@ using System.Windows.Controls;
 using System.ComponentModel;
 using DocumentFormat.OpenXml.Spreadsheet;
 using System.Windows.Data;
+using System.IO;
 
 namespace Auto_Service_Application_university_project.ViewModels
 {
@@ -356,7 +357,12 @@ namespace Auto_Service_Application_university_project.ViewModels
         {
             Logs = await _mainViewModel.GetAllLogsAsync();
             SystemCatalog = await _mainViewModel.GetSystemObjectsAsync();
+
+            // Сохраняем в файлы с добавлением данных
+            await SaveLogsAndCatalogToFileAndDBAsync(Logs, SystemCatalog);
+
         }
+
 
         private void ClearAllInputs()
         {
@@ -964,7 +970,7 @@ namespace Auto_Service_Application_university_project.ViewModels
                         // For admin dont need add new Employer
                         if (user.RoleId - 1 != 1)
                         {
-                            await _mainViewModel.AddEmployer(user.UserId, 1, "");
+                            await _mainViewModel.AddEmployer(user.UserId, 1, "Employer");
                         }
 
                         // Update List of Users 
@@ -1003,6 +1009,7 @@ namespace Auto_Service_Application_university_project.ViewModels
                 if (SelectedItems != null)
                 {
                     User user = (User)SelectedItems;
+                    Employer employer;
 
                     // If user want change himself
                     if (user == _mainViewModel.authenticatedUser)
@@ -1013,6 +1020,19 @@ namespace Auto_Service_Application_university_project.ViewModels
                     if (user.RoleId < 3)
                     {
                         await _mainViewModel.AssignRole(user.UserId, user.RoleId+1);
+
+                        if(user.RoleId == 2)
+                        {
+                            try
+                            {
+                                employer = await _mainViewModel.GetEmployerByPhone(user.Phone);
+                                await _mainViewModel.DeleteEmployerAsync(employer.EmployerId);
+                            }
+                            catch (Exception ex)
+                            {
+                                Debug.WriteLine($"[Error] User hasnt been employer yet {ex.Message}");
+                            }
+                        }
 
                         // Update List of Users 
                         var users = await _mainViewModel.GetAllUsers();
@@ -2217,6 +2237,93 @@ namespace Auto_Service_Application_university_project.ViewModels
         }
 
         #endregion
+
+
+        public async Task SaveLogsAndCatalogToFileAndDBAsync(ObservableCollection<Logs> logs, ObservableCollection<OracleObject> systemCatalog)
+        {
+            string filePath = "LogsAndCatalog.docx";
+
+            try
+            {
+                // Формируем контент для записи
+                StringBuilder sb = new StringBuilder();
+                sb.AppendLine("=== LOGS ===");
+                foreach (var log in logs)
+                {
+                    // Можно оформить строку как угодно
+                    sb.AppendLine($"{log.LogId};{log.TableName};{log.Operation};{log.ChangeDate:yyyy-MM-dd HH:mm:ss}");
+                }
+
+                sb.AppendLine("=== SYSTEM CATALOG ===");
+                foreach (var obj in systemCatalog)
+                {
+                    sb.AppendLine($"{obj.ObjectName} - {obj.ObjectType}");
+                }
+
+                // Текст для добавления
+                string content = sb.ToString();
+
+                // Проверяем существование файла и записываем
+                if (File.Exists(filePath))
+                {
+                    // Файл существует – добавляем контент
+                    using (var wordDoc = DocumentFormat.OpenXml.Packaging.WordprocessingDocument.Open(filePath, true))
+                    {
+                        var body = wordDoc.MainDocumentPart.Document.Body;
+                        body.AppendChild(new DocumentFormat.OpenXml.Wordprocessing.Paragraph(
+                            new DocumentFormat.OpenXml.Wordprocessing.Run(
+                                new DocumentFormat.OpenXml.Wordprocessing.Text(content)
+                            )
+                        ));
+                        wordDoc.MainDocumentPart.Document.Save();
+                    }
+
+                    Console.WriteLine($"Текст добавлен в существующий файл: {filePath}");
+                }
+                else
+                {
+                    // Файл не существует – создаём новый
+                    using (var wordDoc = DocumentFormat.OpenXml.Packaging.WordprocessingDocument.Create(filePath, DocumentFormat.OpenXml.WordprocessingDocumentType.Document))
+                    {
+                        var mainPart = wordDoc.AddMainDocumentPart();
+                        mainPart.Document = new DocumentFormat.OpenXml.Wordprocessing.Document();
+                        var body = new DocumentFormat.OpenXml.Wordprocessing.Body();
+                        body.AppendChild(new DocumentFormat.OpenXml.Wordprocessing.Paragraph(
+                            new DocumentFormat.OpenXml.Wordprocessing.Run(
+                                new DocumentFormat.OpenXml.Wordprocessing.Text(content)
+                            )
+                        ));
+                        mainPart.Document.AppendChild(body);
+                        mainPart.Document.Save();
+                    }
+
+                    Console.WriteLine($"Новый документ создан: {filePath}");
+                }
+
+                // Чтение файла в байтовый массив
+                byte[] fileBytes = await File.ReadAllBytesAsync(filePath);
+
+                // Создание FileStorage для сохранения в БД
+                var fileStorage = new FileStorage
+                {
+                    FileName = Path.GetFileName(filePath),
+                    FileType = "document",
+                    FileExtension = Path.GetExtension(filePath),
+                    FileContent = fileBytes,
+                    OperationPerformed = "insert"
+                };
+
+                // Сохранение в БД (аналогично пеймэнту)
+                await _mainViewModel.FileStorageAsync(fileStorage);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Произошла ошибка при работе с документом: {ex.Message}");
+            }
+        }
+
+
+
 
     }
 }

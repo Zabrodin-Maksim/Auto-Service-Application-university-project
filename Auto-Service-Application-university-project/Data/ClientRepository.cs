@@ -88,7 +88,7 @@ namespace Auto_Service_Application_university_project.Data
                     command.Parameters.Add("p_index_add", OracleDbType.Int32).Value = client.Address.IndexAdd;
                     command.Parameters.Add("p_street", OracleDbType.Varchar2).Value = client.Address.Street;
                     command.Parameters.Add("p_house_number", OracleDbType.Int32).Value = client.Address.HouseNumber;
-                    command.Parameters.Add("p_phone", OracleDbType.Int64).Value = client.Phone;
+                    command.Parameters.Add("p_phone", OracleDbType.Int32).Value = client.Phone;
 
                     try
                     {
@@ -119,7 +119,7 @@ namespace Auto_Service_Application_university_project.Data
                     command.Parameters.Add("p_index_add", OracleDbType.Int32).Value = client.Address.IndexAdd;
                     command.Parameters.Add("p_street", OracleDbType.Varchar2).Value = client.Address.Street;
                     command.Parameters.Add("p_house_number", OracleDbType.Int32).Value = client.Address.HouseNumber;
-                    command.Parameters.Add("p_phone", OracleDbType.Int64).Value = client.Phone;
+                    command.Parameters.Add("p_phone", OracleDbType.Int32).Value = client.Phone;
 
                     try
                     {

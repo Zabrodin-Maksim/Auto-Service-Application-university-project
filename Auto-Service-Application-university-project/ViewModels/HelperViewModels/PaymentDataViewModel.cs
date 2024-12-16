@@ -18,6 +18,7 @@ namespace Auto_Service_Application_university_project.ViewModels.HelperViewModel
         public PaymentDataViewModel()
         {
             _paymentRepository = new PaymentRepository();
+            _fileStorageRepository = new FileStorageRepository();
         }
 
         public async Task AddPayment(Payment payment)

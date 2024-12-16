@@ -207,7 +207,23 @@ namespace Auto_Service_Application_university_project.Data
                                     OfferId = reader.GetInt32(reader.GetOrdinal("offer_id")),
                                     PricePerHour = reader.IsDBNull(reader.GetOrdinal("price_per_hour")) ? (int?)null : reader.GetInt32(reader.GetOrdinal("price_per_hour")),
                                     DateOffer = reader.IsDBNull(reader.GetOrdinal("date_offer")) ? (DateTime?)null : reader.GetDateTime(reader.GetOrdinal("date_offer")),
-                                    Employer = reader.IsDBNull(reader.GetOrdinal("employer_employer_id")) ? null : await userRepository.GetEmployerAsync(reader.GetInt32(reader.GetOrdinal("employer_employer_id"))),
+                                    //Employer = reader.IsDBNull(reader.GetOrdinal("employer_employer_id")) ? null : await userRepository.GetEmployerAsync(reader.GetInt32(reader.GetOrdinal("employer_employer_id"))),
+                                    Employer = reader.IsDBNull(reader.GetOrdinal("employer_employer_id")) ? null : new Employer
+                                    {
+                                        EmployerId = reader.GetInt32(reader.GetOrdinal("employer_employer_id"))
+                                        // Дополнительно заполните поля Employer, если они присутствуют в результате запроса
+                                        // Например:
+                                        // Name = reader.GetString(reader.GetOrdinal("employer_name")),
+                                        // Phone = reader.GetInt32(reader.GetOrdinal("employer_phone")),
+                                        // Address = new Address
+                                        // {
+                                        //     Country = reader.GetString(reader.GetOrdinal("country")),
+                                        //     City = reader.GetString(reader.GetOrdinal("city")),
+                                        //     IndexAdd = reader.GetInt32(reader.GetOrdinal("index_add")),
+                                        //     Street = reader.GetString(reader.GetOrdinal("street")),
+                                        //     HouseNumber = reader.GetInt32(reader.GetOrdinal("house_number"))
+                                        // }
+                                    },
                                     Car = await carRepository.GetCarAsync(reader.GetInt32(reader.GetOrdinal("car_car_id"))), 
                                     ServiceType = new ServiceType { ServiceTypeId = reader.GetInt32(reader.GetOrdinal("service_type_id")), TypeName = reader.GetString(reader.GetOrdinal("type_name")) },
                                     WorkingHours = reader.IsDBNull(reader.GetOrdinal("working_hours")) ? (int?)null : reader.GetInt32(reader.GetOrdinal("working_hours"))
