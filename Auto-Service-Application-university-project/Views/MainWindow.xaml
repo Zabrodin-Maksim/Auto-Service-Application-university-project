@@ -189,12 +189,12 @@
                 
                 <!-- Home -->
 
-                <Button Grid.Row="1" Style="{StaticResource MenuButtons}">
+                <!--<Button Grid.Row="1" Style="{StaticResource MenuButtons}">
                     <StackPanel Style="{StaticResource StackPanelMenu}" Grid.Row="1" Orientation="Horizontal">
                         <fa:FontAwesome Style="{StaticResource IconsStyle}" Icon="Home"/>
                         <TextBlock Style="{StaticResource TextBlock}" Text="Home"/>
                     </StackPanel>
-                </Button>
+                </Button>-->
 
                 
                 <!-- Login -->
