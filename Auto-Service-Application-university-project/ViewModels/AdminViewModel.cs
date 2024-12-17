@@ -1012,7 +1012,7 @@ namespace Auto_Service_Application_university_project.ViewModels
                     Employer employer;
 
                     // If user want change himself
-                    if (user == _mainViewModel.authenticatedUser)
+                    if (user.Phone == _mainViewModel.authenticatedUser.Phone)
                     {
                         ErrorMessage = "OHH, IS THAT YOU, MY LITTLE SEXY ADMIN !!!";
                         return;
