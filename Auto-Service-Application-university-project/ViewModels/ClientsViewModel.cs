@@ -48,7 +48,7 @@ namespace Auto_Service_Application_university_project.ViewModels
             }
         }
         public ObservableCollection<Client> Clients { get; set; }
-        public ICollectionView FilteredItems { get => _clients; set => SetProperty(ref _clients, value, nameof(Clients)); }
+        public ICollectionView FilteredItems { get => _clients; set => SetProperty(ref _clients, value, nameof(FilteredItems)); }
 
         public string ClientName
         {
@@ -307,12 +307,14 @@ namespace Auto_Service_Application_university_project.ViewModels
                     await _mainViewModel.DeleteClient(SelectedClient.ClientId);
                     await _mainViewModel.FillinOutClientsLists();
                     Clients = _mainViewModel.Clients;
+                    FilteredItems = CollectionViewSource.GetDefaultView(Clients);
+                    FilteredItems.Filter = FilterItems;
                     OnClear();
                 }
             }
             else
             {
-                ErrorMessage = "Not access, you need admin or employee access!";
+                ErrorMessage = "Not access, you need admin access!";
             }
 
         }
@@ -335,6 +337,8 @@ namespace Auto_Service_Application_university_project.ViewModels
                     );
                     await _mainViewModel.FillinOutClientsLists();
                     Clients = _mainViewModel.Clients;
+                    FilteredItems = CollectionViewSource.GetDefaultView(Clients);
+                    FilteredItems.Filter = FilterItems;
                 }
                 else
                 {
@@ -355,8 +359,9 @@ namespace Auto_Service_Application_university_project.ViewModels
                 );
                 await _mainViewModel.FillinOutClientsLists();
                 Clients = _mainViewModel.Clients;
+                FilteredItems = CollectionViewSource.GetDefaultView(Clients);
+                FilteredItems.Filter = FilterItems;
             }
-
         }
 
         private bool CheckInputsNumber(string parameterCheck)

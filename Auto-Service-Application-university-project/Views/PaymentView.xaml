@@ -159,7 +159,6 @@
                         <ListView.View >
                             <GridView >
                                 <GridViewColumn Header="Reservation info" DisplayMemberBinding="{Binding InfoOfferReservation}" Width="145"/>
-                                <GridViewColumn Header="Employer" DisplayMemberBinding="{Binding EmployerWasWork}" Width="125"/>
                                 <GridViewColumn Header="Bill Price and Date" DisplayMemberBinding="{Binding PriceAndDate}" Width="165"/>
                             </GridView>
                         </ListView.View>

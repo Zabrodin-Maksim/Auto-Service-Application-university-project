@@ -199,6 +199,7 @@ namespace Auto_Service_Application_university_project.ViewModels
                         Client = client
                     };
 
+
                     // Fill By Type Payment
                     if (PaymentTypeSelected.TypeName.Equals("card", StringComparison.OrdinalIgnoreCase))
                     {
@@ -244,6 +245,12 @@ namespace Auto_Service_Application_university_project.ViewModels
 
 
                     await CreateBillDocumentAsync(payment.ToString() + "\n Total Price: " + SelectedBills.Price + "\n");
+
+                    Bills = await _mainViewModel.GetAllBills();
+                    PaymentTypes = await _mainViewModel.GetAllPaymentTypes();
+
+                    FilteredItems = CollectionViewSource.GetDefaultView(Bills);
+                    FilteredItems.Filter = FilterItems;
 
                     OnClear();
                 }
