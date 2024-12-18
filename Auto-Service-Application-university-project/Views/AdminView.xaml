@@ -237,9 +237,10 @@
                 <!-- Part of List-->
                 <Grid Grid.Column="1" Visibility="{Binding VisibleListItem}">
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="0.106*"/>
+                        <RowDefinition Height="0.121*"/>
                         <RowDefinition Height="0.03*"/>
                         <RowDefinition Height="*"/>
+                        <RowDefinition Height="0.106*"/>
                     </Grid.RowDefinitions>
 
                     <!--#region SearchText field -->
@@ -254,6 +255,8 @@
                     <ListView Style="{StaticResource ListOfClients}"  Grid.Row="2"
                              ItemsSource="{Binding FilteredItems}"
                              SelectedItem="{Binding SelectedItems}" />
+
+                    <Button Content="Hide personal data" Command="{Binding HidePersonalData}" Visibility="{Binding VisibleHideDataPerson}" Grid.Row="3" Margin="10,10,20,10"/>
 
                 </Grid>
 

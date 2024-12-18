@@ -16,9 +16,19 @@ namespace Auto_Service_Application_university_project.Models
         public Employer Supervisor { get; set; } // Связь с другим Employer (если есть)
         public Address Address { get; set; }
 
+
+        public static bool IsSecredModeActive { get; set; }
+
         public override string ToString()
         {
-            return $"Speciality: {Speciality}, Name Employee: {NameEmployee}, Phone: +420 {Phone}, Supervisor: {Supervisor}";
+            if (IsSecredModeActive)
+            {
+                return $"Speciality: {Speciality}, Name Employee: {NameEmployee}, Phone: +420 *********, Supervisor: {Supervisor}";
+            }
+            else
+            {
+                return $"Speciality: {Speciality}, Name Employee: {NameEmployee}, Phone: +420 {Phone}, Supervisor: {Supervisor}";
+            }
         }
     }
 }

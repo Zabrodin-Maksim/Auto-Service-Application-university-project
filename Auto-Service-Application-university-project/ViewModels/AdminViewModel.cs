@@ -29,8 +29,11 @@ namespace Auto_Service_Application_university_project.ViewModels
         // Filds
         private Visibility _visibilityFilds;
 
-        //List Items
+        // List Items
         private Visibility _visibleListItem;
+
+        // Hide Data Person
+        private Visibility _visibleHideDataPerson;
 
         // Menu
         private Visibility _visibilityMenu;
@@ -144,6 +147,9 @@ namespace Auto_Service_Application_university_project.ViewModels
         #region Visibility
         // Fields
         public Visibility VisibilityFilds { get => _visibilityFilds; set => SetProperty(ref _visibilityFilds, value, nameof(VisibilityFilds)); }
+
+        // Hide Data Person
+        public Visibility VisibleHideDataPerson { get => _visibleHideDataPerson; set => SetProperty(ref _visibleHideDataPerson, value, nameof(VisibleHideDataPerson)); }
 
         // List 
         public Visibility VisibleListItem { get => _visibleListItem; set => SetProperty(ref _visibleListItem, value, nameof(VisibleListItem)); }
@@ -299,6 +305,9 @@ namespace Auto_Service_Application_university_project.ViewModels
         public ICommand BillsCommand { get; }
         public ICommand PaymentsCommand { get; }
 
+        // Hide secret info in list
+        public ICommand HidePersonalData { get; }
+
         // Emulation
         public ICommand EmulationUser { get; }
         //public ICommand EmulationEmployer { get; }
@@ -320,10 +329,13 @@ namespace Auto_Service_Application_university_project.ViewModels
             #endregion
 
             #region Init Commands
-            // Filds
+            // Buttons for Fields
             BackCommand = new MyICommand<object>(async parametr => await OnBackCommand(parametr));
             AddUpdateCommand = new MyICommand<object>(async parametr => await OnAddUpdateCommand(parametr));
             DeleteCommand = new MyICommand<object>(async parametr => await OnDeleteCommand(parametr));
+
+            // Hide Personal Data
+            HidePersonalData = new MyICommand<object>(async parametr => await OnHidePersonalData(parametr));
 
             //Role
             DownRoleCommand = new MyICommand<object>(async parametr => await OnDownRole(parametr));
@@ -353,6 +365,8 @@ namespace Auto_Service_Application_university_project.ViewModels
             FillListsUsers();
         }
 
+
+        // Log and Catalog Lists
         private async Task FillLogsAndCatalog()
         {
             Logs = await _mainViewModel.GetAllLogsAsync();
@@ -363,7 +377,7 @@ namespace Auto_Service_Application_university_project.ViewModels
 
         }
 
-
+        // Clear Fields
         private void ClearAllInputs()
         {
             SelectedItems = null;
@@ -381,6 +395,7 @@ namespace Auto_Service_Application_university_project.ViewModels
         }
 
 
+        // Buttons in Fields Items Page
         private async Task OnBackCommand(object param)
         {
             await FillLogsAndCatalog();
@@ -566,6 +581,53 @@ namespace Auto_Service_Application_university_project.ViewModels
 
         }
 
+
+        // Hide personal data Button
+        private async Task OnHidePersonalData(object param)
+        {
+            switch (currentMenuItem)
+            {
+                case EnumAdminMenuItems.Clients:
+                    if (Client.IsSecredModeActive)
+                    {
+                        Client.IsSecredModeActive = false;
+                    }
+                    else
+                    {
+                        Client.IsSecredModeActive = true;
+                    }
+                    await OnClientsCommand(param);
+                    break;
+
+                case EnumAdminMenuItems.Users:
+                    if (User.IsSecredModeActive)
+                    {
+                        User.IsSecredModeActive = false;
+                    }
+                    else
+                    {
+                        User.IsSecredModeActive = true;
+                    }
+                    await OnUsersCommand(param);
+                    break;
+
+                case EnumAdminMenuItems.Employers:
+                    if (Employer.IsSecredModeActive)
+                    {
+                        Employer.IsSecredModeActive = false;
+                    }
+                    else
+                    {
+                        Employer.IsSecredModeActive = true;
+                    }
+                    await OnEmployersCommand(param);
+                    break;
+
+            }
+        }
+
+
+        // Naviagete from menu to Fields Items
         private void ChangeMenuOnFields()
         {
             VisibilityMenu = Visibility.Collapsed;
@@ -573,10 +635,13 @@ namespace Auto_Service_Application_university_project.ViewModels
             VisibleListItem = Visibility.Visible;
         }
 
+        // For Back in menu
         private void HideAllFields()
         {
             // List Items
             VisibleListItem = Visibility.Collapsed;
+
+            VisibleHideDataPerson = Visibility.Collapsed;
 
             // ComboBoxes 
             VisibleFirstCombo = Visibility.Collapsed;
@@ -598,6 +663,8 @@ namespace Auto_Service_Application_university_project.ViewModels
             VisibilitiButtonsRole = Visibility.Collapsed;
         }
 
+
+        // Filter in List
         private bool FilterItems(object obj)
         {
             if (string.IsNullOrEmpty(SearchText))
@@ -697,6 +764,8 @@ namespace Auto_Service_Application_university_project.ViewModels
 
             // Needed Fields
             VisibleFirstCombo = Visibility.Visible;
+
+            VisibleHideDataPerson = Visibility.Visible;
 
             VisibleFirstTextBox = Visibility.Visible;
             VisibleSecondTextBox = Visibility.Visible;
@@ -818,10 +887,14 @@ namespace Auto_Service_Application_university_project.ViewModels
 
             // Needed Fields
             VisibleFirstCombo = Visibility.Visible;
+
+            VisibleHideDataPerson = Visibility.Visible;
+
             VisibleFirstTextBox = Visibility.Visible;
             VisibleSecondTextBox = Visibility.Visible;
             VisibleThirdTextBox = Visibility.Visible;
             VisibleFifthTextBox = Visibility.Visible;
+
             VisibilitiButtonsRole = Visibility.Visible;
 
             // Fill in List
@@ -1072,6 +1145,8 @@ namespace Auto_Service_Application_university_project.ViewModels
             VisibleFirstCombo = Visibility.Visible;
             VisibleSecondCombo = Visibility.Visible;
             VisibleThirdCombo = Visibility.Visible;
+
+            VisibleHideDataPerson = Visibility.Visible;
 
             VisibleFirstTextBox = Visibility.Visible;
             VisibleSecondTextBox = Visibility.Visible;
@@ -2321,9 +2396,6 @@ namespace Auto_Service_Application_university_project.ViewModels
                 Console.WriteLine($"Произошла ошибка при работе с документом: {ex.Message}");
             }
         }
-
-
-
 
     }
 }

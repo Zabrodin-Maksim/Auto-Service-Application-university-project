@@ -19,9 +19,18 @@ namespace Auto_Service_Application_university_project.Models
 
         public string ShortAdress { get => Address.City + " " + Address.Street + Address.HouseNumber; }
 
+        public static bool IsSecredModeActive { get; set; }
+
         public override string ToString()
         {
-            return $"{Username}, Name: {Name}, Phone: +420 {Phone}, {ShortAdress}, Role: {RoleId}";
+            if (IsSecredModeActive)
+            {
+                return $"{Username}, Name: {Name}, Phone: +420 *********, Address: ***..., Role: {RoleId}";
+            }
+            else
+            {
+                return $"{Username}, Name: {Name}, Phone: +420 {Phone}, Address: {ShortAdress}, Role: {RoleId}";
+            }
         }
     }
 }

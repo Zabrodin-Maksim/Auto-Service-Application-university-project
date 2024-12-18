@@ -26,7 +26,7 @@ namespace Auto_Service_Application_university_project.Models
             {
                 return $"Bill: Date Bill: 16.10.2024, Price: {randomNumber}, Payment Type: {PaymentType}, Client: {Client.ClientName}";
             }
-            return $"Bill: {Bill}, Payment Type: {PaymentType}, Client: {Client.ClientName}";
+            return $"Bill: {Bill}, Payment Type: {PaymentType}";
         }
     }
 }
