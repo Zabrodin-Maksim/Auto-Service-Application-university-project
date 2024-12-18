@@ -631,6 +631,7 @@ namespace Auto_Service_Application_university_project.ViewModels
         private void ChangeMenuOnFields()
         {
             VisibilityMenu = Visibility.Collapsed;
+            VisibilitiButtonsTools = Visibility.Visible;
             VisibilityFilds = Visibility.Visible;
             VisibleListItem = Visibility.Visible;
         }
@@ -638,6 +639,8 @@ namespace Auto_Service_Application_university_project.ViewModels
         // For Back in menu
         private void HideAllFields()
         {
+            VisibilitiButtonsTools = Visibility.Collapsed;
+
             // List Items
             VisibleListItem = Visibility.Collapsed;
 
