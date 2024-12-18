@@ -199,13 +199,6 @@
                              ItemsSource="{Binding FilteredItems}"
                              SelectedItem="{Binding SelectedClient}" 
                              >
-                        <ListView.View >
-                            <GridView >
-                                <GridViewColumn Header="Name" DisplayMemberBinding="{Binding ClientName}" Width="145"/>
-                                <GridViewColumn Header="Phone" DisplayMemberBinding="{Binding Phone}" Width="125"/>
-                                <GridViewColumn Header="Address" DisplayMemberBinding="{Binding ShortAdress}" Width="165"/>
-                            </GridView>
-                        </ListView.View>
                     </ListView>
                 </Grid>
 
