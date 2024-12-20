@@ -729,7 +729,6 @@ namespace Auto_Service_Application_university_project.ViewModels
         //    {
         //        _mainViewModel.adminInEmulation = _mainViewModel.authenticatedUser;
         //        _mainViewModel.emulationFlag = true;
-        //        // TODO: ДОДЕЛАТЬ ДЛЯ ЭПЛОЕРА
         //        //_mainViewModel.authenticatedUser = SelectedEmployer;
         //        _mainViewModel.HideAllVisibilites();
         //        _mainViewModel.ShowForEmployee();
