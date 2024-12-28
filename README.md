@@ -60,7 +60,12 @@ Below are visual examples of the application's interface and functionality:
 
 ![image](https://github.com/user-attachments/assets/3ff4e713-6201-4b84-a87c-a6f9747a9080)
 
-
 ![image](https://github.com/user-attachments/assets/1a4df72f-396a-49d4-904f-4c3c93649d3b)
+
+![image](https://github.com/user-attachments/assets/3f1811f0-ba55-4188-942d-845799fb27f4)
+
+![image](https://github.com/user-attachments/assets/d9ed0579-4210-4115-b8cb-2c3999d040d4)
+
+![image](https://github.com/user-attachments/assets/f3ba5354-ef07-4170-aea2-944f171a0d36)
 
 
